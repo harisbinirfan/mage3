@@ -1,5 +1,6 @@
 # Ignore everything
-*
+/*
+/*/
 
 # But not these files and folders...
 !.gitignore
@@ -11,7 +12,7 @@
 !app/design/frontend/intenso/
 !app/code/etc/modules/
 !app/code/locale/
-!dev/
+!/dev/
 !dev/*
 !downloader/
 !errors/
