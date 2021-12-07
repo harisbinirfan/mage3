@@ -1,0 +1,21 @@
+# Ignore everything
+*
+
+# But not these files and folders...
+!.gitignore
+!.htaccess
+!phpinfo.php
+!temp
+!.DS_Store
+!app/code/local/
+!app/design/frontend/intenso/
+!app/code/etc/modules/
+!app/code/locale/
+!dev/
+!downloader/
+!errors/
+!includes/
+!js/
+!lib/
+!shell/
+!skin/
