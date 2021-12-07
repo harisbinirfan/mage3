@@ -8,7 +8,7 @@
 !phpinfo.php
 !temp
 !.DS_Store
-
+#For app directory
 !app/
 app/*
 !app/code/
@@ -33,7 +33,21 @@ app/design/adminhtml/default/*
 !app/etc/
 app/etc/*
 !app/etc/modules
-
+#For skins directory        
+!skin/
+skin/*
+!skin/adminhtml/
+app/adminhtml/*
+!skin/adminhtml/default
+app/adminhtml/default/*
+!skin/adminhtml/default/tejar_admin
+!skin/frontend/
+app/frontend/*
+!skin/frontend/intenso
+app/frontend/intenso/*
+!skin/frontend/intenso/tejar
+!skin/frontend/intenso/tejar-mobile
+!skin/frontend/intenso/tejar_tablet
 
 # !/dev/
 # !dev/*
@@ -44,4 +58,3 @@ app/etc/*
 !js/
 !lib/
 !shell/
-!skin/
