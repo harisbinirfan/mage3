@@ -1,0 +1,125 @@
+<script type="text/javascript">
+    jQuery('#customerbalance_placer').on('click', function(){
+        save_address_information(save_address_url,1,1,1);
+    });
+</script>
+<dl class="sp-methods" id="checkout-payment-method-load">
+    <?php $i = 0; ?>
+    <?php foreach ($this->getMethods() as $_method): $_code = $_method->getCode() ?>
+        <?php $i++; ?>
+        <?php if ($i != count($this->getMethods())): ?>
+            <style type="text/css">
+                #advice-validate-one-required-by-name-p_method_<?php echo $_code ?> {
+                    display: none !important;
+                }
+            </style>
+        <?php endif; ?>
+        <dt>
+            <?php if (sizeof($this->getMethods()) > 1): ?>
+                <input id="p_method_<?php echo $_code ?>" value="<?php echo $_code ?>" type="radio"
+                       name="payment[method]" title="<?php echo $this->htmlEscape($_method->getTitle()) ?>"
+                       <?php if ($this->getSelectedMethodCode() == $_code): ?> checked="checked"<?php endif; ?>
+                       class="payemntradio radio validate-one-required-by-name"/>
+					   <label for="p_method_<?php echo $_code ?>"><?php echo $this->getMethodTitle($_method) ?><?php echo $this->getMethodLabelAfterHtml($_method) ?></label>
+            <?php else: ?>
+               <input id="p_method_<?php echo $_code ?>" value="<?php echo $_code ?>"
+                                                type="radio" name="payment[method]" checked="checked"
+                                                class="payemntradio radio validate-one-required-by-name "
+												/>
+                                                
+												
+												  <label for="p_method_<?php echo $_code ?>"><?php echo $this->getMethodTitle($_method) ?><?php echo $this->getMethodLabelAfterHtml($_method) ?></label>
+												
+												
+            <?php endif; ?>
+            
+        </dt>
+        <?php if ($html = $this->getPaymentMethodFormHtml($_method)): ?>
+            <dd id="container_payment_method_<?php echo $_code; ?>" class="payment-method">
+                <?php echo $html; ?>
+            </dd>
+        <?php endif; ?>
+    <?php endforeach; ?>
+</dl>
+<div class="tool-tip" id="payment-tool-tip" style="display:none;">
+    <div class="btn-close"><a href="#" id="payment-tool-tip-close"
+                              title="<?php echo Mage::helper('core')->quoteEscape($this->__('Close')) ?>"><?php echo $this->__('Close') ?></a>
+    </div>
+    <div class="tool-tip-content"><img src="<?php echo $this->getSkinUrl('images/cvv.gif') ?>"
+                                       alt="<?php echo $this->__('Card Verification Number Visual Reference') ?>"
+                                       title="<?php echo Mage::helper('core')->quoteEscape($this->__('Card Verification Number Visual Reference')) ?>"/>
+    </div>
+</div>
+<div id="centinel"></div>
+<?php $orderNotice = Mage::getStoreConfig('sales/general/order_notice'); ?>
+<?php if(!Mage::Helper('core')->isStoreOpen() && $orderNotice): ?>
+<div class="clearfix"></div>
+<div class="order-notice" style="background: orange;border-color: orange;padding: 10px;margin-bottom: 5px;margin-top: 5px;">
+	<p style="color: #fff;">
+		<?php echo $orderNotice; ?>
+	</p>
+</div>
+<?php endif; ?>
+<script type="text/javascript">
+    //<![CDATA[
+    $$('#checkout-payment-method-load dt input').invoke('observe', 'click', function (e) {
+        var element = e.element();
+        var name = 'payment_form_' + element.value;
+
+        /* Hide all other forms */
+        $$('dd.payment-method').invoke('hide');
+
+        if (element.checked) {
+            var form = $(name);
+            var container = $('container_payment_method_' + element.value);
+
+            if (element !== null && container !== null) {
+                container.show();
+                $(name).show();
+            }
+        }
+    });
+	;(function ($, window, document, undefined) {
+					'use strict';
+		$(function () {
+			$('.input-field').floatLabels();
+		});
+	}(jQuery, this, this.document));
+    //]]>
+</script>
+<script type="text/javascript">
+    //<![CDATA[
+    function toggleToolTip(event) {
+        if ($('payment-tool-tip')) {
+            $('payment-tool-tip').setStyle({
+                top: (Event.pointerY(event) - 560) + 'px'//,
+                //left: (Event.pointerX(event)+100)+'px'
+            })
+            $('payment-tool-tip').toggle();
+        }
+        Event.stop(event);
+    }
+    if ($('payment-tool-tip-close')) {
+        Event.observe($('payment-tool-tip-close'), 'click', toggleToolTip);
+    }
+
+    initWhatIsCvvListeners();
+    //]]>
+</script>
+<script>
+	//---- 3SD CODE AVOID Ajax Renderer Radio Button Checked
+	// var classname = document.getElementsByClassName("payemntradio radio validate-one-required-by-name");
+	var classname = document.getElementsByClassName("onestepcheckout-payment-methods")[0].getElementsByClassName("radio validate-one-required-by-name");
+	var paymentMethodAction = function() {
+		if(!this.hasAttribute("checked")){
+			save_shipping_method(shipping_method_url,0,update_payment_review);
+		}
+		 for (var i = 0; i < classname.length; i++) {
+			 classname[i].removeAttribute("checked","checked");
+		 }
+		this.setAttribute("checked","checked");
+	 };
+	for (var i = 0; i < classname.length; i++) {
+		classname[i].addEventListener('click', paymentMethodAction, false);
+	}
+</script>

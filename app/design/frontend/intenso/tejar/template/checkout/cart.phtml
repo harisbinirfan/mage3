@@ -1,0 +1,319 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php
+/**
+ * Shopping cart template
+ *
+ * @see Mage_Checkout_Block_Cart
+ */
+ 
+?>
+
+<div class="cart">
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+	<div class="row">
+		<div class="col-xs-8">
+			<?php if (Mage::getModel('cms/block')->load('shopping_cart_block_1')->getIsActive()): ?>
+			   <!-- <div class="shopping-cart-block-1">
+				<?php // echo $this->getChildHtml('shopping_cart_block_1') ?>
+				</div>-->
+			<?php endif; ?>
+			<div class="page-title">
+				<h1><?php echo $this->__('Shopping Cart') ?></h1>
+			</div>
+			<?php echo $this->getChildHtml('form_before') ?>
+			<form action="<?php echo $this->getFormActionUrl() ?>" method="post" id="product_addtocart_form">
+				<?php echo $this->getBlockHtml('formkey'); ?>
+					<table id="shopping-cart-table" class="table_type_1 shopping_cart_table">
+						<?php $mergedCells = ($this->helper('tax')->displayCartBothPrices() ? 2 : 1); ?>
+							<col width="120" />
+							<col />
+							<col width="130" />
+							<col width="140" />
+							<col width="120" />
+						<thead>
+							<tr>
+								<th class="" rowspan="<?php echo $mergedCells; ?>" colspan="2">Product</th>
+								<?php /*if ($this->helper('wishlist')->isAllowInCart()) : ?>
+								<th rowspan="<?php echo $mergedCells; ?>" class="a-center"><span class="nobr"><?php echo $this->__('Move to Wishlist') ?></span></th>
+								<?php endif*/ ?>
+								<th class="a-center" rowspan="<?php echo $mergedCells; ?>"><?php echo $this->__('Qty') ?></th>
+								<th class="a-right" rowspan="<?php echo $mergedCells; ?>"><?php echo $this->__('Subtotal') ?></th>
+								<th class="a-center" rowspan="<?php echo $mergedCells; ?>"><?php echo $this->__('Action') ?></th>
+							</tr>
+							<?php if ($this->helper('tax')->displayCartBothPrices()): ?>
+							<tr>
+								<th>Product</th>
+								<th class="a-right"><?php echo $this->helper('tax')->getIncExcTaxLabel(false) ?></th>
+								<th><?php echo $this->helper('tax')->getIncExcTaxLabel(true) ?></th>
+							</tr>
+							<?php endif; ?>
+						</thead>
+						<tbody>
+						<?php foreach($this->getItems() as $_item): ?>
+							<?php echo $this->getItemHtml($_item) ?>
+						<?php endforeach ?>
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan="3" class="btn-continue-shopping">
+									<?php if($this->getContinueShoppingUrl()): ?>
+										<button type="button" title="<?php echo $this->__('Continue Shopping') ?>" class="btn-small btn secondary" onclick="setLocation('<?php echo $this->getContinueShoppingUrl() ?>')"><?php echo $this->__('Continue Shopping') ?></button>
+									<?php endif; ?></td>
+						        <td colspan="2" class="btn-continue-shopping" style="text-align: right;"><button type="submit" name="update_cart_action" data-cart-empty value="empty_cart" title="<?php echo $this->quoteEscape($this->__('Empty Cart')); ?>" class="btn btn-small secondary" id="empty_cart_button"><span><span><?php echo $this->__('Empty Cart'); ?></span></span></button></td>
+							</tr>
+						</tfoot>
+					</table>
+				<script type="text/javascript">decorateTable('shopping-cart-table')</script>
+			</form>
+		</div>
+	
+	<div class="col-xs-4">
+		<div class="page-title">
+			<h1 class="heading-top">Total</h1>
+		</div>
+		<?php if(!$this->hasError()): ?>
+        <ul class="checkout-types top">
+        <?php foreach ($this->getMethods('top_methods') as $method): ?>
+            <?php if ($methodHtml = $this->getMethodHtml($method)): ?>
+            <li><?php echo $methodHtml; ?></li>
+            <?php endif; ?>
+        <?php endforeach; ?>
+        </ul>
+        <?php endif; ?>
+		<div class="cart-collaterals">
+            <?php echo $this->getChildHtml('totals'); ?>
+            <?php $orderQuoteError = Mage::helper('catalog/data')->getOrderQuoteError($this->getItems()); ?>
+			
+			<?php // var_dump( $orderQuoteError); ?>
+			<?php if(!$this->hasError()): ?>
+			
+            <ul class="checkout-types">
+            <?php foreach ($this->getMethods('methods') as $method): ?>
+                <?php if ($methodHtml = $this->getMethodHtml($method)): ?>
+                <li><?php echo $methodHtml; ?></li>
+                <?php endif; ?>
+            <?php endforeach; ?>
+            </ul>
+            <?php endif; ?>
+			<?php  if (!$this->getIsVirtual()): echo $this->getChildHtml('shipping'); endif; ?>
+			<?php  echo $this->getChildHtml('coupon') ?>
+			<div class="shopping-cart-extra">
+				<?php /* Extensions placeholder */ ?>
+				<?php echo $this->getChildHtml('checkout.cart.extra') ?>
+			</div>
+<script>
+if ($$('.shipping-form')[0]) {
+	if ($('postcode') != undefined && !$('postcode').value) {
+		$$('.shipping-form').first().hide();
+	}
+	$$('.cart-collaterals > .shipping > h2').first().observe('click', function(){
+		Effect.toggle($(this).siblings('.shipping-form').first(),'slide',{duration:0.2});
+	});
+}
+if ($$('.discount-form')[0]) {
+	$$('.discount-form').first().hide();
+	$$('#discount-coupon-form > .discount > h2').first().observe('click', function(){
+		Effect.toggle($(this).siblings('.discount-form').first(),'slide',{duration:0.2});
+	});
+}
+
+	var myHTML = jQuery('.cart-qty').html();
+		jQuery('#cart-qty').html(myHTML);
+				
+				 //<![CDATA[
+			var productAddToCartFormCart = new VarienForm('product_addtocart_form');
+			productAddToCartFormCart.submit = function(button, url, customQtyId, buttonId, flag) {
+			
+				if (this.validator.validate()) {
+						
+				//===================ZEE CODE===========//
+				
+					//if flag value is null or empty it means user has directly edited the cart
+					
+					if(flag != "" && flag != null){
+						document.getElementById(buttonId+"_plus").disabled = "disabled";
+						document.getElementById(buttonId+"_minus").disabled = "disabled";
+						document.getElementById(buttonId+"_"+flag).style.background = "#01B4E5";
+						if(flag=="minus"){
+						
+						document.getElementById(buttonId+"_plus").style.background = "#CCCCCC";
+							var newCustomQtyVal = parseInt(document.getElementById(customQtyId).value)-1;
+							document.getElementById(customQtyId).value = newCustomQtyVal;
+						}else if(flag=="plus"){
+						document.getElementById(buttonId+"_minus").style.background = "#CCCCCC";
+							var newCustomQtyVal = parseInt(document.getElementById(customQtyId).value)+1;
+							document.getElementById(customQtyId).value = newCustomQtyVal;
+						}
+					}else{
+					
+						document.getElementById(buttonId+"_plus").disabled = "disabled";
+						document.getElementById(buttonId+"_minus").disabled = "disabled";
+						document.getElementById(buttonId+"_plus").style.background = "#01B4E5";
+						document.getElementById(buttonId+"_minus").style.background = "#01B4E5";
+					}
+				//===================END ZEE CODE===========//	
+				
+					var form = this.form;
+					var oldUrl = form.action;
+
+					if (url) {
+					   form.action = url;
+					}
+					
+					var e = null;
+					if (!url) {
+						url = jQuery('#product_addtocart_form').attr('action');
+					  
+					}
+					if(url.indexOf("wishlist/index/cart") != -1){
+						url = url.replace("wishlist/index/cart","ajaxcart/index/add"); // New Code
+					} else {
+						
+						url = url.replace("checkout/cart","ajaxcart/index"); // New Code
+					}
+					url = url.replace("http://", "//");
+					url = url.replace("https://", "//");
+					var data = jQuery('#product_addtocart_form').serialize();
+					data += '&isAjax=1';
+					var is_quickview = false;
+					if(jQuery("body").hasClass("quickview-index-view")){
+						is_quickview = true;
+					}
+					if(is_quickview)
+						window.parent.jQuery("#loading-mask").show();
+					else
+							
+						
+					try {
+						
+						jQuery.ajax({
+							url : url,
+							dataType : 'json',
+							type : 'post',
+							data : data,
+							success : function(data) {
+								if(is_quickview)
+									window.parent.jQuery('#loading-mask').hide();
+								else
+									jQuery('#loading-mask').hide();
+								if(data.status == 'ERROR'){
+									if(is_quickview)
+										window.parent.alert(data.message.replace("<br/>",""));
+									else
+										alert(data.message.replace("<br/>",""));
+								}else{
+									if(is_quickview){
+										
+										if(window.parent.jQuery('.m-hide .mini-cart')){
+											window.parent.jQuery('.m-hide .mini-cart').replaceWith(data.toplink);
+										}
+										if(window.parent.jQuery('.fixed-header .mini-cart')){
+											window.parent.jQuery('.fixed-header .mini-cart').replaceWith(data.toplink);
+										}
+										if(window.parent.jQuery('.sticky-header .mini-cart')){
+											window.parent.jQuery('.sticky-header .mini-cart').replaceWith(data.toplink);
+										}
+										if(window.parent.jQuery('.col-right .block.block-cart')){
+											window.parent.jQuery('.col-right .block.block-cart').replaceWith(data.cart_sidebar);
+										}
+										window.parent.jQuery('#after-loading-success-message #success-message-container .msg-box').html(data.message);
+										<?php $code = Mage::app()->getStore();?>
+										<?php $autoclose = Mage::getStoreConfig('ajaxcart/addtocart/autoclose', $code);?>
+										ajaxcart_sec = <?php echo ($autoclose && is_numeric($autoclose))?$autoclose:5; ?>;
+										timer_sec = ajaxcart_sec;
+										window.parent.jQuery('#after-loading-success-message').fadeIn(200);
+										ajaxcart_timer = setInterval(function(){
+											timer_sec --;
+											window.parent.jQuery('#after-loading-success-message .timer').html(timer_sec);
+										},1000)
+										setTimeout(function(){
+											window.parent.jQuery('#after-loading-success-message').fadeOut(200);
+											clearTimeout(ajaxcart_timer);
+											setTimeout(function(){
+												window.parent.jQuery('#after-loading-success-message .timer').html(ajaxcart_sec);
+											}, 1000);
+										},ajaxcart_sec*1000);
+									}
+									else {
+										
+								
+									//var myHTML = jQuery('.cart-qty').html();
+									//============== ZEE CODE=====================// 
+										//--- Getting Cart Items Count From Server Side on Cart Page & Not Displaying MiniCart on Hover 	
+										jQuery('#cart-qty').html(data.cart_count);
+									//============== ZEE CODE=====================// 
+									if(jQuery('.m-hide .mini-cart')){
+											jQuery('.m-hide .mini-cart').replaceWith(data.toplink);
+											
+										}
+										if(jQuery('.cart ')){
+											jQuery('.cart ').replaceWith(data.shoping_cart);
+										}
+										if(jQuery('.fixed-header .mini-cart')){
+											jQuery('.fixed-header .mini-cart').replaceWith(data.toplink);
+										}
+										if(jQuery('.sticky-header .mini-cart')){
+											jQuery('.sticky-header .mini-cart').replaceWith(data.toplink);
+										}
+										if(jQuery('.col-right .block.block-cart')){
+											jQuery('.col-right .block.block-cart').replaceWith(data.cart_sidebar);
+										}
+										
+										jQuery('#after-loading-success-message #success-message-container .msg-box').html(data.message);
+										<?php $autoclose = Mage::getStoreConfig('ajaxcart/addtocart/autoclose', $code);?>
+										ajaxcart_sec = <?php echo ($autoclose && is_numeric($autoclose))?$autoclose:5; ?>;
+										timer_sec = ajaxcart_sec;
+										jQuery('.topCartContent').show();
+										ajaxcart_timer = setInterval(function(){
+											timer_sec --;
+											jQuery('#after-loading-success-message .timer').html(timer_sec);
+										},1000);
+										
+									 
+										if(jQuery('#shopping-cart-table').find('td > p.error').html()){
+											jQuery('.col-xs-9>.page-title').after('<ul class="messages"><li class="error-msg"><ul><li><span>Some of the products cannot be ordered in requested quantity.</span></li></ul></li></ul>');
+										}else{
+											jQuery('.col-xs-9>.page-title').after('');
+									
+										}
+									}
+									
+								}
+							}
+							
+						});
+					} catch (e) {
+					} 
+		
+					this.form.action = oldUrl;
+					if (e) {
+						throw e;
+					}
+				}
+			}.bind(productAddToCartFormCart);
+					
+		//]]>
+			</script>
+		</div>
+	</div>
+</div>
+</div>
+<style>
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+}
+</style>
+<?php echo $this->getChildHtml('crosssell') ?>

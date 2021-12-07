@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Intenso Premium Theme
+ *
+ * @category    Itactica
+ * @package     Itactica_LayeredNavigation
+ * @copyright   Copyright (c) 2014-2017 Intenso (https://www.getintenso.com)
+ * @license     http://getintenso.com/license
+ */
+-->
+<config>
+    <modules>
+        <Tejar_LayeredNavigation>
+            <version>1.0.0</version>
+        </Tejar_LayeredNavigation>
+    </modules>
+    	<global>
+		<helpers>
+			<tejar_layerednavigation>
+				<class>Tejar_LayeredNavigation_Helper</class>
+			</tejar_layerednavigation>
+			<itactica_layerednavigation>
+				<rewrite>
+					<data>Tejar_LayeredNavigation_Helper_Data</data>
+				</rewrite>
+			</itactica_layerednavigation>
+		</helpers>
+	</global>
+    <frontend>
+        <routers>
+            <catalog>
+                <args>
+                    <modules>
+                        <Tejar_LayeredNavigation before="Itactica_LayeredNavigation">Tejar_LayeredNavigation</Tejar_LayeredNavigation>
+                    </modules>
+                </args>
+            </catalog>
+        </routers>
+    </frontend>
+</config>

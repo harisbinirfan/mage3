@@ -1,0 +1,47 @@
+<!--<label for="<?php // echo $this->getFieldId('month') ?>"<?php // if ($this->isRequired()) echo ' class="required"' ?>><?php // echo $this->__('Date of Birth') ?>
+    <?php // if ($this->isRequired()): ?>
+        <span class="required">*</span>
+    <?php // endif ?>
+</label>-->
+<div class="customer-dob">
+    <?php
+    $this->setDateInput('d',
+        '<div class="dob-day">
+			<div class="input-field input-wrapper">
+				<input type="text" id="' . $this->getFieldId('day') . '" name="' . $this->getFieldName('day') . '" value="' . $this->getDay() . '" title="' . $this->__('Day') . '" placeholder="'. $this->__('DD') .'" class="input-text input-floating validate-custom" ' . $this->getFieldParams() . ' />
+				<label for="' . $this->getFieldId('day') . '" class="label-floating">' . $this->__('DD') . '</label>
+			</div>
+         </div>'
+    );
+
+    $this->setDateInput('m',
+        '<div class="dob-month">
+			<div class="input-field input-wrapper">
+				 <input type="text" id="' . $this->getFieldId('month') . '" name="' . $this->getFieldName('month') . '" value="' . $this->getMonth() . '" title="' . $this->__('Month') . '" placeholder="'. $this->__('MM') .'" class="input-text input-floating validate-custom" ' . $this->getFieldParams() . ' />
+				 <label for="' . $this->getFieldId('month') . '" class="label-floating">' . $this->__('MM') . '</label>
+			 </div>
+         </div>'
+    );
+
+    $this->setDateInput('y',
+        '<div class="dob-year">
+			<div class="input-field input-wrapper">
+				<input type="text" id="' . $this->getFieldId('year') . '" name="' . $this->getFieldName('year') . '" value="' . $this->getYear() . '" title="' . $this->__('Year') . '" placeholder="'. $this->__('YYYY') .'" class="input-text input-floating validate-custom" ' . $this->getFieldParams() . ' />
+				<label for="' . $this->getFieldId('year') . '" class="label-floating">' . $this->__('YYYY') . '</label>
+			 </div>
+         </div>'
+    );
+    ?>
+    <?php echo $this->getSortedDateInputs() ?>
+    <div class="dob-full" style="display:none;">
+        <input type="hidden" id="<?php echo $this->getFieldId('dob') ?>"
+               name="<?php echo $this->getFieldName('dob') ?>"/>
+    </div>
+
+    <div class="validation-advice" style="display:none;"></div>
+</div>
+<script type="text/javascript">
+    //<![CDATA[
+    var customer_dob = new Varien.DOB('.customer-dob', <?php echo $this->isRequired() ? 'true' : 'false' ?>, '<?php echo $this->getDateFormat() ?>');
+    //]]>
+</script>

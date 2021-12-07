@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Intenso Premium Theme
+ * 
+ * @category    Itactica
+ * @package     Itactica_Billboard
+ * @copyright   Copyright (c) 2015 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+-->
+<config>
+    <modules>
+        <Tejar_OrbitSlider>
+            <version>1.9.3</version>
+        </Tejar_OrbitSlider>
+    </modules>
+    <global>
+        <helpers>
+			<tejar_orbitslider>
+				<class>Tejar_OrbitSlider_Helper</class>
+			</tejar_orbitslider>
+        </helpers>
+		 <models>
+			<tejar_orbitslider>
+				<class>Tejar_OrbitSlider_Model</class>
+			</tejar_orbitslider>
+        </models>
+    </global>
+</config>
+

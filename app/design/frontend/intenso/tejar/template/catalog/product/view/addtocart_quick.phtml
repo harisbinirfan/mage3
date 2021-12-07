@@ -1,0 +1,111 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014-2015 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+
+<?php $_product = $this->getProduct(); ?>
+<?php $buttonTitle = $this->__('Add to Cart'); ?>
+<?php $productData = Mage::getModel('cataloginventory/stock_item')->loadByProduct($_product); ?>
+<?php
+	$attributeOptions = array();
+	if ($_product->isConfigurable()) {
+		$productAttributeOptions = $_product->getTypeInstance(true)->getConfigurableAttributesAsArray($_product);
+		foreach ($productAttributeOptions as $productAttribute) {
+		    $attributeOptions[] = $productAttribute['label'];
+		}
+	}
+	//--- Get Custom Stock Status...
+	$customStockAlertStatus = Mage::helper('catalog/data')->customStockAddtoCartStatus($_product);
+	//var_dump($customStockAlertStatus);die;
+?>
+<?php // if($_product->isSaleable()): ?>
+		
+	<?php if(!$_product->isGrouped()): ?>
+
+			<div class="description_section_2 v_centered" style="text-align: center;">
+				<span class="title">Quantity :</span>
+				<div class="qty qty-wrapper min clearfix">
+					<button type="button" class="theme_button" id="minus_quick" data-direction="minus">&#45;</button>
+					<input min="1" max="999" autocomplete="off" id="qty" type="number" class="input-text qty validation-passed" name="qty" value="<?php echo $this->getProductDefaultQty() * 1 ?>" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Qty')) ?>" pattern="\d*">
+					<!--<input autocomplete="off" type="number" pattern="[0-9]*"  id="qty_quick" class="input-text qty validation-passed" name="qty" value="1">-->
+					<button type="button" class="theme_button" data-direction="plus" id="plus_quick">&#43;</button>
+				</div>
+			</div>
+						<!--==================== ZEE CODE ================-->
+						<input  type="hidden" value="<?php echo $this->getProductDefaultQty() * 1 ?>" id="qty_clone_quickview" />
+						<!--==================== ZEE CODE ================-->							
+	<?php endif; ?>
+	<?php if(Mage::getStoreConfig('intenso/product_page/product_show_add_to_cart', Mage::app()->getStore())): ?>
+		<button  <?php echo $customStockAlertStatus == false || $_product->isSaleable() ==false?'disabled="disabled"':""; ?> type="button" title="<?php echo $buttonTitle ?>" id="product-addtocart-button" class="btn btn-cart-pro" onclick="productAddToCartForm.submit(this)"><span><span><?php echo $buttonTitle ?></span></span></button>	
+	<?php endif; ?>
+	<?php echo $this->getChildHtml('', true, true) ?>
+<?php // endif; ?>
+<script>
+//=================== ZEE CODE ========================//
+	
+			//--- The file is being executed twice, hence unbind the click even on 'quick view button'
+			//--- to execute plus and minus once only....
+			
+			jQuery('#plus_quick, #minus_quick').unbind().click(function(){
+				jQuery('#qty_quick').val(jQuery('#qty_clone_quickview').val()); 
+					var jQuerythis = jQuery(this),
+						d = jQuerythis.data('direction'),
+						input = jQuerythis.siblings('input'),
+						c = +input.val();
+					if((c == 1 && d == "minus") || c=="" || c==null){ 
+						input.val(1);
+						return false;
+					}
+					input.val(d == "minus" ? --c : ++c);
+					jQuery('#qty_clone_quickview').val(parseInt(jQuery('#qty_quick').val())); 
+				});
+			
+			jQuery(document).on("click tap touchstart",function(e) {
+				//console.log('HERE!---->');
+					//Restore the quantity value if clicked anywhere on Body and Hide the Update button
+				if(jQuery('#qty_quick').val()==""){
+					jQuery('#qty_quick').val(jQuery('#qty_clone_quickview').val()); 
+				} 
+			});
+				
+			jQuery('#qty_quick').bind('copy paste', function (e) {
+				   e.preventDefault();
+				});
+			
+			jQuery('#qty_quick').bind('keydown', function (event) {
+				//console.log(event.which);
+				
+				var kC = event.which;
+				//var kC = event.keyCode;
+				//--- if input was not integer...
+				if( !((kC >= 48 && kC <= 57 && kC!==190) || (kC >= 96 && kC <= 105) || kC == 8 || kC==16)) return false;
+				//--- if special character was entered while shift key is pressed..
+			
+				//--- Avoid all Special Characters...
+				if(event.shiftKey == true ){
+						event.preventDefault();
+					}
+					
+				setTimeout(function(){
+					
+						if(jQuery('#qty_quick').val().length && jQuery('#qty_quick').val()>=1){
+							
+							jQuery('#qty_clone_quickview').val(jQuery('#qty_quick').val()); 
+						}else if(kC===13){
+							jQuery('#qty_quick').val(jQuery('#qty_clone_quickview').val()); 
+						}
+					
+				},700);
+				
+			});		
+			
+
+			
+	
+</script>

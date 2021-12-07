@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<config>
+	<acl>
+		<resources>
+		  <admin>
+			<children>
+			  <system>
+				<children>
+				  <config>
+					<children>
+					  <tejarobservpricing>
+						<title>Stores Default Sourcing</title>
+						<sort_order>100</sort_order>
+					  </tejarobservpricing>
+					</children>
+				  </config>
+				</children>
+			  </system>
+			</children>
+		  </admin>
+		</resources>
+	</acl>	
+</config>

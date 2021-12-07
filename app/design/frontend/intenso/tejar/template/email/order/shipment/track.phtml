@@ -1,0 +1,89 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php $_shipment=$this->getShipment() ?>
+<?php $_order=$this->getOrder() ?>
+<pre>
+<?php  
+// var_dump($_order);
+
+?>
+</pre>
+<!--/[] 3SD CODE Get Store Phone Number []\-->
+<?php  $storePhone = Mage::getStoreConfig('general/store_information/phone');?>
+<?php $store = Mage::app()->getStore();
+$shippingMethods = @unserialize(Mage::getStoreConfig('intenso/sales/sales_shipping_methods_links', Mage::app()->getStore()));
+?>
+<?php if ($_shipment && $_order && $_shipment->getAllTracks()): ?>
+	<tr>
+		<td style="padding-top: 15px; padding-bottom: 15px;" width="100%" class="mobile-padding">
+			<div style="background-color:rgb(214,214,214);font-size:1px;height:1px"></div>
+		</td>
+	</tr>
+	<tr>
+		<td valign="top" class="shipment-info" id="shipment-notifications">
+			<h6>Shipment Notifications:</h6>
+			<p><span class="no-link"><?php echo $_order->getCustomerEmail(); ?></span></p>
+		</td>
+	</tr>
+	
+
+    <?php $i=0; foreach ($_shipment->getAllTracks() as $_item): $i++ ?>
+	<?php // 3SD CODE SET VAR NULL
+		$shippingMethodUrl = "";
+	?>
+	<?php // 3SD CODE SHIPPING METHODS COLLECTION FETCH ?>
+	<?php foreach ($shippingMethods as $shippingMethod): ?>
+	<?php // 3SD CODE SHIPPING METHODS TITLE AND CUSTOM VALUE TITLE COMPERISON ?>
+		<?php if(($_item['title'] ? $this->escapeHtml($_item['title']) : $this->__('N/A')) == $shippingMethod['menu_item']):?>
+			<?php // 3SD CODE SET VAR VALUE ?>
+			<?php $shippingMethodUrl = $shippingMethod['url']; ?>
+		<?php endif;?>
+	<?php endforeach; ?>
+	<?php // 3SD CODE IF URL EMPTY LINK NOT APPEAR ?>
+	<tr>
+		<td valign="top" class="shipment-info" id="carrier-name">
+			<h6>Carrier Name:</h6>
+			<p><span class="no-link"><?php echo $this->escapeHtml($_item->getTitle()) ?></span></p>
+		</td>
+	</tr>
+	<tr>
+		<td valign="top" class="shipment-info" id="tracking-number">
+			<h6>Tracking Number:</h6>
+			<?php  if($shippingMethodUrl == ""):?>
+				<?php echo (isset($_item['number']) ? $this->escapeHtml($_item['number']) : ''); ?>
+			<?php else: ?>
+			<?php // 3SD CODE IF URL VALUE LINK APPEAR 
+				$waybill = str_replace('waybill', $this->escapeHtml($_item['number']), $shippingMethodUrl);
+			?>
+				<a href="<?php echo $waybill; ?>" target="_blank" title="<?php echo ($_item['title'] ? $this->escapeHtml($_item['title']) : $this->__('N/A')); ?>">
+					<?php echo (isset($_item['number']) ? $this->escapeHtml($_item['number']) : ''); ?>
+				</a>
+			<?php endif;  ?>
+		</td>
+	</tr>
+    <?php endforeach ?>
+<?php endif; ?>

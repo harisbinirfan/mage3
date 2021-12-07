@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<config>
+	<modules>
+        <Tejar_Email>
+            <version>0.2.0</version>
+        </Tejar_Email>
+    </modules>
+	
+    <global>
+		<resources>
+			<tejar_email_setup>
+				<setup>
+					<module>Tejar_Email</module>
+				</setup>
+				<connection>
+					<use>core_setup</use>
+				</connection>
+			</tejar_email_setup>
+			<tejar_email_write>
+				<connection>
+					<use>core_write</use>
+				</connection>
+			</tejar_email_write>
+			<tejar_email_read>
+				<connection>
+					<use>core_read</use>
+				</connection>
+			</tejar_email_read>
+		</resources>
+		<models>
+			<tejar_email>
+				<class>Tejar_Email_Model</class>
+			</tejar_email>
+		</models>
+    </global>
+	<frontend>
+		 <routers>
+			 <tejar_email>
+                <use>standard</use>
+                <args>
+                    <module>Tejar_Email</module>
+                    <frontName>email</frontName>
+                </args>
+            </tejar_email>
+        </routers>
+		<layout>
+            <updates>
+                <tejar_email>
+                    <file>tejar_email.xml</file>
+                </tejar_email>
+            </updates>
+        </layout>
+	</frontend>
+	
+	<crontab>
+        <jobs>
+		
+			<tejar_review_email>
+			  <schedule><config_path>sales_email/review_rating/cron_settings</config_path></schedule>
+                <run>
+                    <model>tejar_email/observer::sendReviewEmails</model>
+                </run>
+            </tejar_review_email>
+			
+            <tejar_delayed_email>
+			  <schedule><config_path>sales_email/delayed/cron_settings</config_path></schedule>
+                <run>
+                    <model>tejar_email/observer::sendDelayEmails</model>
+                </run>
+            </tejar_delayed_email>
+			
+        </jobs>
+    </crontab>
+	
+</config>

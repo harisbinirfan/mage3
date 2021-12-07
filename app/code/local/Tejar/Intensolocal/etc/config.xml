@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<config> 
+	<modules>
+        <Tejar_Intensolocal>
+            <version>0.0.1</version>
+        </Tejar_Intensolocal>
+    </modules>
+    <global>
+		<helpers>
+			<itactica_intenso>
+				<rewrite>
+					<data>Tejar_Intensolocal_Helper_Data</data>
+				</rewrite>
+			</itactica_intenso>
+			<configurableswatches>
+                <rewrite>
+                    <mediafallback>Tejar_Intensolocal_Helper_Mediafallback</mediafallback>
+					<productimg>Tejar_Intensolocal_Helper_Productimg</productimg>
+                </rewrite>
+            </configurableswatches>
+		</helpers>
+		<blocks>
+            <itactica_logoslider>
+				<rewrite>
+					<view>Tejar_Intensolocal_Block_View</view>
+				</rewrite>
+            </itactica_logoslider>
+        </blocks>
+		 <models>
+            <itactica_intenso>
+				<rewrite>
+					<config_productnamelength>Tejar_Intensolocal_Model_Config_Productnamelength</config_productnamelength>
+				</rewrite>
+            </itactica_intenso>
+            <tejar_intensolocal>
+                <class>Tejar_Intensolocal_Model</class>
+            </tejar_intensolocal>
+        </models>
+    </global>
+	
+</config>

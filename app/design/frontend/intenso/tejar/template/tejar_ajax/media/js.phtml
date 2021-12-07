@@ -1,0 +1,24 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014-2017 Intenso (https://www.getintenso.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php
+    /* @var $this Mage_ConfigurableSwatches_Block_Catalog_Media_Js_Abstract */
+?>
+
+<script type="text/javascript">
+	$j(document).on('product-media-loaded', function() {
+        ConfigurableMediaImages.init('<?php echo $this->getImageType(); ?>');
+        <?php foreach ($this->getProductImageFallbacks(false) as $imageFallback): ?>
+        ConfigurableMediaImages.setImageFallback(<?php echo $imageFallback['product']->getId(); ?>, $j.parseJSON('<?php echo addslashes($imageFallback['image_fallback']); ?>'));
+        <?php endforeach; ?>
+        $j(document).trigger('configurable-media-images-init', ConfigurableMediaImages);
+	});
+	$j(document).trigger('product-media-loaded');	
+</script>

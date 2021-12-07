@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+/**
+* Tejar
+*
+*/
+-->
+<config>
+    <modules>
+        <Tejar_SocialConnect>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Tejar_SocialConnect>
+    </modules>
+</config>

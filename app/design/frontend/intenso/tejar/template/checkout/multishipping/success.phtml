@@ -1,0 +1,188 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php 
+$orderIds = $this->getOrderIds();
+// $orderIds = Mage::getSingleton('core/session')->getTejarMultiShippingOrderIds();$orderIds = Mage::getSingleton('core/session')->getTejarMultiShippingOrderIds();
+//echo "<pre>"; print_r($testing); echo "</pre>";
+
+?>
+<div class="row flush">
+    <div class="col-sm-12">
+        <div class="page-title">
+            <h1 class="center"><!--<span class="icons-ok"></span>--><?php echo $this->__('Your order has been received.') ?></h1>
+        </div>
+		<h5 class="center"><?php echo $this->__('Thank you for Shopping at Tejar .') ?></h5>
+		<p class="center"><?php echo $this->__('We are processing your order and you will soon receive an email with details of the order. Once the order has shipped you will receive another email with a link to track its progress.') ?></p>
+            <?php //if($_orderIds = $this->getOrderIds()): ?>
+            <?php if($_orderIds = $orderIds): ?>
+                <?php foreach ($_orderIds as $orderId=>$incrementId): ?>
+					<?php $order = Mage::getModel('sales/order')->loadByIncrementId($incrementId); ?>
+						<!--======================= 3SD CODE ========================-->
+							<!-- HTML for ORDER Tracking Progress Bar ---->
+							<table class="order-tracking-progress">
+								<tr>
+									<td style="border-top-left-radius: 0.2em;border-bottom-left-radius: 0.2em;" <?php if($order->getStatusLabel()=="Pending" || $order->getStatusLabel()=="Processing" || $order->getStatusLabel()=="Complete"){?>class="order-progress-active" <?php }?>></td>
+									<td <?php if($order->getStatusLabel()=="Processing" || $order->getStatusLabel()=="Complete"){?>class="order-progress-active" <?php }?>><?php echo $order->getStatusLabel()=='Complete'?'Shipped':$order->getStatusLabel(); ?></td>
+									<td style="border-top-right-radius: 0.2em;border-bottom-right-radius: 0.2em;" <?php if($order->getStatusLabel()=="Complete"){?>class="order-progress-active" <?php }?>></td>
+								</tr>
+							</table>
+							<!-- HTML for ORDER Tracking Progress Bar ---->
+						<!--======================= 3SD CODE ========================-->
+						
+						<!--======================= 3SD CODE ========================-->
+							<!-- Order Detail Table ---->
+							<table class="table_type_1 theme_table success-detail-table">
+								<thead>
+									<tr>
+										<th class="" colspan="1"><?php echo $this->__('Order Confirmation') ?></td>
+										<th  class="align_right" data-role="order-numbers" colspan="2">Order #<a href="<?php echo $this->getViewOrderUrl($orderId) ?>"><?php echo $incrementId ?></a></th>
+									</tr>
+									<tr>
+										<th><?php echo $this->__('SHIP TO') ?></th>
+										<th><?php echo $this->__('PAYMENT') ?></th>
+										<th><?php echo $this->__('ORDER TOTAL') ?></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td><address><?php echo $order->getShippingAddress()->format('html') ?></address></td>
+										<td><?php  echo $order->getPayment()->getMethodInstance()->getTitle(); ?></td>
+										<td>
+											<table class="zebra table_type_3">
+												<tbody>
+													<tr>
+														<td><?php echo $this->__('Sub Total') ?></td>
+														<td class="align_right"><span class="price"><?php  echo  Mage::helper("core")->currency($order->getSubtotal()); ?></span></td>
+													</tr>
+													<?php if($order->getShippingAmount() && $order->getShippingAmount() > 0) :?>
+													<tr>
+														<td><?php echo $this->__('Shipping Amount') ?></td>
+														<td class="align_right"><span class="price"><?php  echo  Mage::helper("core")->currency($order->getShippingAmount()); ?></span></td>
+													</tr>
+													<?php endif ;?>
+													<?php if($order->getDiscountAmount() && $order->getDiscountAmount() > 0) :?>
+													<tr>
+														<td><?php echo $this->__('Discount Amount') ?></td>
+														<td class="align_right"><span class="price"><?php echo Mage::helper("core")->currency($order->getDiscountAmount()); ?></span></td>
+													</tr>
+													<?php endif ;?>
+													<?php if($order->getTaxAmount() && $order->getTaxAmount() > 0) :?>
+													<tr>
+														<td><?php echo $this->__('Tax Amount') ?></td>
+														<td class="align_right"><span class="price"><?php echo Mage::helper("core")->currency($order->getTaxAmount()); ?></span></td>
+													</tr>
+													<?php endif ;?>
+													<tr>
+														<td><?php echo $this->__('Grand Total') ?></td>
+														<td class="align_right"><span class="price"><?php echo Mage::helper("core")->currency($order->getGrandTotal()); ?></span></td>
+													</tr>
+											</table>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<!-- Order Detail Table ---->
+						<!--======================= 3SD CODE ========================-->
+							
+							
+						<!--======================= 3SD CODE ========================-->
+							<!-- Order Items ---->
+								<table class="table_type_1 theme_table success-item-table">
+									<thead>
+										 <tr> 
+											<th class="product_image_col"><?php echo $this->__('IMAGE') ?></th>
+											<th class="product_title_col"><?php echo $this->__('PRODUCT') ?></th>
+											<th class="product_sku_col"><?php echo $this->__('SKU') ?></th>
+											<th class="product_qty_col"><?php echo $this->__('QTY') ?></th>
+											<th class="product_price_col"><?php echo $this->__('Price') ?></th>
+										</tr>
+									</thead>
+									<tbody>
+									<?php
+									//========================================= ZEE CODE ================================================//
+										
+										//echo "---> ",$gift_message_id;die;
+										$message = Mage::getModel('giftmessage/message');
+										$gift_message_id = $order->getGiftMessageId();
+										if(!is_null($gift_message_id)) {
+											$message->load((int)$gift_message_id);
+											$gift_sender = $message->getData('sender');
+											$gift_recipient = $message->getData('recipient');
+											echo $gift_message = $message->getData('message');
+										}
+										
+										foreach($order->getAllVisibleItems() as $item): 
+										$configItem = Mage::getModel('catalog/product')->loadByAttribute('sku', $item->getSku());
+										$product = Mage::getModel('catalog/product')->setStoreId(Mage::app()->getStore()->getId())->load($item->getProductId());
+										//--- Get Product Brand...
+										$productBrand  = $product->getAttributeText('manufacturer');
+										//$productModel = Mage::getModel('catalog/product')->load($item->getProduct()->getId())->getModel();
+										//--- Taking Model by using loadByAttribute as currently unable to get it from $product object..
+										$productModel  = $configItem->getModel();
+										//echo var_dump($configItem->getData('model'));
+										
+											//--- Create Brand URL...
+										  $brandUrl=Mage::getUrl(); 
+										  $brandName = strtolower($product->getAttributeText('manufacturer'));
+										  $brandName = str_replace(' ', '-', $brandName);
+										  
+										  //--- Fix for replacing space and '&' from brand name.
+										  $brandName = str_replace(' ', '-', $brandName);
+										  $brandName = str_replace('-&-', '-', $brandName);
+										  
+									?> 
+									<tr>
+									   <td><a href="<?php echo $product->getProductUrl() ?>" title="<?php echo $item->getName() ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($configItem, 'small_image')->resize(150); ?>" width="150" height="150" class="media-object img-responsive" alt="<?php echo $this->getImageLabel($configItem, 'small_image'); ?>"/></a></td>
+										<td><h2 class="product-name"><a href="<?php echo $product->getProductUrl() ?>"><?php echo $item->getName() ?></a></h2>
+											<div class="cart-brand-model">
+												<p>By: <a href="<?php echo $brandUrl;?><?php echo strtolower($brandName);?>"><?php echo $productBrand;?></a></p>
+												<p>Model: <span><?php echo $productModel;?></span></p>
+											</div>
+											<!--========================== ZEE CODE ======================-->
+											<!--================= GET CUSTOM STOCK STATUS =================-->		
+													<?php 
+													$customStockProduct = Mage::getModel('catalog/product')->load($configItem->getId());
+													$customStock = $customStockProduct->getAttributeText('custom_stock_availability');?>
+													<p class="cart-in-stock"><?php echo $customStock?$customStock:"In Stock";?></p>
+											<!--========================== ZEE CODE ======================-->
+											<div class="attributes-options">
+											<dl class="item-options clearfix">				
+											<?php  		
+												$orderItemsOpt = Mage::getModel('sales/order_item')->getCollection()->addFieldToFilter('product_id', $item->getProductId());
+												if($product->getTypeId()=="configurable"){
+													$attributes = $item->getProductOptions();
+													foreach ($attributes['attributes_info'] as $attributeInfo){?>
+													 <dt><?php echo $attributeInfo['label'];?></dt>
+													 <dd><?php echo $attributeInfo['value']; ?></dd>
+												<?php } ?>
+											<?php }	?>
+											</dl>
+											</div>
+										</td>
+										<td class=""><?php echo $item->getSku(); ?></td>
+										<td class="center"><?php echo round($item->getQtyOrdered(), 0) ?></td>
+										<td class=""><?php echo Mage::helper("core")->currency($item->getPrice()) ?></td>
+									</tr>
+							<?php endforeach ?> 
+						</tbody>
+					</table>
+                <?php endforeach; ?>
+           
+            <?php endif; ?>
+            <?php echo $this->getChildHtml() ?>
+			
+            <div class="buttons-set center">
+				<button type="button" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Continue Shopping')) ?>" class="btn" onclick="setLocation('<?php echo $this->getContinueUrl() ?>')"><span><span><?php echo $this->__('Continue Shopping') ?></span></span></button>
+			</div>
+			</div>
+        </div>
+    </div>
+</div>

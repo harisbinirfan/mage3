@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Technodeft_Soapapi>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Technodeft_Soapapi>
+    </modules>
+</config> 

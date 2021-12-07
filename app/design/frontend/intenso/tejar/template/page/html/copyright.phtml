@@ -1,0 +1,30 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<!--<div class="t-divider t-divider-section"><div class="t-divider-inner"></div></div>-->
+<footer class="copyright-footer">
+	<?php /* 3SD CODE Copyright Section */ ?>
+	<?php if($this->getCopyright()): ?>
+	<?php
+		$format = $this->getCopyright();
+		$year = Mage::getModel('core/date')->date('Y');
+		$storeName = $storePhone = Mage::getStoreConfig('general/store_information/name');
+		$copyright = sprintf($format, $year, $storeName);
+
+	?>
+	<div class="footer__section _copyright">
+		<div class="container">
+			<div class="footer__copyright">
+				<p><span class="sosumi"><strong><?php echo $copyright; ?></strong></span></p>
+			</div>
+		</div>
+	</div>
+	<?php endif; ?>
+</footer>

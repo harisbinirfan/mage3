@@ -1,0 +1,123 @@
+<?php 
+
+
+
+  $sliders = Mage::getResourceModel('itactica_featuredcategories/slider_collection');
+  $sliders->addFilter('status', array('=' => 1), 'public');
+	$sliders->addFilter('identifier', array('like' => 'deals_%'), 'public');
+	// echo $sliders->getSize(); die;
+	// $storeId = Mage::app()->getStore()->getStoreId();
+	// $filter = Mage::getSingleton('catalog/layer');
+	// $category  = Mage::registry('current_category');
+	
+	 // $_categories = Mage::getModel('catalog/category')->getCollection()
+		// ->addAttributeToSelect('*')
+		// ->addIsActiveFilter(1)
+		// ->addAttributeToFilter('collection_type',array('null' => true))
+		// ->addAttributeToFilter('children_count',array('eq' => 0))
+		// ->addAttributeToFilter('dup_cat.product_id', array('in' => $filter->productIds()))
+		// ->addAttributeToFilter('level', array('gt' => 2))
+		// ->addOrderField('name');
+	
+	
+	// $_categories->getSelect()->joinInner(array('dup_cat' => $_categories->getTable('catalog/category_product_index')),'main_table.entity_id = dup_cat.category_id AND dup_cat.store_id="'.$storeId.'" AND dup_cat.visibility IN('.join(',',Mage::getSingleton('catalog/product_visibility')->getVisibleInCatalogIds()).')')->group('main_table.entity_id');
+	
+	
+	// $matchDealCategoryUrl = preg_match('/deals\/filter\/category/i',Mage::app()->getRequest()->getRequestString());
+			
+			
+?>
+
+<?php if($sliders->getSize()): ?>
+<?php $_columnCount = 2; ?>
+<div class="box-row">
+	<?php $mediaUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA); ?>
+	<?php $i=0;  foreach($sliders as $slider): ?>
+		<?php if ($i++%$_columnCount==0): ?>
+		<div class="box-column">
+		<?php endif ?>
+			<div class="collage_image" id="<?php echo $slider->getIdentifier(); ?>">
+				<a href="<?php echo Mage::getBaseUrl(); ?>deals/filter/categories/<?php echo $slider->getId(); ?>">
+					<span><?php echo $slider->getTitle(); ?></span>
+					<img src="<?php echo $mediaUrl . $slider->getIdentifier(); ?>.jpg" title="<?php echo $slider->getTitle(); ?>" />
+				</a>
+			</div>
+		<?php if ($i%$_columnCount==0 || $i==count($sliders)): ?>
+			</div>
+		<?php endif ?>
+	<?php endforeach; ?>
+</div>
+<?php endif; ?>
+<style>
+.box-row {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 4px;
+  background: #fff;
+}
+
+.collage_image span:after {
+    content: "";
+    border-bottom: 2px solid #333;
+    display: block;
+    padding: 5px;
+    width: 60px;
+}
+
+.collage_image span {
+    position: absolute;
+    font-size: 1.5rem;
+    color: #333;
+    left: 15px;
+    top: 15px;
+    font-weight: 600;
+	background: rgb(255 255 255 / 78%);
+    padding: 15px;
+}
+
+/* Create four equal columns that sits next to each other */
+.box-column {
+  flex: 33.333333333%;
+  max-width: 33.333333333%;
+  
+  padding: 0 4px;
+}
+
+.box-column .collage_image {
+  margin-top: 8px;
+  vertical-align: middle;
+  width: 100%;
+  position: relative;
+	max-height: 395px;
+	overflow: hidden;
+}
+
+.box-column .collage_image img {
+    width: 100%;
+}
+
+div#deals_selfimprovement {
+    max-height: 350px;
+}
+
+div#deals_learning {
+    max-height: 440px;
+}
+
+/* Responsive layout - makes a two column-layout instead of four columns */
+@media screen and (max-width: 800px) {
+  .box-column {
+    flex: 50%;
+    max-width: 50%;
+  }
+}
+
+/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .box-column {
+    flex: 100%;
+    max-width: 100%;
+  }
+}
+
+</style>

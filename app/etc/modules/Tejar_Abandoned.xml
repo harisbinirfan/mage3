@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Tejar_Abandoned>
+            <active>true</active>
+            <codePool>local</codePool>
+            <!-- <self_name>Abandoned Carts Alerts Pro</self_name> -->
+            <!-- <priority>10060</priority> -->
+        </Tejar_Abandoned>
+    </modules>
+</config>

@@ -1,0 +1,32 @@
+<config>
+	<global>
+	    <blocks>
+            <!-- <page>
+				<rewrite>
+					<html_breadcrumbs>Tejar_Page_Block_Html_Breadcrumbs</html_breadcrumbs>
+				</rewrite>
+            </page> -->
+			<page>
+				<rewrite>
+					<html_head>Tejar_Page_Block_Html_Head</html_head>
+				</rewrite>
+            </page>
+						<cms>
+							<rewrite>
+								<page>Tejar_Page_Block_Cms_Page</page>
+							</rewrite>
+						</cms>
+        </blocks>
+	</global>
+	 <adminhtml>
+		<cms>
+			<browser>
+				<extensions>
+					<media_allowed>
+						<mp4>1</mp4>
+					</media_allowed>
+				</extensions>
+			</browser>
+		</cms>
+	 </adminhtml>
+</config>

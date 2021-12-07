@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Tejar_Onestepcheckout>
+            <version>0.1.0</version>
+        </Tejar_Onestepcheckout>
+    </modules>
+	<global>
+		<events>
+			<checkout_controller_onepage_save_shipping_method>
+					<observers>
+						<tejar_onestepcheckout>
+							<class>Tejar_Onestepcheckout_Model_Observer</class>
+							<method>checkoutOnepageSaveShippingMethod</method>
+							<type>singleton</type>
+						</tejar_onestepcheckout>
+					</observers>
+			</checkout_controller_onepage_save_shipping_method>
+		</events>
+		<helpers>
+			<onestepcheckout>
+				<rewrite>
+					<data>Tejar_Onestepcheckout_Helper_Data</data> 
+				</rewrite>
+				<rewrite>
+					<message>Tejar_Onestepcheckout_Helper_Message</message> 
+				</rewrite>
+			</onestepcheckout>
+		</helpers>
+		<blocks>
+			<onestepcheckout>
+				<rewrite>
+					<onestepcheckout>Tejar_Onestepcheckout_Block_Onestepcheckout</onestepcheckout>
+				</rewrite>
+			</onestepcheckout>
+		</blocks>
+		<!-- <models>
+			<customer>
+                <rewrite>
+                    <form>Tejar_Onestepcheckout_Model_Customer_Form</form>
+                </rewrite>
+            </customer>
+		</models> -->
+	</global>
+	<frontend>
+		<routers>
+			<onestepcheckout>
+				<args>
+					<modules>
+						<Tejar_Onestepcheckout before="Mage_Checkout">Tejar_Onestepcheckout</Tejar_Onestepcheckout>
+					</modules>
+				</args>
+			</onestepcheckout>
+        </routers>
+	</frontend>
+	<global>
+		<rewrite>
+			<fancy_url>
+			   <from><![CDATA[#^/checkout/buy[\/]?$#]]></from>
+				 <to><![CDATA[/onestepcheckout/index/$1]]></to>
+				<complete>1</complete>
+			</fancy_url>
+		</rewrite> 
+	</global>
+</config>

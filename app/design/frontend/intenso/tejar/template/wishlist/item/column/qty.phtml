@@ -1,0 +1,37 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+$item = $this->getItem();
+$product = $item->getProduct();
+$options = $this->getChild('customer.wishlist.item.options')
+    ->setItem($item)
+    ->getConfiguredOptions();
+?>
+
+<?php if ($item->canHaveQty() && $item->getProduct()->isVisibleInSiteVisibility()): ?>
+    <div id="qty-wrapper-<?php echo $item->getId() ?>" class="qty-wrapper" style="text-align: center;">
+        <?php if (($this->getAddToCartQty($item) * 1) < 10): ?>
+            <select class="simulate-change" name="qty[<?php echo $item->getId() ?>]" id="qty[<?php echo $item->getId() ?>]">
+                <?php for ($i=1; $i < 10; $i++): ?>
+                    <option value="<?php echo $i ?>"<?php if (($this->getAddToCartQty($item) * 1) == $i): ?> selected="selected"<?php endif; ?>><?php echo $i ?></option>
+                <?php endfor; ?>
+                <option value="10">10+</option>
+            </select>
+            <script type="text/javascript">
+                $("qty[<?php echo $item->getId() ?>]").observe('change', function(){
+                    if ($(this).getValue() == 10) {
+                        $("qty-wrapper-<?php echo $item->getId() ?>").update('<input type="number" class="input-text qty validate-not-negative-number" name="qty[<?php echo $item->getId() ?>]" size="4" maxlength="10" value="<?php echo $this->getAddToCartQty($item) * 1 ?>" />');
+                    }
+                });
+            </script>
+        <?php else: ?>
+            <input name="qty[<?php echo $item->getId() ?>]" id="qty[<?php echo $item->getId() ?>]" value="<?php echo $this->getAddToCartQty($item) * 1 ?>" size="4" title="<?php echo $this->__('Qty') ?>" class="input-text qty" maxlength="12" />
+        <?php endif; ?>
+    </div>
+<?php endif; ?>

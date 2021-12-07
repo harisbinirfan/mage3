@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+/**
+ * Tejar is not affiliated with or in any way responsible for this code.
+ *
+ * Commercial support is available directly from the [extension author](http://www.techytalk.info/contact/).
+ *
+ * @category Marko-M
+ * @package SocialConnect
+ * @author Marko Martinović <marko@techytalk.info>
+ * @copyright Copyright (c) Marko Martinović (http://www.techytalk.info)
+ * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ */
+-->
+
+<layout>
+    <default>
+        <reference name="head">
+		
+            <!--<action method="addItem"
+                ifconfig="customer/tejar_socialconnect_google/enabled">
+                <type>skin_css</type>
+                <name>tejar_socialconnect/google/css/button.css</name>
+            </action>
+            <action method="addItem"
+                ifconfig="customer/tejar_socialconnect_facebook/enabled">
+                <type>skin_css</type>
+                <name>tejar_socialconnect/facebook/css/button.css</name>
+            </action>
+            <action method="addItem"
+                ifconfig="customer/tejar_socialconnect_twitter/enabled">
+                <type>skin_css</type>
+                <name>tejar_socialconnect/twitter/css/button.css</name>
+            </action>
+            <action method="addItem"
+                ifconfig="customer/tejar_socialconnect_linkedin/enabled">
+                <type>skin_css</type>
+                <name>tejar_socialconnect/linkedin/css/button.css</name>
+            </action>-->
+        </reference>
+    </default>
+
+    <!--<customer_account_login>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>tejar_socialconnect/css/styles.css</name>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="tejar_socialconnect/login" name="tejar_socialconnect_login">
+                <block type="tejar_socialconnect/google_button" name="tejar_socialconnect_google_login_button" />
+                <block type="tejar_socialconnect/facebook_button" name="tejar_socialconnect_facebook_login_button" />
+                <block type="tejar_socialconnect/twitter_button" name="tejar_socialconnect_twitter_login_button" />
+                <block type="tejar_socialconnect/linkedin_button" name="tejar_socialconnect_linkedin_login_button" />
+            </block>
+        </reference>
+    </customer_account_login>-->
+
+   <!-- <customer_account_create>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>tejar_socialconnect/css/styles.css</name>
+            </action>
+        </reference>
+        <reference name="customer_form_register">
+            <action method="setTemplate" >
+                <template>tejar/socialconnect/customer/form/register.phtml</template>
+            </action>
+            <block type="tejar_socialconnect/register" name="tejar_socialconnect_register">
+                <block type="tejar_socialconnect/google_button" name="tejar_socialconnect_checkout_google_button" />
+                <block type="tejar_socialconnect/facebook_button" name="tejar_socialconnect_checkout_facebook_button" />
+                <block type="tejar_socialconnect/twitter_button" name="tejar_socialconnect_checkout_twitter_button" />
+                <block type="tejar_socialconnect/linkedin_button" name="tejar_socialconnect_checkout_linkedin_button" />
+            </block>
+        </reference>
+    </customer_account_create> -->
+
+    <!--<customer_account>
+        <reference name="customer_account_navigation">
+            <action method="addLink" translate="label" module="tejar_socialconnect"
+                ifconfig="customer/tejar_socialconnect_google/enabled">
+                <name>tejar_socialconnect_google</name>
+                <path>socialconnect/account/google</path>
+                <label>Google Connect</label>
+            </action>
+            <action method="addLink" translate="label" module="tejar_socialconnect"
+                ifconfig="customer/tejar_socialconnect_facebook/enabled">
+                <name>tejar_socialconnect_facebook</name>
+                <path>socialconnect/account/facebook</path>
+                <label>Facebook Connect</label>
+            </action>
+            <action method="addLink" translate="label" module="tejar_socialconnect"
+                ifconfig="customer/tejar_socialconnect_twitter/enabled">
+                <name>tejar_socialconnect_twitter</name>
+                <path>socialconnect/account/twitter</path>
+                <label>Twitter Connect</label>
+            </action>
+            <action method="addLink" translate="label" module="tejar_socialconnect"
+                ifconfig="customer/tejar_socialconnect_linkedin/enabled">
+                <name>tejar_socialconnect_linkedin</name>
+                <path>socialconnect/account/linkedin</path>
+                <label>LinkedIn Connect</label>
+            </action>
+        </reference>
+    </customer_account>-->
+
+    <tejar_socialconnect_account_google translate="label">
+        <label>Customer My Account Google Connect</label>
+        <update handle="customer_account"/>
+        <reference name="head">
+            <action method="setTitle" translate="title" module="tejar_socialconnect">
+                <title>Google Connect</title>
+            </action>
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>tejar_socialconnect/css/styles.css</name>
+            </action>
+        </reference>
+        <reference name="my.account.wrapper">
+            <block type="tejar_socialconnect/google_account" name="tejar_socialconnect_google_account">
+                <block type="tejar_socialconnect/google_button" name="tejar_socialconnect_account_google_button" />
+            </block>
+        </reference>
+        <reference name="customer_account_navigation">
+            <action method="setActive" module="tejar_socialconnect">
+                <path>socialconnect/account/google</path>
+            </action>
+        </reference>
+    </tejar_socialconnect_account_google>
+
+   <tejar_socialconnect_account_facebook translate="label">
+        <label>Customer My Account Facebook Connect</label>
+        <update handle="customer_account"/>
+        <reference name="head">
+            <action method="setTitle" translate="title" module="tejar_socialconnect">
+                <title>Facebook Connect</title>
+            </action>
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>tejar_socialconnect/css/styles.css</name>
+            </action>
+        </reference>
+        <reference name="my.account.wrapper">
+            <block type="tejar_socialconnect/facebook_account" name="tejar_socialconnect_facebook_account">
+                <block type="tejar_socialconnect/facebook_button" name="tejar_socialconnect_account_facebook_button" />
+            </block>
+        </reference>
+        <reference name="customer_account_navigation">
+            <action method="setActive" module="tejar_socialconnect">
+                <path>socialconnect/account/facebook</path>
+            </action>
+        </reference>
+    </tejar_socialconnect_account_facebook>
+
+   <tejar_socialconnect_account_twitter translate="label">
+        <label>Customer My Account Twitter Connect</label>
+        <update handle="customer_account"/>
+        <reference name="head">
+            <action method="setTitle" translate="title" module="tejar_socialconnect">
+                <title>Twitter Connect</title>
+            </action>
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>tejar_socialconnect/css/styles.css</name>
+            </action>
+        </reference>
+        <reference name="my.account.wrapper">
+            <block type="tejar_socialconnect/twitter_account" name="tejar_socialconnect_twitter_account">
+                <block type="tejar_socialconnect/twitter_button" name="tejar_socialconnect_account_twitter_button" />
+            </block>
+        </reference>
+        <reference name="customer_account_navigation">
+            <action method="setActive" module="tejar_socialconnect">
+                <path>socialconnect/account/twitter</path>
+            </action>
+        </reference>
+    </tejar_socialconnect_account_twitter>
+
+   <tejar_socialconnect_account_linkedin translate="label">
+        <label>Customer My Account LinkedIn Connect</label>
+        <update handle="customer_account"/>
+        <reference name="head">
+            <action method="setTitle" translate="title" module="tejar_socialconnect">
+                <title>LinkedIn Connect</title>
+            </action>
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>tejar_socialconnect/css/styles.css</name>
+            </action>
+        </reference>
+        <reference name="my.account.wrapper">
+            <block type="tejar_socialconnect/linkedin_account" name="tejar_socialconnect_linkedin_account">
+                <block type="tejar_socialconnect/linkedin_button" name="tejar_socialconnect_account_linkedin_button" />
+            </block>
+        </reference>
+        <reference name="customer_account_navigation">
+            <action method="setActive" module="tejar_socialconnect">
+                <path>socialconnect/account/linkedin</path>
+            </action>
+        </reference>
+    </tejar_socialconnect_account_linkedin>
+
+    <!-- <checkout_onepage_index> -->
+        <!-- <reference name="head"> -->
+            <!-- <action method="addItem"> -->
+                <!-- <type>skin_css</type> -->
+                <!-- <name>tejar_socialconnect/css/styles.css</name> -->
+            <!-- </action> -->
+        <!-- </reference> -->
+        <!-- <reference name="checkout.onepage.login"> -->
+            <!-- <action method="setTemplate" > -->
+                <!-- <template>tejar/socialconnect/checkout/onepage/login.phtml</template> -->
+            <!-- </action> -->
+            <!-- <block type="tejar_socialconnect/checkout" name="tejar_socialconnect_checkout"> -->
+                <!-- <block type="tejar_socialconnect/google_button" name="tejar_socialconnect_checkout_google_button" /> -->
+                <!-- <block type="tejar_socialconnect/facebook_button" name="tejar_socialconnect_checkout_facebook_button" /> -->
+                <!-- <block type="tejar_socialconnect/twitter_button" name="tejar_socialconnect_checkout_twitter_button" /> -->
+                <!-- <block type="tejar_socialconnect/linkedin_button" name="tejar_socialconnect_checkout_linkedin_button" /> -->
+            <!-- </block> -->
+        <!-- </reference> -->
+    <!-- </checkout_onepage_index> -->
+</layout>

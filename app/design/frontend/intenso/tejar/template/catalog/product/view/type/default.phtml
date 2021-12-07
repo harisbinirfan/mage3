@@ -1,0 +1,372 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+
+<!--<meta name="format-detection" content="telephone=no">-->
+<?php
+/* @var $this Mage_Catalog_Block_Product_View_Abstract */?>
+<?php $_product = $this->getProduct(); ?>
+<?php $free = Mage::getStoreConfig('carriers/freeshipping/free_shipping_subtotal'); ?>
+<?php $freeShippingActive = Mage::getStoreConfig('carriers/freeshipping/active'); ?>
+<?php $flatrateShippingActive = Mage::getStoreConfig('carriers/flatrate/active'); ?>
+<?php $_helper = $this->helper('catalog/output');?>
+<?php $_isAjax = Mage::getStoreConfig('intenso/product_page/swatch_ajax', Mage::app()->getStore()); ?>
+<?php $_isPercentage = Mage::getStoreConfig('intenso/product_label/price_percentage', Mage::app()->getStore()); ?>
+<?php
+	$_baseUrl = Mage::getBaseUrl();
+	$_currentUrl = Mage::helper('core/url')->getCurrentUrl();
+	$_relativeUrl = str_replace($_baseUrl, '/', $_currentUrl);
+	$storeCode = Mage::app()->getStore()->getCode();
+	// $sourcingText = $_product->getAttributeText('sourcing');
+	// $defaultProductMatchSourcing = preg_grep ('/(\W|^)'.$storeCode.'(\W|$)/i', array($sourcingText));
+	$defaultProductMatchSourcing = $_product->getExistsStoreValueFlag('sourcing');
+?>
+<input type="hidden" id="isSwatchAjax" value="<?php if($_isAjax): ?>true<?php else: ?>false<?php endif; ?>"/>
+    <div class="price_and_shipping">
+        <div class="pas_price">
+            <!-- ========================================== ZEE CODE=============================================== -->
+
+            <?php
+            /* - Collect following chgangable attributes for Associated Products in a
+            - Configurable Product and save them inside HTML elements 'div/span etc' to be
+            - used in Swatch JS (product-media.js), replacing upon selection of Swatches...
+            * Product Title
+            * Price
+            * Model
+            * SKU
+            */
+            //-- Get Custom Stock Status if Avialable............
+            ?>
+
+            <?php
+            $customStockStatusText = "";
+            if($_product->getCustomStockAvailability()){
+                $customStockStatusText = Mage::helper('catalog/data')->getCustomStockStatusText($_product);
+            }
+
+            if($_product->getTypeId() == "configurable"){
+                $mySwatchCount = 1;
+                $conf = Mage::getModel('catalog/product_type_configurable')->setProduct($_product);
+                $simple_collection = $conf->getUsedProductCollection()->addAttributeToSelect('*')->addFilterByRequiredOptions();
+				if (!Mage::getStoreConfig(Mage_Catalog_Helper_Product::XML_PATH_PRODUCT_URL_USE_CATEGORY, Mage::app()->getStore()->getId())) {
+					$simple_collection->addUrlRewrite();
+				}
+			    $productCount = count($simple_collection);
+			    $productOffset = $productCount/2;
+	        ?>
+
+            <?php foreach($simple_collection as $simple_product){ ?>
+							<?php
+									$simpleProductSourcingText = $simple_product->getAttributeText('sourcing');
+									$simpleProductMatchSourcing = preg_grep ('/(\W|^)'.$storeCode.'(\W|$)/i', array($simpleProductSourcingText));
+							?>
+                    <!-- // Saving Associated Product Attributes in HTML Elements... -->
+					<?php if(!$_isAjax): ?>
+						<div class="shortDescription" style="display:none;" id="short_description_<?php echo  $simple_product->getData('entity_id'); ?>"><?php echo $simple_product->getData('short_description'); ?></div>
+						<div class="description" style="display:none;" id="longDescription_<?php echo  $simple_product->getData('entity_id'); ?>"><?php echo $simple_product->getData('description'); ?>
+							<?php if($simple_product->getData('product_video')): ?>
+								<iframe class="product_video" width="560" height="315" src="https://www.youtube.com/embed/<?php echo $simple_product->getData('product_video'); ?>" frameborder="0" allowfullscreen></iframe>
+							<?php elseif($_product->getData('product_video')): ?>
+								<iframe class="product_video" width="560" height="315" src="https://www.youtube.com/embed/<?php echo $_product->getData('product_video'); ?>" frameborder="0" allowfullscreen></iframe>
+							<?php endif; ?>
+						</div>
+						<?php if($simple_product->getData('in_the_box')): ?><div class="inTheBox"  style="display:none;" id="inTheBox_<?php echo  $simple_product->getData('entity_id'); ?>"><h3><?php echo $simple_product->getResource()->getAttribute('in_the_box')->getStoreLabel(); ?></h3><?php echo $simple_product->getData('in_the_box'); ?></div><?php endif; ?>
+						<?php
+							$data = array();
+							$excludeAttr = array();
+							$attributes = $simple_product->getAttributes();
+							foreach ($attributes as $attribute) {
+								//            if ($attribute->getIsVisibleOnFront() && $attribute->getIsUserDefined() && !in_array($attribute->getAttributeCode(), $excludeAttr)) {
+								if ($attribute->getIsVisibleOnFront() && !in_array($attribute->getAttributeCode(), $excludeAttr)) {
+									$value = $attribute->getFrontend()->getValue($simple_product);
+
+									if (!$simple_product->hasData($attribute->getAttributeCode())) {
+										$value = Mage::helper('catalog')->__('N/A');
+									} elseif ((string)$value == '') {
+										$value = Mage::helper('catalog')->__('No');
+									} elseif ($attribute->getFrontendInput() == 'price' && is_string($value)) {
+										$value = Mage::app()->getStore()->convertPrice($value, true);
+									}
+
+									if (is_string($value) && strlen($value)) {
+										$data[$attribute->getAttributeCode()] = array(
+											'label' => $attribute->getStoreLabel(),
+											'value' => $value,
+											'code'  => $attribute->getAttributeCode()
+										);
+									}
+								}
+							}
+						?>
+						<?php if ($_additional = $data): ?><table class="data-table" style="display: none;" id="product-attribute-specs-table_<?php echo  $simple_product->getData('entity_id'); ?>"><tbody><?php foreach ($_additional as $_data): ?><tr><th><?php echo $this->escapeHtml($this->__($_data['label'])) ?></th><td <?php if($this->escapeHtml($this->__($_data['label']))=="SKU"):?>id="<?php echo $this->escapeHtml($this->__($_data['label']))=="SKU"?'associated-sku':''; ?>"<?php endif;?>><?php echo $_helper->productAttribute($simple_product, $_data['value'], $_data['code']) ?></td></tr><?php endforeach; ?></tbody></table><?php endif; ?>
+					<?php endif; ?>
+				    <span class="associatedNames" style="display:none;" id="name_<?php echo $simple_product->getData('entity_id'); ?>"><?php echo $simple_product->getData('name'); ?></span>
+				    <span class="associatedModel" style="display:none;" id="model_<?php echo  $simple_product->getData('entity_id'); ?>"><?php echo $simple_product->getData('model'); ?></span>
+					<?php $visibilitySwitch = Mage::getStoreConfig('catalog/frontend/visibility'); ?>
+					<?php if($visibilitySwitch): ?>
+						<input type="hidden" class="associatedUrl" style="display:none;" id="url_<?php echo  $simple_product->getData('entity_id'); ?>" value="<?php echo $simple_product->getProductUrl(); ?>" />
+					<?php endif; ?>
+				    <div class="associatedPrices" id="<?php echo  $simple_product->getId(); ?>">
+					<!-- INTENSO CHECK FOR HIDDEN PRICE -->
+					<?php if(Mage::getStoreConfig('intenso/product_page/product_show_price_tag', Mage::app()->getStore())){ ?>
+						<!-- 3SD CODE CHECK FOR PRICE MAPPING -->
+							<?php echo $this->getPriceHtml($simple_product); ?>
+
+							<?php if (!Mage::helper('catalog')->isMsrpEnabled()): ?>
+								<?php if ($simple_product->getFinalPrice() >= $free) :?>
+									<?php if($freeShippingActive): ?>
+										<div class="product_free_shipping">& <strong><?php if(empty($simpleProductMatchSourcing)): ?><?php echo Mage::getStoreConfig('carriers/freeshipping/title', Mage::app()->getStore());?><?php else : ?><?php echo Mage::getStoreConfig('carriers/freeshipping/alt_title', Mage::app()->getStore());?><?php endif; ?></strong></div>
+									<?php endif; ?>
+								<?php else : ?>
+							<?php if($flatrateShippingActive): ?>
+								<div class="product_free_shipping">& <strong>
+									<?php if(empty($simpleProductMatchSourcing)): ?>
+										<?php echo Mage::getStoreConfig('carriers/flatrate/title', Mage::app()->getStore());?>
+									<?php else : ?>
+										<?php echo Mage::getStoreConfig('carriers/flatrate/alt_title', Mage::app()->getStore());?>
+									<?php endif; ?></strong>
+								</div>
+							<?php endif; ?>
+								<?php endif; ?>
+
+								<?php if($simple_product->getSpecialPrice() && (Mage::app()->getLocale()->isStoreDateInInterval(null, $simple_product->getSpecialFromDate(), $simple_product->getSpecialTODate())) && ($simple_product->getPrice() > $simple_product->getSpecialPrice())){ ?>
+									<?php $dateDiff = strtotime(date('Y-m-d 00:00:00',strtotime($simple_product->getSpecialTODate()))); ?>
+									<!-- Get Special Price End  Date form Day Start... -->
+
+									<span class="specialTimeLeftPlaceholder" id="specialTimeLeftPlaceholder_<?php echo $simple_product->getId()?>" style="display:none"><?php echo $dateDiff; ?></span>
+									<!-- ============================= ZEE CODE ===================== -->
+									<!-- Place Holder for Special Price Timer: Configurable -->
+										<span class="specialTimeLeft" id="specialTimeLeft_<?php echo $simple_product->getId()?>"></span>
+									<!-- ============================= ZEE CODE ===================== -->
+								<?php } ?>
+							<?php endif; ?>
+
+							<!-- ============================= Display 'Quantity Threshold' Message ============================= -->
+							<?php $productStockQty = (int)Mage::getModel('cataloginventory/stock_item')->loadByProduct($simple_product)->getQty();
+							//--- Get Website based Qty Thresholdvalue from config...
+							$thresholdQtyValue = (int)Mage::app()->getStore()->getWebsite()->getConfig('cataloginventory/options/stock_threshold_qty');
+							//--- Check if the quantity Matches the Theshold Value (website/store based)...
+							if($productStockQty>0 && $productStockQty<$thresholdQtyValue){?>
+								<p class="availability-only"><span title="<?php echo $this->__('Only %s left', ($productStockQty)) ?>"><?php echo $this->__('Only %s left', "<strong>{$productStockQty}</strong>") ?></span></p>
+							<?php }?>
+
+						<!-- 3SD CODE CHECK FOR PRICE MAPPING -->
+					<?php } ?>
+				<!-- INTENSO CHECK FOR HIDDEN PRICE -->
+				</div>
+
+		<?php $mySwatchCount++; }?>
+		<?php } ?>
+
+		<!--============================ END ZEE CODE============================= -->
+
+			<?php if($_product->isAvailable()){?>
+				<div  id='defaultProductPrice'>
+					<?php if(Mage::getStoreConfig('intenso/product_page/product_show_price_tag', Mage::app()->getStore())){ ?>
+						<?php echo $this->getPriceHtml($_product) ?>
+						<?php if (!Mage::helper('catalog')->isMsrpEnabled()): ?>
+							<?php if ($_product->getFinalPrice() >= $free) :?>
+								<?php if($freeShippingActive): ?>
+									<div class="product_free_shipping">& <strong><?php if(empty($defaultProductMatchSourcing)): ?><?php echo Mage::getStoreConfig('carriers/freeshipping/title', Mage::app()->getStore());?><?php else : ?><?php echo Mage::getStoreConfig('carriers/freeshipping/alt_title', Mage::app()->getStore());?><?php endif; ?></strong></div>
+								<?php endif; ?>
+								<?php else : ?>
+							<?php if($flatrateShippingActive): ?>
+								<div class="product_free_shipping">& <strong>
+									<?php if(empty($defaultProductMatchSourcing)): ?>
+										<?php echo Mage::getStoreConfig('carriers/flatrate/title', Mage::app()->getStore());?>
+									<?php else : ?>
+										<?php echo Mage::getStoreConfig('carriers/flatrate/alt_title', Mage::app()->getStore());?>
+									<?php endif; ?></strong>
+								</div>
+							<?php endif; ?>
+								<?php endif; ?>
+						<?php endif; ?>
+					<?php } ?>
+					<?php if($_product->getTypeId() != "configurable"){?>
+						<?php if($_product->getSpecialPrice() && (Mage::app()->getLocale()->isStoreDateInInterval(null, $_product->getSpecialFromDate(), $_product->getSpecialTODate())) && ($_product->getPrice() > $_product->getSpecialPrice())){ ?>
+							<?php $dateDiff = strtotime(date('Y-m-d 00:00:00',strtotime($_product->getSpecialTODate()))); ?>
+							<!--============================ END ZEE CODE============================= -->
+							<!-- Place Holders for Special Price Timer & Time: Simple --->
+							<span id="specialTimeLeftPlaceholderSimple" style="display:none"><?php echo $dateDiff; ?></span>
+							<span id="specialTimeLeftSimple" <?php if (Mage::helper('catalog')->isMsrpEnabled()){ ?>style="display: none;"<?php } ?>></span>
+							<!--============================ END ZEE CODE============================= -->
+						<?php } ?>
+					<?php } ?>
+				</div>
+			<?php } ?>
+
+
+		</div>
+	</div>
+
+
+
+
+<?php echo $this->getChildHtml('product_type_data_extra') ?>
+<!-- 3SD CODE DYNAMIC FREE SHIPPING -->
+<?php if ($this->displayProductStockStatus()): ?>
+
+
+
+<?php //--- ZEE: Check if product Status is In Stock, Pre Order, Back Order, else consider it 'Out of Stock'..
+		if ($_product->isAvailable() && (!$_product->getCustomStockAvailability() || Mage::helper('catalog/data')->customStockAddtoCartStatus($_product))): ?>
+
+
+			<p class="availability in-stock">
+				<meta content="<?php echo $_currentUrl; ?>">
+				<meta content="<?php echo Mage::app()->getStore()->getCurrentCurrencyCode(); ?>" />
+				<?php $time = strtotime(Mage::getModel('core/date')->date('Y-m-d H:i:s')); ?>
+				<meta content="<?php echo date('Y-m-d', strtotime("+1 month", $time)); ?>" />
+				<span class="hide" aria-hidden="true"><?php echo preg_replace("/[^0-9|.]/", "", Mage::helper('core')->currency($_product->getFinalPrice())); ?></span>
+				<span class="hide"><?php echo $this->__('Availability:') ?></span>
+				<span><?php echo $customStockStatusText!=""?$customStockStatusText:$this->__('In Stock'); ?></span>
+				<a class="hide"><?php echo $customStockStatusText!=""?$customStockStatusText:$this->__('In Stock'); ?></a>
+				<?php if($_product->getData('condition')): ?>
+				<a class="hide"<?php echo  $_product->getAttributeText('condition');?>Condition><?php echo  $_product->getAttributeText('condition');?></a>
+				<?php endif; ?>
+			</p>
+			<input type="hidden" id="stockStatus" value="1" />
+		<?php else: ?>
+			<p class="availability out-of-stock hide">
+				<meta content="<?php echo $_currentUrl; ?>">
+				<meta content="<?php echo Mage::app()->getStore()->getCurrentCurrencyCode(); ?>" />
+				<?php $time = strtotime(Mage::getModel('core/date')->date('Y-m-d H:i:s')); ?>
+				<meta content="<?php echo date('Y-m-d', strtotime("+1 month", $time)); ?>" />
+				<span class="hide" aria-hidden="true"><?php echo preg_replace("/[^0-9|.]/", "", Mage::helper('core')->currency($_product->getFinalPrice())); ?></span>
+				<span class="hide"><?php echo $this->__('Availability:') ?></span>
+				<a class="hide"><?php echo  $customStockStatusText!=""?$customStockStatusText:$this->__('Out of stock'); ?></a>
+				<?php if($_product->getData('condition')): ?>
+				<a class="hide"<?php echo  $_product->getAttributeText('condition');?>Condition><?php echo  $_product->getAttributeText('condition');?></a>
+				<?php endif; ?>
+			</p>
+			<input type="hidden" id="stockStatus" value="0" />
+			<p class="availability out-of-stock"><span class="hide"><?php echo $this->__('Availability:') ?></span> <span><?php echo  $customStockStatusText!=""?$customStockStatusText:$this->__('Out of stock'); ?></span></p>
+		<?php endif; ?>
+	<?php endif; ?>
+<!-- 3SD CODE DYNAMIC FREE SHIPPING END -->
+
+<!--=========================================== ZEE CODE ================================================== -->
+	<!-- Store Current Store Time in a Span  -->
+<!--<span id="storeCurrentTime" style="display:none"><?php //echo strtotime(Mage::app()->getLocale()->date()->setTime('23:59:59')->toString(Varien_Date::DATETIME_INTERNAL_FORMAT));?></span>-->
+<span id="storeCurrentTime" style="display:none"><?php echo strtotime(Mage::app()->getLocale()->date());?></span>
+<!--<span id="storeCurrentTime" style="display:none"><?php //echo strtotime(date('Y-m-d 23:59:50'));?></span>-->
+<script type="">
+/*
+*@name   startTimer
+*@desc   manage Display of Timer by generating it from SpecialPrice Dates.
+*@param  duration, display, storeTime
+*@return none
+*/
+function startTimer(duration, display, storeTime) {
+
+    var start = Date.now(),
+        diff,
+		days,
+		hours,
+        minutes,
+        seconds;
+
+    function timer() {
+        //--- Get the number of seconds that have elapsed since
+        //--- startTimer() was called
+
+		var futureDate = new Date(duration*1000+24*60*60*1000);
+		storeTime  = storeTime+1000;
+		if(!futureDate>storeTime){
+			return false;
+		}
+        diff = Math.floor(futureDate - storeTime) / 1000 ;
+
+        // calculate (and subtract) whole days
+			var days = Math.floor(diff / 86400);
+			//--- Hide Special price if values of days becomes less than 0
+			if(parseInt(days)<0){
+				jQuery(display).hide();
+				return;
+			}
+			diff -= days * 86400;
+
+			// calculate (and subtract) whole hours
+			var hours = Math.floor(diff / 3600) % 24;
+			diff -= hours * 3600;
+
+			// calculate (and subtract) whole minutes
+			var minutes = Math.floor(diff / 60) % 60;
+			diff -= minutes * 60;
+
+			// what's left is seconds
+			var seconds = Math.floor(diff) % 60;
+
+        days    = days < 10 ? "0" + days : days;
+        hours   = hours < 10 ? "0" + hours : hours;
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        //display.textContent = "Ends in " + days + "d and" + minutes + ":" + seconds+"s";
+        display.innerHTML = "<strong>Ends in </strong>" + days + "d and " + hours + "h " + minutes +"m " + seconds+"s";
+//console.log("<strong>Ends in </strong>" + days + "d and " + hours + "h " + minutes +"m " + seconds+"s");
+        if (diff <= 0) {
+            // add one second so that the count down starts at the full duration
+            // example 05:00 not 04:59
+            start = Date.now() + 1000;
+        }
+    };
+    // we don't want to wait a full second before the timer starts
+    timer();
+    setInterval(timer, 1000);
+}
+<?php if($_product->getTypeId() != "configurable"){?>
+
+function timerOnload(){
+	if(jQuery('#storeCurrentTime').length && jQuery('#stockStatus').val()=="1"){
+	var storeTime = jQuery('#storeCurrentTime').text()*1000;
+  // console.log(storeTime);
+        display = document.querySelector('#specialTimeLeft');
+        displaySimple = document.querySelector('#specialTimeLeftSimple');
+		if(display){
+			var timeLeft = parseInt(jQuery('#specialTimeLeftPlaceholder').text());
+			//console.log(timeLeft);
+			startTimer(timeLeft, display, storeTime);
+		}else if(displaySimple){
+
+			var timeLeft = parseInt(jQuery('#specialTimeLeftPlaceholderSimple').text());
+			startTimer(timeLeft, displaySimple, storeTime);
+		}
+	}
+}
+
+document.readyState !== "loading" ? timerOnload() : document.addEventListener("DOMContentLoaded", timerOnload);
+
+<?php }else{ ?>
+function productTimer(){
+	if(jQuery('#storeCurrentTime').length){
+		var storeTime = jQuery('#storeCurrentTime').text()*1000;
+		jQuery('.specialTimeLeftPlaceholder').each(function(){
+			var childProductIdArray = jQuery(this).attr('id').split('_');
+			var displayChild = document.querySelector("#specialTimeLeft_"+childProductIdArray[childProductIdArray.length-1]);
+			var timeLeft = parseInt(jQuery(this).text());
+
+			//console.log(timeLeft + " ---> " + storeTime);
+			startTimer(timeLeft, displayChild, storeTime);
+		});
+	}
+
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+	productTimer();
+});
+
+if(document.readyState !== "loading"){
+	productTimer();
+}
+<?php } ?>
+//=============================================== ZEE CODE =============================================//
+</script>

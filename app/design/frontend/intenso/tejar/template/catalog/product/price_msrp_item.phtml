@@ -1,0 +1,123 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014-2017 Intenso (https://www.getintenso.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+
+<?php
+/**
+ * Template for displaying product price at product view page, gift registry and wishlist
+ *
+ * @var $this Mage_Catalog_Block_Product_Price
+ */
+?>
+<?php
+    /** @var $_coreHelper Mage_Core_Helper_Data */
+    $_coreHelper = $this->helper('core');
+    /** @var $_catalogHelper Mage_Catalog_Helper_Data */
+    $_catalogHelper = $this->helper('catalog');
+
+    /** @var $_product Mage_Catalog_Model_Product */
+    $_product = $this->getProduct();
+    $_id = $_product->getId();
+    $_msrpPrice = '';
+	$_msrpShipping = "";
+    $priceElementIdPrefix = $this->getPriceElementIdPrefix() ? $this->getPriceElementIdPrefix() : 'product-price-';
+	$_msrpTimer = "";
+?>
+<?php $free = Mage::getStoreConfig('carriers/freeshipping/free_shipping_subtotal'); ?>
+<?php $freeShippingActive = Mage::getStoreConfig('carriers/freeshipping/active'); ?>
+<?php if ($_product->getFinalPrice() >= $free) :?>
+<?php if($freeShippingActive): ?>
+<?php $_msrpShipping = Mage::getStoreConfig('carriers/freeshipping/title');?>
+<?php endif; ?>
+<?php endif; ?>
+
+<?php if(($_product->getSpecialPrice() && ($_product->getSpecialTODate() > date('Y-m-d') || $_product->getSpecialTODate()==null)) && ($_product->getPrice() > $_product->getSpecialPrice())) { ?>
+	<!-- Get Special Price End  Date form Day Start... -->
+	<?php if($_product->getSpecialTODate()!=null){ $dateDiff =strtotime(date('Y-m-d 00:00:00',strtotime($_product->getSpecialTODate()))); ?>
+		<span class="specialTimeLeftPlaceholder" id="specialTimeLeftPlaceholder_<?php echo $_product->getId()?>" style="display:none"><?php echo $dateDiff; ?></span>
+	<?php } ?>
+	<!-- ============================= ZEE CODE ===================== -->	
+	<!-- Place Holder for Special Price Timer: Configurable -->		
+	<?php if($_product->getSpecialTODate()!=null && $_product->getSpecialTODate()> date('y-m-d')){ ?>
+		<span class="specialTimeLeft" id="specialTimeLeft_<?php echo $_product->getId()?>"></span>
+		<?php $_msrpTimer = "specialTimeLeft_".$_product->getId(); ?>
+	<?php } ?>
+	<!-- ============================= ZEE CODE ===================== -->	
+<?php } ?>
+
+    <div class="price-box map-info">
+    <?php $_price = $this->helper('tax')->getPrice($_product, $_product->getMsrp()) ?>
+        <?php if($_product->getMsrp()): ?>
+            <?php $_msrpPrice = $_coreHelper->currency($_product->getMsrp(),true,true) ?>
+            <span class="old-price" ><?php echo $_msrpPrice ?></span>
+        <?php endif; ?>
+
+        <?php if ($_catalogHelper->isShowPriceOnGesture($_product)): ?>
+            <?php $priceElementId = $priceElementIdPrefix . $_id . $this->getIdSuffix(); ?>
+            <span id="<?php echo $priceElementId ?>" style="display:none"></span>
+            <?php $popupId = 'msrp-popup-' . $_id . $_coreHelper->getRandomString(20); ?>
+            <a href="#" id="<?php echo($popupId);?>" class="msrp-popup"><?php echo $this->__('Click for price'); ?></a>
+            <script type="text/javascript">
+                function MSRPFunc(){
+                    var priceElement = $("<?php echo $priceElementId ?>"),
+                        realPrice = <?php echo $this->getRealPriceJs($_product) ?>,
+                        priceHtml = realPrice.stripScripts();
+
+                    priceElement.innerHTML = priceHtml;
+                    realPrice.evalScripts();
+                    var originalOptionPriceReload;
+                    if (typeof(optionsPrice) != 'undefined' && optionsPrice && optionsPrice.reload) {
+                        originalOptionPriceReload = optionsPrice.reload;
+                        Product.OptionsPrice.prototype.reload = function() {
+                            if (originalOptionPriceReload) {
+                                originalOptionPriceReload.call(this);
+                            }
+                            if ($('<?php echo $popupId ?>') == Catalog.Map.active) {
+                                Element.update(
+                                    $('map-popup-price'),
+                                    $("<?php echo $priceElementId ?>").innerHTML
+                                );
+                            }
+                        }
+                        optionsPrice.reload();
+                    }
+                
+					Catalog.Map.addHelpLink(
+						$('<?php echo $popupId ?>'),
+						"<?php echo addslashes($_product->getName()); ?>",
+						$("<?php echo $priceElementId ?>"),
+						'<?php echo $_msrpPrice ?>',
+						'<?php echo  $_msrpShipping ?>',
+						'<?php echo  $_msrpTimer ?>',
+						"<?php echo $_product->isSalable() ? $_product->getAddToCartUrl() : '' ?>"
+					);
+				};
+				
+				document.readyState !== "loading" ? MSRPFunc() : document.addEventListener("DOMContentLoaded", MSRPFunc);
+            </script>
+        <?php else: ?>
+            <span class="msrp-price-hide-message">
+                <?php echo $_catalogHelper->getMsrpPriceMessage($_product) ?>
+            </span>
+        <?php endif; ?>
+
+        <?php $helpLinkId = 'msrp-help-' . $_id . $_coreHelper->getRandomString(20); ?>
+        <a href="#" id="<?php echo($helpLinkId);?>" class="msrp-help"><?php echo $this->__("What's this?"); ?></a>
+        <script type="text/javascript">
+			function addHelpLinkFunc(){
+				Catalog.Map.addHelpLink(
+					$('<?php echo $helpLinkId ?>'),
+					"<?php echo $this->__("What's this?"); ?>"
+				);
+			};
+			
+			document.readyState !== "loading" ? addHelpLinkFunc() : document.addEventListener("DOMContentLoaded", addHelpLinkFunc);
+        </script>
+    </div>

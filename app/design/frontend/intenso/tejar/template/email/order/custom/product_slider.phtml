@@ -1,0 +1,25 @@
+<?php $_order = $this->getOrder() ?>
+<?php if($_order): ?>
+<?php $displayType = "core/template"; ?>
+
+<?php  $sliders = array(); ?> 
+<?php if($bought = $this->getLayout()->createBlock($displayType)->setOrder($_order)->setTemplate('email/order/custom/bought.phtml')->toHtml()): ?>
+	<?php $sliders[] = $bought; ?>
+<?php endif; ?>
+<?php if($related = $this->getLayout()->createBlock($displayType)->setOrder($_order)->setTemplate('email/order/custom/related.phtml')->toHtml()): ?>
+	<?php $sliders[] = $related; ?>
+<?php endif; ?>
+<?php if($up_sell = $this->getLayout()->createBlock($displayType)->setOrder($_order)->setTemplate('email/order/custom/up_sell.phtml')->toHtml()): ?>
+	<?php $sliders[] = $up_sell; ?>
+<?php endif; ?>
+<?php if($cross_sell = $this->getLayout()->createBlock($displayType)->setOrder($_order)->setTemplate('email/order/custom/cross_sell.phtml')->toHtml()): ?>
+	<?php $sliders[] = $cross_sell; ?>
+<?php endif; ?>
+<?php 
+// var_dump($sliders); die;
+if(!empty($sliders)){
+	$key = array_rand($sliders,1);
+	echo $sliders[$key];
+}
+?>
+<?php endif; ?>

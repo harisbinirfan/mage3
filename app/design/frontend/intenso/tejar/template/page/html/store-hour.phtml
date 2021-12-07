@@ -1,0 +1,79 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    Itactica
+ * @package     Itactica_Intenso
+ * @copyright   Copyright (c) 2014-2015 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php
+		$store = Mage::app()->getStore();
+		$storePhone = Mage::getStoreConfig('general/store_information/phone', $store);
+		$storeHour = Mage::getStoreConfig('general/store_information/hours', $store);
+		$storeWeekendDays = Mage::getStoreConfig('general/locale/weekend', $store);
+		$currentTime = date("ha", Mage::getModel('core/date')->timestamp(time()));
+		$currentTime24 = date("H", Mage::getModel('core/date')->timestamp(time()));
+		$weekday = Mage::getSingleton('core/date')->date('w');
+		$weekendDays = explode(',', $storeWeekendDays);
+		$storeHoursGetTime = substr(Mage::getStoreConfig('general/store_information/hours', $store),10);
+		$storeHoursGetTimeArray = explode('-',$storeHoursGetTime);
+		$days = array('0' =>	'Sunday','1' =>	'Monday','2' =>	'Tuesday','3' =>	'Wednesday','4' =>	'Thursday','5' =>	'Friday','6' =>	'Saturday',);
+		$convertHoursArray1 = date('H', strtotime($storeHoursGetTimeArray[0]));
+		$convertHoursArray2 = date('H', strtotime($storeHoursGetTimeArray[1]));
+		$storetitle = "";
+?>
+
+<?php $storeHoursGetDay = explode(' ',Mage::getStoreConfig('general/store_information/hours'));?>
+<?php $startDay = $storeHoursGetDay[0]; ?>
+<?php $endDay = $storeHoursGetDay[2]; ?>
+<?php $storeHoursDays = array('Sun' =>	0,'Mon' => 1,'Tue' => 2, 'Wed' => 3,'Thu' => 4, 'Fri' => 5,'Sat' => 6); ?>
+<?php $weekdate = Mage::getSingleton('core/date')->date('Y-m-d'); ?>
+<?php $eventCollection = Mage::helper('tejar_contacts')->getGoogleCalendar(Mage::app()->getStore()); ?>
+<?php $storeOpenAndClose = null; ?>
+<?php if(!empty($eventCollection) && is_array($eventCollection)): ?>
+<?php foreach($eventCollection as $event): ?>
+	<?php $transparency = $event['transparency']; ?>
+	<?php $startDate = date('Y-m-d',strtotime($event['start'])); ?>
+	<?php $endDate = date('Y-m-d',(strtotime($event['end']) - (1 * 60))); ?>
+	<?php // if($transparency == "Free" && ($weekdate >= $startDate && $weekdate < $endDate)): ?>
+	<?php if($transparency == "Free" && (Mage::app()->getLocale()->isStoreDateInInterval(null, $startDate, $endDate))): ?>
+	<?php $storeOpenAndClose = "Free"; ?>
+	<?php // elseif($transparency == "Busy" && $weekdate >= $startDate && $weekdate < $endDate): ?>
+	<?php elseif($transparency == "Busy" && (Mage::app()->getLocale()->isStoreDateInInterval(null, $startDate, $endDate))): ?>
+	<?php $storeOpenAndClose = "Busy"; ?>
+	<?php endif; ?>
+<?php endforeach; ?>
+<?php endif; ?>
+<?php $continues = true; ?>
+<?php $array = array(); ?>
+<?php foreach($storeHoursDays as $key => $val): ?>
+<?php 
+if($key == $startDay){
+	$continues = false;
+}  ?>
+<?php if($continues): ?>
+	<?php $array[] = $val; ?>
+<?php endif; ?>
+<?php 
+if($key == $endDay){
+	$continues = true;
+}
+?>
+<?php endforeach; ?>
+<?php foreach($array  as $week=>$val): ?>
+	<?php if(($weekday == $val && $storeOpenAndClose == "Busy") || ($weekday == $val && $storeOpenAndClose == null)): ?>
+		<?php echo $storetitle = "Customer Service Hours: </br>". $storeHour; ?>
+	<?php endif; ?>
+<?php endforeach; ?>
+<?php if($storetitle == "" && $storeOpenAndClose == "Busy"): ?>
+	<?php echo $storetitle = "Customer Service Hours: </br>". $storeHour; ?>
+<?php endif; ?>
+<?php if($storetitle == "" || ($storetitle == "" && $storeOpenAndClose == "Free")): ?>
+		<?php if (($currentTime24 >= $convertHoursArray1) && ($currentTime24 <= $convertHoursArray2 - 1)) :?>
+			 Customer Service Currently </br> Open
+		<?php else: ?>
+			 Customer Service Hours: </br> <?php echo $storeHour; ?>
+		<?php endif; ?>
+<?php endif; ?>

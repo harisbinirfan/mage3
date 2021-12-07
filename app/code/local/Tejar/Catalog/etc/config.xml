@@ -1,0 +1,180 @@
+<?xml version="1.0" ?>
+  <config>
+    <modules>
+      <Tejar_Catalog>
+        <version>0.0.1</version>
+      </Tejar_Catalog>
+    </modules>
+	<global>
+		<helpers>
+		<tejar_catalog>
+				<class>Tejar_Catalog_Helper</class>
+			</tejar_catalog>
+			<catalog>
+				<rewrite>
+					<data>Tejar_Catalog_Helper_Data</data>
+				</rewrite>
+				<rewrite>
+					<product>Tejar_Catalog_Helper_Product</product>
+				</rewrite>
+				<rewrite>
+					<output>Tejar_Catalog_Helper_Output</output>
+				</rewrite>
+			</catalog>
+			<eav>
+				<rewrite>
+					<data>Tejar_Catalog_Helper_Eav</data>
+				</rewrite>
+			</eav>
+		</helpers>
+		<blocks>
+      <tejar_catalog>
+      	<class>Tejar_Catalog_Block</class>
+      </tejar_catalog>
+			<catalog>
+				<rewrite>
+					<product_view_type_configurable>Tejar_Catalog_Block_Product_View_Type_Configurable</product_view_type_configurable>
+					<product_list>Tejar_Catalog_Block_Product_List</product_list>
+					<product_view>Tejar_Catalog_Block_Product_View</product_view>
+          <breadcrumbs>Tejar_Catalog_Block_Breadcrumbs</breadcrumbs>
+          <category_view>Tejar_Catalog_Block_Category_View</category_view>
+		  <product_list_toolbar>Tejar_Catalog_Block_Product_List_Toolbar</product_list_toolbar>
+		  			<product_list_related>Tejar_Catalog_Block_Product_List_Related</product_list_related>
+					<product_list_upsell>Tejar_Catalog_Block_Product_List_Upsell</product_list_upsell>
+					<product_list_crosssell>Tejar_Catalog_Block_Product_List_Crosssell</product_list_crosssell>
+				</rewrite>
+			</catalog>
+			<productalert>
+				<rewrite>
+					<product_view>Tejar_Catalog_Block_Product_ProductAlert_View</product_view>
+				</rewrite>
+			</productalert>
+		</blocks>
+		<models>
+      <tejar_catalog>
+      	<class>Tejar_Catalog_Model</class>
+      	<resourceModel>tejar_catalog_resource</resourceModel>
+      </tejar_catalog>
+      <tejar_catalog_resource>
+      	<class>Tejar_Catalog_Model_Resource</class>
+      	<deprecatedNode>tejar_catalog_resource_eav_mysql4</deprecatedNode>
+      </tejar_catalog_resource>
+			<catalog>
+				<rewrite>
+					<url>Tejar_Catalog_Model_Url</url>
+          <!-- <product>Tejar_Catalog_Model_Product</product> -->
+		  <product_image>Tejar_Catalog_Model_Product_Image</product_image>
+			<product_visibility>Tejar_Catalog_Model_Product_Visibility</product_visibility>
+          <layer_filter_category>Tejar_Catalog_Model_Layer_Filter_Category</layer_filter_category>
+          <layer>Tejar_Catalog_Model_Layer</layer>
+		  			<category_attribute_source_sortby>Tejar_Catalog_Model_Category_Attribute_Source_Sortby</category_attribute_source_sortby>
+					<config>Tejar_Catalog_Model_Config</config>
+					<convert_adapter_product>Tejar_Catalog_Model_Convert_Adapter_Product</convert_adapter_product>
+				</rewrite>
+			</catalog>
+      <catalog_resource>
+      	<rewrite>
+      		<layer_filter_price>Tejar_Catalog_Model_Resource_Layer_Filter_Price</layer_filter_price>
+      	</rewrite>
+      </catalog_resource>
+		</models>
+    </global>
+
+    <adminhtml>
+    	<events>
+    		<!-- save posts-catalog category relations at category save -->
+    		<catalog_category_save_after>
+    			<observers>
+    				<tejar_catalog_category_save_after>
+    					<type>singleton</type>
+    					<class>tejar_catalog/observer</class>
+    					<method>CategorySaveAfter</method>
+    				</tejar_catalog_category_save_after>
+    			</observers>
+    		</catalog_category_save_after>
+			<catalog_category_prepare_save>
+    			<observers>
+    				<tejar_catalog_category_prepare_save>
+    					<type>singleton</type>
+    					<class>tejar_catalog/observer</class>
+    					<method>catalogCategoryPrepareSave</method>
+    				</tejar_catalog_category_prepare_save>
+    			</observers>
+    		</catalog_category_prepare_save>
+			<catalog_controller_category_delete>
+                <observers>
+                    <tejar_catalog_category_delete>
+                        <type>singleton</type>
+                        <class>tejar_catalog/observer</class>
+                        <method>catalogCategoryDeleteAfterDone</method>
+                    </tejar_catalog_category_delete>
+                </observers>
+            </catalog_controller_category_delete> 
+    	</events>
+    </adminhtml>
+
+	 <frontend>
+        <events>
+            <controller_action_predispatch_catalog_product_view>
+                <observers>
+                    <catalog>
+                        <type>model</type>
+                        <class>Tejar_Catalog_Model_Observer</class>
+                        <method>forwardToConfigurable</method>
+                    </catalog>
+                </observers>
+            </controller_action_predispatch_catalog_product_view>
+        </events>
+
+        <routers>
+			 <tejar_catalog>
+                <use>standard</use>
+                <args>
+                    <module>Tejar_Catalog</module>
+                    <frontName>tejar_catalog</frontName>
+                </args>
+            </tejar_catalog>
+        </routers>
+
+    </frontend>
+
+    <crontab>
+           <jobs>
+               <aggregate_catalog_report_most_viewed_data>
+                   <schedule>
+                       <cron_expr>0 0 * * *</cron_expr>
+                   </schedule>
+                   <run>
+                       <model>tejar_catalog/observer::aggregateCatalogReportMostViewedData</model>
+                   </run>
+               </aggregate_catalog_report_most_viewed_data>
+           </jobs>
+       </crontab>
+
+	   	<admin>
+        <fieldsets>
+			<catalog_category_dataflow>
+				<!-- <entity_id> -->
+					<!-- <system>1</system> -->
+					<!-- <ignore>1</ignore> -->
+				<!-- </entity_id> -->
+			</catalog_category_dataflow>
+		</fieldsets>
+	</admin>
+
+	<default>
+		<catalog>
+			<related>
+				<enabled>1</enabled>
+				<is_ajax>0</is_ajax>
+				<count>8</count>
+			</related>
+			<image_optimizer>
+				<enabled>0</enabled>
+				<imagick_options>convert %s -sampling-factor 4:2:0 -strip -quality 85 -interlace JPEG -colorspace sRGB %s</imagick_options>
+				<imagick_options_png>convert %s -strip %s</imagick_options_png>
+				<imagick_options_gif>convert %s -strip %s</imagick_options_gif>
+			</image_optimizer>
+		</catalog>
+	</default>
+  </config>

@@ -1,0 +1,46 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    Itactica
+ * @package     Itactica_FeaturedCategories
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+
+?>
+
+<?php $_sliders = $this->getSlider(); ?>
+<?php if ($_sliders): ?>
+<?php foreach ($_sliders as $_slider): ?>
+	<?php $_identifier = $_slider->getIdentifier(); ?>
+	<?php if($_identifier): ?>
+		<?php $i = 0; ?>
+		<?php foreach ($this->getCategoryCollection($_slider->getId()) as $category): ?>
+			<?php  if($i == 0): ?>
+				<section class="row owl-slider featured-categories-section">
+					<div class="container">
+						<!--<h3><?php // echo $_slider->getTitle(); ?></h3>-->
+					</div>
+					<div id="featured_categories" class="owl-top-narrow">
+						<div class="filter-products">
+							<div class="products owl-carousel" >
+							<?php endif; ?>
+							<div class="item">
+								<div class="category-images">
+									<a href="<?php echo $category->getUrl(); ?>">
+									<img class="item-image spinner" src="<?php echo $this->helper('itactica_featuredcategories/category')->resize('catalog/category/'.$category->getThumbnail()); ?>" alt="<?php echo $category->getName(); ?>">
+									</a>
+								</div>
+								<h6 class="category-title"><a href="<?php echo $category->getUrl(); ?>" class="truncate"><?php echo $category->getName(); ?></a></h6>
+							</div>
+							<?php if($i == 0): ?>
+						  </div>
+						</div>
+					</div>
+				</section>
+			<?php endif; ?>
+		<?php $i++; endforeach; ?>
+	<?php endif; ?>
+    <?php endforeach; ?>
+<?php endif;?>

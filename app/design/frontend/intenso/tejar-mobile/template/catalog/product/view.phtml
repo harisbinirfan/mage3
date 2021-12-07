@@ -1,0 +1,570 @@
+<?php
+/**
+ * Tejar Personal Theme
+ *
+ * @category    design
+ * @package     tejar_default
+ * @copyright   Copyright (c) 2014 chapal (http://www.chapal.net)
+ * @license     http://chapal.net/
+ */
+/**
+ * Product view template
+ *
+ * @see Mage_Catalog_Block_Product_View
+ * @see Mage_Review_Block_Product_View
+ */
+?>
+
+<?php
+		$_helper = $this->helper('catalog/output');
+		$helper = Mage::helper('itactica_intenso');
+		$_product = $this->getProduct();
+		$_baseUrl = Mage::getBaseUrl();
+		$_currentUrl = Mage::helper('core/url')->getCurrentUrl();
+		$_relativeUrl = str_replace($_baseUrl, '/', $_currentUrl);
+		$code = Mage::app()->getStore();
+		$_description = $_product->getDescription();
+		$_reviews = false;
+		$_isAjax = Mage::getStoreConfig('intenso/product_page/swatch_ajax', Mage::app()->getStore());
+		$_isRelated = Mage::getStoreConfig('catalog/related/enabled', Mage::app()->getStore());
+		$_productH1Title = Mage::getStoreConfig('design/product_meta/h1_title', Mage::app()->getStore());
+?>
+
+<script type="text/javascript">
+	var optionsPrice = "";
+	document.addEventListener('ScriptContentLoaded', function (e) {
+		optionsPrice = new Product.OptionsPrice(<?php echo $this->getJsonConfig() ?>);
+	});
+</script>
+<div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
+<div class="product-content">
+<div class="product-content-section">
+	<div class="container">
+		<section role="main">
+			<div class="row">
+				<meta content="<?php echo $_currentUrl; ?>">
+				<!-- Product Pic & Info -->
+				<div class="col-xs-12 product-essential">
+					<div class="row">
+						<form action="<?php echo $this->getSubmitUrl($_product, array('_secure' => $this->_isSecure())) ?>" method="post" id="product_addtocart_form"<?php if($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
+							<input type="hidden" id="base_url" value="<?php echo $_baseUrl; ?>" name="base_url"/>
+							<?php echo $this->getBlockHtml('formkey') ?>
+							<div class="no-display">
+								<input type="hidden" name="product" value="<?php echo $_product->getId() ?>" />
+								<?php if($_product->getData('sku')): ?>
+									<meta content="<?php echo $_product->getData('entity_id') ?>">
+								<?php endif; ?>
+								<input type="hidden" name="related_product" id="related-products-field" value="" />
+							</div>
+							<div class="col-xs-5 product-shop">
+								<h1 id="product_name" class="name"><span><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></span><?php echo $_productH1Title != "" ? "<span class='hide'>".$_productH1Title."</span>":""; ?></h1>
+								<div class="product_brand_model">
+									<?php
+									$categoryIds = $_product->getCategoryIds();
+									if(!empty($categoryIds)){
+										$categories = Mage::getModel('catalog/category')->getCollection()
+											->addAttributeToSelect('*')
+											->addIsActiveFilter(1)
+											->addLevelFilter(2)
+											->addAttributeToFilter('entity_id',['IN'=>$categoryIds])
+											->addAttributeToFilter('collection_type',['eq'=>1]);
+										$categoryName = "";
+										$categoryUrl = "";
+										foreach($categories as $category){
+											$categoryName = $category->getName();
+											$categoryUrl = $category->getUrl();
+										}
+
+										if($categoryName){
+									?>
+									<p>By: <a href="<?php echo $categoryUrl; ?>"><span id="by"><?php echo $categoryName; ?></span></a></p>
+									<?php } ?>
+									<?php } ?>
+									<?php if($_product->getTypeId() != "configurable"){ ?>
+										  <?php if($_product->getData('model')): ?><p>Model: <span class="model"> <?php echo $_product->getData('model');?> </span> </p><?php endif; ?>
+									<?php } elseif($_product->getTypeId() == "configurable"){ ?>
+										<?php
+											$mpn = "";
+											if($_product->hasData('model')){
+												$mpn = htmlspecialchars($_product->getData('model'));
+											}  else {
+												if($_product->hasData('manufacturer')){
+													$manu = $_product->getAttributeText('manufacturer');
+													$manu = "/^{$manu}/i";
+													$mpn = Mage::helper('core/string')->truncate(htmlspecialchars(trim(preg_replace($manu, '', $_product->getName()))),30,"");
+												} else {
+													$mpn = Mage::helper('core/string')->truncate(htmlspecialchars($_product->getName()),30,"");
+												}
+											}
+										?>
+									  <p id="productModel" style="display:none">Model: <span id="model" class="model"><?php echo $mpn; ?></span> </p>
+									<?php } ?>
+								</div>
+								<p class="hide">Sku: <span id="sku" class="sku"> <?php echo $_product->getData('sku');?> </span> </p>
+								<meta content="<?php echo $_product->getData('sku');?>" />
+								<?php echo $this->getReviewsSummaryHtml($_product, false, true)?>
+								<?php echo $this->getChildHtml('alert_urls') ?>
+								<?php echo $this->getChildHtml('media') ?>
+								<?php echo $this->getChildHtml('product_type_data') ?><?php echo $this->getTierPriceHtml() ?>
+								<?php echo $this->getChildHtml('extrahint') ?>
+								<?php if ($_product->isSaleable() && $this->hasOptions()):?>
+									<?php if($_isAjax): ?>
+										<div id="product-swatch" class="ajax-swatch" data-product-id="<?php echo $_product->getId(); ?>" data-module-url="<?php echo $this->getUrl('tejar_ajaxswatches/') ?>product/view/id/">
+											<?php  echo $this->getChildHtml('placeholder') ?>
+										</div>
+									<?php else : ?>
+										<?php  echo $this->getChildChildHtml('container1', '', true, true) ?>
+									<?php endif;?>
+								<?php endif;?>
+								<?php if ($_product->isSaleable() && $this->hasOptions()):?>
+									<?php echo $this->getChildChildHtml('container2', '', true, true) ?>
+								<?php endif;?>
+								<input type="hidden" id="get_value" value="0"  />
+								<input type="hidden" id="get_selected" value="0" class="get_selected" />
+								<input type="hidden" id="click_id" value="0" />
+								<?php if(!$_product->getShortDescription() && !$_product->getDescription()): ?>
+									<div class="hide">
+										<?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?>
+									</div>
+								<?php endif; ?>
+								<?php $newerProductSku = $_product->getnewerSku(); ?>
+								<?php if($newerProductSku): ?>
+									<?php $newerProduct = Mage::getModel('catalog/product')->loadByAttribute("sku",$newerProductSku); ?>
+									<?php if($newerProduct): ?>
+										<?php if($newerProduct->isSaleable()): ?>
+											<style>
+												.newer_model_heading{
+													font-size: 1.2rem;
+													font-weight: 400;
+												}
+												.newer_model_card_heading {
+													font-size: 1rem;
+													font-weight: 700;
+													line-height: 1.2;
+												}
+												
+												.newer_model_card_image_wrap {
+													float: left;
+													width: 125px;
+													padding: 0;
+												}
+												
+												.newer_model_card_details {
+													float: left;
+													width: calc(100% - 125px);
+													padding: 0;
+												}
+												
+												.product-shop .newer_model_card_details .price-box {
+													padding: 0;
+													margin: 0;
+												}
+												
+												.newer_model {
+													border-top: 1px solid #ddd;
+													display: inline-block;
+													padding: 10px 0;
+												}
+												
+												
+												
+												.product-shop .newer_model_card_details .minimal-price .price, .product-shop  .newer_model_card_details .price-box .price {
+													font-size: 0.938rem;
+												}
+												
+												.product-shop .newer_model_card_details .availability-slider span, .product-shop .newer_model_card_details .availability span{
+													top: 0.4rem;
+													font-size: 0.938rem;
+												}
+												
+											</style>
+											<div class="newer_model">
+												<h2 class="newer_model_heading">There is a newer model of this item:</h2>
+												<div class="newer_model_card">
+													<div class="newer_model_card_inner">
+														<div class="newer_model_card_image_wrap">
+															<a href="<?php echo Mage::getUrl().$newerProduct->getUrlKey(); ?>">
+																<img class="newer_model_card_image" alt="" src="<?php echo $this->getSkinUrl('images/clear.png'); ?>" data-echo="<?php echo $this->helper('catalog/image')->init($newerProduct, 'small_image')->resize(150,150); ?>" width="150" height="150">
+															</a>
+														</div>
+														<div class="newer_model_card_details">
+															<a href="<?php echo Mage::getUrl().$newerProduct->getUrlKey(); ?>">
+																<h3 class="newer_model_card_heading"><?php echo $newerProduct->getName(); ?></h3>
+															</a>
+															<?php echo $this->getPriceHtml($newerProduct, true) ?>
+															<?php 
+															
+																$_newerProduct = $_helper->getCustomProduct($newerProduct);
+																//--- Get Custom Stock Status if Avialable............
+																$customStock = $_helper->getCustomInStockStatus();
+																$customStockStatusText = $customStock['stockStatusText'];
+																$customInStockStatus = $customStock['inStockStatus'];
+																/*---------------------------------------------------- 3SD CODE -------------------------------------------*/
+																/* CONTINUE -  Check if Custom In Stock Status is FALSE and if 'Display Out of Stock Products' Option 
+																	 * in Admin/Config Catalog Inventory is set to 'YES' Or 'NO'
+																	 */
+																$displayOutOfStockConfigValue = Mage::getStoreConfig('cataloginventory/options/show_out_of_stock');
+																/*---------------------------------------- ZEE CODE ----------------------------------*/		
+																
+																?>
+															<?php if ($newerProduct->getStockItem()->getIsInStock() && $customInStockStatus): ?>
+																<p class="availability in-stock"><span class="hide">Availability:</span><span class="singal-truncate"><?php echo $customStockStatusText!=""?$customStockStatusText:"In Stock"?></span></p>
+															<?php else :?>
+																<p class="availability out-of-stock"><span class="hide">Availability:</span><span class="singal-truncate"><?php echo  $customStockStatusText!=""?$customStockStatusText:"Out of Stock"?></span></p>	
+															<?php endif; ?>
+														</div>
+													</div>
+												</div>
+											</div>
+										<?php endif; ?>
+									<?php endif; ?>
+								<?php endif; ?>
+								<?php echo $this->getChildHtml('other');?>
+							</div>
+							<div class="col-xs-3 product-shop">
+								<?php echo $this->getChildChildHtml('product_buy_box', '', true, true) ?>
+								<?php if (Mage::getModel('cms/block')->load('product_view_block_1')->getIsActive()): ?>
+									<div class="product-view-block-1">
+										<?php echo $this->getChildHtml('product_view_block_1') ?>
+									</div>
+								<?php endif; ?>
+								<?php echo $this->getChildHtml('addthis_sharetool') ?>
+								<div id="LPABCButton"></div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+
+<?php  $_description = strlen(trim(strip_tags(strip_tags($_description))))>=200 ?substr(strip_tags($_description), 0,180)."...":strip_tags($_description); ?>
+<div class="product-collateral c-box-group">
+	<?php foreach ($this->getChildGroup('detailed_info', 'getChildHtml') as $alias => $html):?>
+	<?php if ($alias == "ratings-reviews"): ?>
+		<?php $_reviews = true; ?>
+		<?php echo $this->getChildHtml('custom_info') ?>
+	<?php endif;?>
+		<div class="c-box feature">
+			<div class="c-box-inner">
+				<div id="<?php echo "{$alias}"?>_feature_div" data-feature-name="<?php echo "{$alias}"?>" data-template-name="<?php echo "{$alias}"?>" class="section">
+					<div class="section">
+						<span class="declarative" data-action="a-secondary-view" data-a-secondary-view="{&quot;backButtonText&quot;:&quot;Back&quot;,&quot;data&quot;:{&quot;secViewId&quot;:&quot;<?php echo "{$alias}"?>_secondary_view_div&quot;},&quot;name&quot;:&quot;<?php echo "{$alias}"?>_secondary_view_div&quot;}">
+							<a href="#" class="touch-link c-box touch-link-noborder">
+							<div class="c-box-inner">
+								<i class="icons-right-open-mini touch-link-icon"></i>
+								<h3>
+									<?php if($alias == "description"):?>
+										<?php echo $this->__('Product Description'); ?>
+									<?php elseif($alias == "features-and-additional-info"):?>
+										<?php echo $this->__('Features &amp; Additional Info'); ?>
+									<?php elseif($alias == "ratings-reviews"):?>
+										<?php echo $this->__('Ratings & Reviews'); ?>
+									<?php else: ?>
+									<?php endif ;?>
+								</h3>
+								<div id="<?php echo "{$alias}"?>" class="section spacing-small">
+									<?php if($alias == "description"):?>
+										<div class="product-description">
+											<p id="mbLongDescription">
+												<?php echo $_description ; ?>
+											</p>
+										</div>
+									<?php elseif($alias == "features-and-additional-info"):?>
+										<div id="short_description_additional" class="short-description" <?php if ($_product->getShortDescription()): ?><?php endif; ?> <?php if (!$_product->getShortDescription()): ?> style="display: none;" <?php endif; ?>>
+											<?php echo $_helper->productAttribute($_product, nl2br($_product->getShortDescription()), 'short_description') ?>
+										</div>
+									<?php elseif($alias == "ratings-reviews"):?>
+									<?php endif ;?>
+								</div>
+							</div>
+						</a>
+					</span>
+					<div class="popover-preload" id="a-popover-<?php echo "{$alias}"?>_secondary_view_div">
+						<h3 style="font-size: 1.6rem;">
+							<?php if($alias == "description"):?>
+							<?php echo $this->__('Product Description'); ?>
+							<?php elseif($alias == "features-and-additional-info"):?>
+								<?php echo $this->__('Features &amp; Additional Info'); ?>
+							<?php elseif($alias == "ratings-reviews"):?>
+								<?php echo $this->__('Ratings & Reviews'); ?>
+							<?php else: ?>
+							<?php endif ;?>
+						</h3>
+						<?php if($alias == "description"):?>
+						<div id="<?php echo "{$alias}"?>_fullView">
+							<p></p>
+							<?php echo $html; ?>
+						</div>
+						<?php elseif($alias == "features-and-additional-info"):?>
+								<div id="<?php echo "{$alias}"?>_fullView">
+									<p></p>
+									<h3><?php echo $this->__('Features'); ?></h3>
+									<div id="short_description" class="short-description" <?php if (!$_product->getShortDescription()): ?> style="display: none;" <?php endif; ?>>
+										<?php if($_product->getShortDescription()): ?>
+											<?php echo $_helper->productAttribute($_product, nl2br($_product->getShortDescription()), 'short_description') ?>
+										<?php else: ?>
+											null
+										<?php endif; ?>
+									</div>
+									<p></p>
+									<h3><?php echo $this->__('Additional Info'); ?></h3>
+									<?php echo $html; ?>
+								</div>
+						<?php else : ?>
+							<div id="<?php echo "{$alias}"?>_fullView">
+								<p></p>
+								<?php echo $html; ?>
+							</div>
+						<?php endif ;?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	<?php endforeach;?>
+	<?php if (!$_reviews): ?>
+		<?php echo $this->getChildHtml('custom_info') ?>
+	<?php endif; ?>
+</div>
+</div>
+<?php if($this->getRequest()->getControllerName() == 'product'): ?>
+<?php echo $this->getChildHtml('crosssell_products') ?>
+<?php echo $this->getChildHtml('upsell_products') ?>
+<?php if($_isRelated) echo $this->getChildHtml('related_products'); ?>
+<?php echo $this->getChildHtml('alsobought_products') ?> 
+<?php endif; ?>
+<script type="text/javascript">
+	var spConfig = "";
+	document.addEventListener("DOMContentLoaded", function(){
+		var url = "<?php echo $this->getUrl('tejar_ajax/') ?>product/view/id/<?php echo (int) $this->getRequest()->getParam('id'); ?>";
+		if($j('body').hasClass('checkout-cart-configure')){
+			url = "<?php echo $this->getUrl('tejar_ajax/') ?>cart/configure/id/<?php echo (int) $this->getRequest()->getParam('id'); ?>";
+		}
+		new Ajax.Request(url,{
+			method:'get',
+			onSuccess: function(transport)    {
+				var json = transport.responseText.evalJSON(true);
+				document.getElementById('product-swatch')&&json.swatches&&($('product-swatch').update(json.swatches));
+				document.getElementById('also-bought__product_ajax')&&json.alsobought&&($('also-bought__product_ajax').update(json.alsobought));
+				document.getElementById('related-products__product_ajax')&&json.related&&($('related-products__product_ajax').update(json.related));
+				document.getElementById('upsell__product_ajax')&&json.related&&($('upsell__product_ajax').update(json.upsell));
+				document.getElementById('crosssell__product_ajax')&&json.related&&($('crosssell__product_ajax').update(json.crosssell));
+				<?php if(Mage::getStoreConfig('intenso/product_page/swatch_display', Mage::app()->getStore())):?>
+					jQuery('.product-shop .configurable-swatch-list').hideMaxListItems({ max:<?php echo Mage::getStoreConfig('intenso/product_page/swatch_display', Mage::app()->getStore()) - 1 ; ?>, speed:0, moreText:'Show more ([COUNT])',innerAction: true, lessText:'<span class="more_thum swatch-label">Less</span', moreText:'<span class="more_thum swatch-label">More ([COUNT])</span>' ,moreHTML:'<li class="maxlist-more more_thum_style"><a href="#"></a></li>' });
+				<?php endif;?>
+			},
+			onFailure: function(transport){
+				console.error(transport.statusText);
+			}
+		});
+	});
+</script>
+<?php if(Mage::getStoreConfig('ajaxcart/addtocart/enableproduct') && (Mage::app()->getFrontController()->getRequest()->getModuleName() == "catalog") || (Mage::app()->getFrontController()->getRequest()->getModuleName() == "quickview")): ?>
+<script type="text/javascript">
+//<![CDATA[
+var productAddToCartForm = "";
+document.addEventListener("DOMContentLoaded", function(){
+	productAddToCartForm = new VarienForm('product_addtocart_form');
+
+   productAddToCartForm.submit = function(button, url, redirectFlag) {
+		if(url){
+			return  this.form.submit();
+		}
+		if (this.validator.validate()) {
+			var form = this.form;
+			var oldUrl = form.action;
+
+			if (url) {
+			   form.action = url;
+			}
+			var e = null;
+			if (!url) {
+				url = jQuery('#product_addtocart_form').attr('action');
+			}
+			if(url.indexOf("wishlist/index/cart") != -1){
+				url = url.replace("wishlist/index/cart","ajaxcart/index/add"); // New Code
+			} else {
+				url = url.replace("checkout/cart","ajaxcart/index"); // New Code
+			}
+			url = url.replace("http://", "//");
+			url = url.replace("https://", "//");
+			var data = jQuery('#product_addtocart_form').serialize();
+			data += '&isAjax=1';
+			var is_quickview = false;
+			if(jQuery("body").hasClass("quickview-index-view")){
+				is_quickview = true;
+			}
+			//--- Add redirectflag value to parameters, if buy now was clicked..
+			if(redirectFlag=='buynow'){
+				 data += '&redirectFlag='+redirectFlag;
+			}
+
+			try {
+				//--- Disable Add to Cart and Buy Now button before adding to cart
+				jQuery( "#buy-now" ).prop( "disabled", true );
+				jQuery( "#product-addtocart-button" ).prop( "disabled", true );
+				jQuery('#popup-error-msg').css('display','none');
+				jQuery.ajax({
+					url : url,
+					dataType : 'json',
+					type : 'post',
+					data : data,
+					success : function(data) {
+						if(data.status == 'ERROR'){
+							jQuery('#myModal').foundation('reveal', 'close');
+							if(is_quickview)
+								window.parent.alert(data.message.replace("<br/>",""));
+							else
+								jQuery('#popup-error-msg').css('display','block');
+								jQuery('#global-notification').html(data.message.replace("<br/>",""));
+								jQuery( "#product-addtocart-button" ).prop( "disabled", false );
+								jQuery( "#buy-now" ).prop( "disabled", false );
+								jQuery('html, body').animate({scrollTop:0},400);
+						}else{
+							if(is_quickview){
+								if(window.parent.jQuery('.m-hide .mini-cart')){
+									window.parent.jQuery('.m-hide .mini-cart').replaceWith(data.toplink);
+								}
+								window.parent.jQuery('#after-loading-success-message #success-message-container .msg-box').html(data.message);
+								<?php $autoclose = Mage::getStoreConfig('ajaxcart/addtocart/autoclose', $code);?>
+								ajaxcart_sec = <?php echo ($autoclose && is_numeric($autoclose))?$autoclose:5; ?>;
+								timer_sec = ajaxcart_sec;
+								window.parent.jQuery('#after-loading-success-message').fadeIn(200);
+								ajaxcart_timer = setInterval(function(){
+									timer_sec --;
+									window.parent.jQuery('#after-loading-success-message .timer').html(timer_sec);
+								},1000)
+								setTimeout(function(){
+
+									window.parent.jQuery('#after-loading-success-message').fadeOut(200);
+									clearTimeout(ajaxcart_timer);
+									setTimeout(function(){
+										window.parent.jQuery('#after-loading-success-message .timer').html(ajaxcart_sec);
+									}, 1000);
+								},ajaxcart_sec*1000);
+							}
+							else {
+
+
+									//console.log(data.toplink);
+									if(jQuery('.m-hide .mini-cart')){
+										jQuery('.m-hide .mini-cart').replaceWith(data.toplink);
+										//Apply paging on miniCart throught Intenso JS
+										Intenso.libs.miniCart.init();
+									}
+									var myHTML = jQuery('.cart-qty').html();
+									jQuery('#cart-qty').html(myHTML);
+									//--- Enable Add to Cart and Buy Now button after adding to cart
+									jQuery( "#buy-now" ).prop( "disabled", false );
+									jQuery( "#product-addtocart-button" ).prop( "disabled", false );
+									jQuery('#after-loading-success-message #success-message-container .msg-box').html(data.message);
+									<?php $autoclose = Mage::getStoreConfig('ajaxcart/addtocart/autoclose', $code);?>
+									ajaxcart_sec = <?php echo ($autoclose && is_numeric($autoclose))?$autoclose:5; ?>;
+									timer_sec = ajaxcart_sec;
+
+									//jQuery('html, body').animate({ scrollTop: 0 }, 300);
+									jQuery('.dropdown.cart-dropdown').fadeIn(200);
+									jQuery( '#cart-slide-down' ).slideDown( "slow" );
+									jQuery( ".product-shop" ).mouseleave(function( event ) {
+									jQuery('.dropdown.cart-dropdown').fadeOut(200);
+									});
+
+									ajaxcart_timer = setInterval(function(){
+										timer_sec--;
+
+									},100);
+
+										setTimeout(function(){
+										jQuery('.dropdown.cart-dropdown').fadeOut(200);
+										jQuery('#cart-slide-down').slideUp( "slow" );
+										clearTimeout(ajaxcart_timer);
+										setTimeout(function(){
+
+										}, 100);
+									},ajaxcart_sec*800);
+
+										jQuery( '#continue-btn' ).click(function() {
+											jQuery( '#cart-slide-down' ).slideUp( "slow" );
+										});
+								}
+								//--- To follow the Admin Check 'After Adding a Product Redirect to Shopping Cart'
+								if(data.redirectUrl){
+									window.location = data.redirectUrl;
+								}
+							}
+
+						}
+					});
+				} catch (e) {
+			}
+			this.form.action = oldUrl;
+			if (e) {
+				throw e;
+			}
+		}
+	}.bind(productAddToCartForm);
+	productAddToCartForm.submitLight=function(d,a){if(this.validator){var c=Validation.methods;delete Validation.methods["required-entry"];delete Validation.methods["validate-one-required"];delete Validation.methods["validate-one-required-by-name"];for(var b in Validation.methods)b.match(/^validate-datetime-.*/i)&&delete Validation.methods[b];this.validator.validate()&&(a&&(this.form.action=a),this.form.submit());Object.extend(Validation.methods,c)}}.bind(productAddToCartForm);
+});
+//]]>
+</script>
+<?php else : ?>
+<script type="text/javascript">
+//<![CDATA[
+var productAddToCartForm="";
+document.addEventListener('DOMContentLoaded' , function(){
+	productAddToCartForm=new VarienForm("product_addtocart_form");productAddToCartForm.submit=function(a,b){if(this.validator.validate()){var c=this.form,d=c.action;b&&(c.action=b);try{this.form.submit()}catch(e){}this.form.action=d;a&&"undefined"!=a&&(a.disabled=!0)}}.bind(productAddToCartForm);
+	productAddToCartForm.submitLight=function(d,a){if(this.validator){var c=Validation.methods;delete Validation.methods["required-entry"];delete Validation.methods["validate-one-required"];delete Validation.methods["validate-one-required-by-name"];for(var b in Validation.methods)b.match(/^validate-datetime-.*/i)&&delete Validation.methods[b];this.validator.validate()&&(a&&(this.form.action=a),this.form.submit());Object.extend(Validation.methods,c)}}.bind(productAddToCartForm);
+});
+//]]>
+</script>
+<?php endif; ?>
+
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded' , function(){
+//========================================ZEE CODE =============================================//
+//--- Populate hidden field redirectFlag with 'buy now' (to be stored in PHP session for redirection)
+	jQuery('#buy-now').on('click', function(e){
+
+		//jQuery('#guest-checkout-button').show();
+		var validator = new Validation('product_addtocart_form');
+		if(validator.validate()){
+		<?php  if(!Mage::getSingleton('customer/session')->isLoggedIn() && Mage::getStoreConfig('onestepcheckout/general/active',  Mage::app()->getStore())){ ?>
+			setTimeout(function(){
+				productAddToCartForm.submit(this, null, 'buynow');
+			},1000);
+		<?php } ?>
+		}else{
+			return false;
+		}
+	});
+//--- Attach Click event on Body to retain 'quantity' on Product page...
+	jQuery(document).click(function(e) {
+		//Restore the quantity value if clicked anywhere on Body and Hide the Update button
+		if(jQuery('#qty').val()==""){
+			jQuery('#qty').val(jQuery('#qty_clone_quickview').val());
+		}
+	});
+
+//=============================================ZEE CODE =============================================//
+	jQuery(document).ready(function() {
+		jQuery('#short_description_additional ul').hideMaxListItems({ 'max':2, 'speed':500, 'moreHTML':'' });
+		jQuery('#short_description ul').hideMaxListItems({ 'max':4, 'speed':0, 'moreText':'Show more ([COUNT])' });
+		<?php if(Mage::getStoreConfig('intenso/product_page/swatch_display', Mage::app()->getStore())):?>
+			jQuery('.configurable-swatch-list').hideMaxListItems({ max:<?php echo Mage::getStoreConfig('intenso/product_page/swatch_display', Mage::app()->getStore()) - 1 ; ?>, speed:0, moreText:'Show more ([COUNT])',innerAction: true, lessText:'<span class="more_thum swatch-label">Less</span', moreText:'<span class="more_thum swatch-label">More ([COUNT])</span>' ,moreHTML:'<li class="maxlist-more more_thum_style"><a href="#"></a></li>' });
+		<?php endif;?>
+	});
+
+});
+//============================================ 3SD CODE =============================================//
+</script>
+<script type="text/javascript">
+	<?php if($this->getCompareId()): ?>
+		var compareProducts = Array(0,<?php echo $this->getCompareId(); ?>);for (i = 0; i < compareProducts.length; i++) {if (document.getElementById('compare-id-'+compareProducts[i]) != undefined) document.getElementById('compare-id-'+compareProducts[i]).classList.add('compared');}
+	<?php endif; ?>
+	<?php if($this->getWhishlistId()): ?>
+    var wishlistProducts = Array(0,<?php  echo $this->getWhishlistId(); ?>);for (i = 0; i < wishlistProducts.length; i++) {if (document.getElementById('wishlist-id-'+wishlistProducts[i]) != undefined)document.getElementById('wishlist-id-'+wishlistProducts[i]).classList.add('active');}
+	var wishlistThumbProducts = Array(0,<?php  echo $this->getWhishlistId(); ?>);for (i = 0; i < wishlistThumbProducts.length; i++) {if (document.getElementById('wish-id-'+wishlistThumbProducts[i]) != undefined)$('wish-id-'+wishlistThumbProducts[i]).classList.add('active');}
+	<?php endif; ?>
+</script>

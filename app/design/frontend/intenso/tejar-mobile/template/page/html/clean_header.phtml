@@ -1,0 +1,206 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+/**
+ * @var Mage_Page_Block_Html_Header $this
+ */
+?>
+<?php $themeHelper = Mage::helper('itactica_intenso'); ?>
+<?php $smallLogo = ($this->getLogoSrcSmall()) ? $this->getLogoSrcSmall() : $this->getLogoSrc(); ?>
+<?php $isStickyEnabled = $themeHelper->stickyMenuUrl(); ?>
+<?php $store = Mage::app()->getStore();?>
+<?php $controllerName = $this->getRequest()->getControllerName(); ?>
+<?php
+		$storePhone = Mage::getStoreConfig('general/store_information/phone', $store);
+		$storeWeekendDays = Mage::getStoreConfig('general/locale/weekend');
+		$currentTime = date("ha", Mage::getModel('core/date')->timestamp(time()));
+		$currentTime24 = date("H", Mage::getModel('core/date')->timestamp(time()));
+		$weekday = Mage::getSingleton('core/date')->date('w');
+		$weekendDays = explode(',', $storeWeekendDays);
+		$storeHoursGetTime = substr(Mage::getStoreConfig('general/store_information/hours'),-19);
+		$storeHoursGetTimeArray = explode('-',$storeHoursGetTime);
+		$days = array('0' =>	'Sunday','1' =>	'Monday','2' =>	'Tuesday','3' =>	'Wednesday','4' =>	'Thursday','5' =>	'Friday','6' =>	'Saturday',);
+		$convertHoursArray1 = date('H', strtotime($storeHoursGetTimeArray[0]));
+		$convertHoursArray2 = date('H', strtotime($storeHoursGetTimeArray[1]));
+?>
+<header class="m-hide main-header header <?php if (!$themeHelper->mobileStickyMenu()): ?>non-sticky<?php endif;?>" id="header">
+		<div class="bottom_part-sticky">
+            <div class="sticky_part sticky_initialized sticky">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+							<div class="">
+								<ul class="mobile-bottom">
+									<li class="menu-mobile ">
+
+										<div class="show-right-menu icons-menu-3" ></div>
+									</li>
+									<li class="logo-mobile">
+										<a href="<?php  echo $this->getUrl('') ?>">
+											<?php if(Mage::getStoreConfig('design/header/logo_src' , Mage::app()->getStore())): ?>
+												<img  src="<?php echo $smallLogo ?>" alt="<?php echo $this->getLogoAlt() ?>" title="<?php echo $this->getLogoAlt() ?>">
+											<?php else: ?>
+												<svg style="width: 100px; height: auto;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Tejar_logo" x="0px" y="0px" width="313.061px" height="91.5px" viewBox="128.689 0 313.061 91.5" enable-background="new 128.689 0 313.061 91.5" xml:space="preserve"><g><g><path d="M151.609,13.768h-9.821l-2.584,9.821h-9.511V1.362h59.959v22.227h-9.614l-2.584-9.821h-9.821v48.587l9.821,3.102v8.787    h-35.666v-8.787l9.821-3.102V13.768z"/><path d="M239.996,42.197h-20.882v19.642h18.504l2.378-8.478h9.304v20.883h-53.964v-8.787l7.753-3.102V13.768l-7.753-3.102V1.879    l23.777-0.517h28.946v19.952h-9.304l-2.584-7.546h-17.057v17.057h20.882V42.197z"/><path d="M283.309,63.286c0,17.987-5.375,27.499-23.57,27.499c-3.308,0-7.857-0.725-7.857-0.725l1.344-10.647h4.962    c6.203,0,9.098-3.411,9.098-9.925v-55.72l-7.753-3.102V1.879l31.53-0.517v9.304l-7.753,3.102V63.286z"/><path d="M371.489,74.244h-32.875v-8.787l7.754-2.791l-2.481-7.547h-22.95l-2.584,7.443l8.063,2.895v8.787h-31.221v-8.787    l7.547-2.895l22.743-60.89l16.541-0.31l22.226,61.2l7.237,2.895V74.244z M332.722,19.557l-8.167,24.5h15.921L332.722,19.557z"/><path d="M375.62,65.457l7.754-3.102V13.768l-7.754-3.102V1.879l23.777-0.517h7.856c16.954,0,26.878,7.03,26.878,21.089    c0,9.717-4.651,16.023-11.682,19.539c1.138,1.344,2.688,3.308,4.342,6.72l6.927,14.162l7.029,2.585v8.787h-19.124l-8.685-19.125    c-3.515-7.856-4.445-9.511-9.924-9.511h-3.618v16.747l7.443,3.102v8.787H375.62V65.457z M405.29,34.753    c8.167,0,12.922-3.928,12.922-10.854c0-5.893-3.929-10.131-10.338-10.131h-8.477v20.985H405.29z"/></g></g></svg>
+											<?php endif; ?>
+											<span class="domain"><?php if($store->getCode()== "default"):?><?php else: ?><?php echo $name = $store->getCode();?><?php endif;?></span>
+										</a>
+									</li>
+									<?php if($storePhone): ?>
+									<li class="contact-mobile dropdown">
+										<a href="javascript:void(0)" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">     <path fill="#0077e5" d="M15.75,14.85l-2.54,2.53c-1.532-0.807-2.759-1.747-3.798-2.792c-1.045-1.039-1.985-2.266-2.792-3.798l2.53-2.54L8.512,3H3 c0,0,0,0.328,0,1c0,4.539,1.84,8.874,4.966,12.034C11.126,19.16,15.461,21,20,21c0.672,0,1,0,1,0v-5.512L15.75,14.85z"></path></svg>
+											<span class="contact-caret"></span>
+										</a>
+										<ul class="dropdown-menu">
+											<li>
+												<a href="tel:<?php echo $storePhone; ?>">
+													<?php echo $storePhone; ?>
+												</a>
+											</li>
+											<li>
+												<a href="<?php echo rtrim($this->getUrl(), '/'); ?>/contact">
+													Contact Us
+												</a>
+											</li>
+											<li>
+												<div class="detail">
+												<?php echo $this->getChildHtml('store_hour'); ?>
+												</div>
+
+											</li>
+										</ul>
+									</li>
+									<?php endif; ?>
+									<li class="cart-mobile">
+										<div class="spc"></div>
+									<a href="<?php echo $this->getUrl('checkout/cart'); ?>" class="mini-cart-icon">
+									<span aria-hidden="true" class="icon-icon_cart"></span>
+									<span class="sup"><span id="cart-qty">	<?php
+										  $count = $this->helper('checkout/cart')->getSummaryCount();  //get total items in cart
+										  $total = $this->helper('checkout/cart')->getQuote()->getGrandTotal(); //get total price
+										  if($count==0)
+										  {
+											echo $this->__('0',$count);
+										  }
+										  if($count==1)
+										  {
+											echo $this->__('1',$count);
+										  }
+										  if($count>1)
+										  {
+											echo $this->__('%s',$count);
+										  }
+										  echo $this->__('', $this->helper('core')->formatPrice($total, false));
+										?></span></span>
+									</a>
+									</li>
+									<li class="acount-mobile">
+										<?php if (Mage::getSingleton('customer/session')->isLoggedIn()): ?>
+											<a href="<?php echo $this->getUrl('customer/account'); ?>" class="mini-account-icon">
+												<span class="icon-account-empty"></span>
+												<span class="sup">
+													<span class="name-char"><?php $reset = substr($this->__('%s', $this->escapeHtml(Mage::getSingleton('customer/session')->getCustomer()->getFirstname())),  0, 1); echo $reset;?></span>
+												</span>
+											</a>
+										<?php else: ?>
+										<?php if(Mage::getStoreConfig('onestepcheckout/general/active',  Mage::app()->getStore())==1){?>
+											<a href="<?php echo $this->getUrl('customer/account'); ?>" class="mini-account-icon sign-in ajaxlogin-login">
+												<span class="icon-account"></span>
+											</a>
+										<?php }else{?>
+											<a  href="<?php echo $this->getUrl('customer/account'); ?>" class="mini-account-icon sign-in ajaxlogin-login">
+												<span class="icon-account"></span>
+											</a>
+										<?php } ?>
+										<?php endif; ?>
+										<?php /* if (Mage::getSingleton('customer/session')->isLoggedIn()): ?>
+											<a href="<?php echo $this->getUrl('customer/account'); ?>" class="mini-account-icon">
+												<span class="icon-account-empty"></span>
+												<span class="sup">
+													<span class="name-char"><?php $reset = substr($this->__('%s', Mage::getSingleton('customer/session')->getCustomer()->getFirstname()) ,  0, 1); echo $reset;?></span>
+												</span>
+											</a>
+										<?php else: ?>
+											<?php if(Mage::getStoreConfig('checkout/options/checkout_onepage_tejar_custom')==0){?>
+											<a  href="<?php echo $this->getUrl('customer/account'); ?>" class="mini-account-icon sign-in ajaxlogin-login">
+												<span class="icon-account"></span>
+											</a>
+											<?php }else{?>
+											<a id="signin" data-reveal-id="myModal" href="<?php echo $this->getUrl('customer/account'); ?>" class="mini-account-icon sign-in ajaxlogin-login">
+												<span class="icon-account"></span>
+											</a>
+											<?php } ?>
+										<?php endif; */ ?>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="cart-slide-down" style="display: none;">
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-12">
+								<ul>
+									<li>
+										<h3>Item added to your Shopping Cart</h3>
+									</li>
+									<li>
+										<a href="<?php echo $this->getUrl('checkout'); ?>" class="waves-effect waves-light btn btn-big ">Checkout</a>
+									</li>
+									<li>
+										<a id="continue-btn" class="">Continue to Shopping</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div style="display: none;">
+			<div class="mini-cart">
+				 <?php echo $this->getChildHtml('minicart');  ?>
+			 </div>
+		</div>
+</header>
+<?php echo $this->getChildHtml('topMenu'); ?>
+<div class="<?php if ($themeHelper->mobileStickyMenu()): ?>header_space<?php else: ?>header_space_none<?php endif;?>"></div>
+<?php echo $this->getChildHtml('clean_header_extra') ?>
+<!--/[] 3SD CODE Sticky Menu Stop In cart Page []\-->
+<?php $currUrl = Mage::helper('core/url')->getCurrentUrl();?>
+<?php if($currUrl == Mage::getBaseUrl()."checkout/cart/"): ?>
+	<script type="text/javascript">
+		jQuery(document).ready(function(){proccessedToCheckout();});
+	</script>
+
+<?php else:?>
+
+<!--/[] 3SD CODE Mobile Sticky Enabled / Disabled []\-->
+	<?php if ($themeHelper->mobileStickyMenu()): ?>
+		<script type="text/javascript">
+			jQuery(document).ready(function(){stickyMobileEnabled();});
+		</script>
+	<?php endif;?>
+<?php endif;?>
+<?php if(!$controllerName=='customer'):?>
+<?php
+	//--- Load popup if Onestepcheckout is enabled..
+	if((Mage::getStoreConfig('onestepcheckout/general/active',  Mage::app()->getStore())==1 && !Mage::getSingleton('customer/session')->isLoggedIn()) || $controllerName=='product'){
+		echo $this->getChildHtml('social-login');
+	}
+?>
+<?php endif; ?>
+<style>
+@media only screen and (max-width: 120em){
+.main-header {
+    border-bottom: 1px solid #ccc !important;
+}
+}
+</style>

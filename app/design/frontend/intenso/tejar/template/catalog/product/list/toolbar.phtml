@@ -1,0 +1,106 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php
+/**
+ * Product list toolbar
+ *
+ * @see Mage_Catalog_Block_Product_List_Toolbar
+ */
+?>
+<?php
+    $_helper    = $this->helper('catalog/output');
+	 //var_dump($_helper);
+    $_category  = Mage::getModel('catalog/layer')->getCurrentCategory();
+    $_categoryBlock = Mage::getSingleton('Mage_Catalog_Block_Category_View');
+    $_isRssCatalogEnable = Mage::getStoreConfig('rss/catalog/category');
+    $_isSearchResults = false;
+    $_isCMSPage = Mage::app()->getFrontController()->getRequest()->getRouteName() == 'cms';
+    // if current page is search result show search term as title instead of category name
+    $pathInfo = Mage::helper('core/url')->getCurrentUrl();
+    $pageTitle = $_helper->categoryAttribute($_category, $_category->getName(), 'name');
+    //echo "dddddddddd".$_category;
+	if (stripos($pathInfo, '/catalogsearch/result') !== false) {
+        $pageTitle = Mage::helper('catalogsearch')->getQueryText();
+        $_isSearchResults = true;
+    }
+    if (stripos($pathInfo, '/catalogsearch/advanced/result') !== false) {
+        $pageTitle = $this->__('Search results');
+        $_isSearchResults = true;
+    }
+
+    $prefix = "";
+	$suffix = "";
+	if($_category->getCollectionType() == 1 && $_category->getLevel() == 3){
+		$prefix = $_category->getParentCategory()->getName();
+	}
+	if($_category->getCollectionType() == 1 && $_category->getLevel() == 4){
+		$prefix = $_category->getParentCategory()->getParentCategory()->getName();
+		$suffix = $_category->getParentCategory()->getName();
+	}
+
+    // if current page is a CMS page remove the title
+    if ($_isCMSPage) {
+        $pageTitle = '&nbsp;';
+    }
+?>
+
+<?php $headingTitle = Mage::getStoreConfig('design/product_meta/category_h1_title', Mage::app()->getStore()->getId()); ?>
+
+<?php if($this->getCollection()->getSize()): ?>
+<div class="row toolbar">
+    <div class="col-xs-6" itemscope itemtype="https://schema.org/Enumeration">
+    <h1 id="category-name" class="truncate" itemprop="name">
+    <?php echo $prefix != ""  ? "<span class='hide'>".$prefix."</span>":""; ?>
+      <?php echo $pageTitle ?>
+      <?php echo $suffix != ""  ? "<span class='hide'>".$suffix."</span>":""; ?>
+      <?php echo $headingTitle != "" ? "<span class='hide'>".$headingTitle."</span>":""; ?>
+      <?php if($_isRssCatalogEnable && !$_isSearchResults && $_categoryBlock->IsTopCategory()): ?>
+        <a href="<?php echo $_categoryBlock->getRssLink() ?>" class="link-rss icon-feed" title="<?php echo $this->__('Subscribe to RSS Feed') ?>"><span class="a11y"><?php echo $this->__('Subscribe to RSS Feed') ?></span></a>
+      <?php endif; ?>
+    </h1>
+		<?php
+		 if ($_imgUrl = $_category->getImageUrl()) {
+        $_imgHtml = '<p class="category-image hide"><img itemprop="image" src="'.$_imgUrl.'" alt="'.$this->escapeHtml($_category->getName()).'" title="'.$this->escapeHtml($_category->getName()).'" /></p>';
+        $_imgHtml = $_helper->categoryAttribute($_category, $_imgHtml, 'image');
+    }?>
+	<?php if($_imgUrl): ?>
+    <?php echo $_imgHtml ?>
+	<?php endif; ?>
+	 <?php if (!$_isCMSPage): ?>
+        <p id="amount" class="amount">
+            <?php if($this->getLastPageNum()>1): ?>
+                <?php echo $this->__('Items %s to %s of %s total', $this->getFirstNum(), $this->getLastNum(), $this->getTotalNum()) ?>
+            <?php else: ?>
+                <?php echo $this->__('%s Item(s)', $this->getTotalNum()) ?>
+            <?php endif; ?>
+        </p>
+        <?php endif; ?>
+    </div>
+    <div class="actions col-xs-6">
+        <?php if (!$_isCMSPage): ?>
+        <div class="action-for-small-only"><a class="button show-left-menu left-off-canvas-toggle filter-toggle"><?php echo $this->__('Filter'); ?></a></div>
+        <div class="action-for-medium-up"><a class="button layered-nav-toggle"><?php echo $this->__('Filter'); ?></a></div>
+        <?php endif; ?>
+        <?php if( $this->isEnabledViewSwitcher() ): ?>
+            <?php $_modes = $this->getModes(); ?>
+            <?php if($_modes && count($_modes)>1): ?>
+            <ul class="button-group">
+                <?php foreach ($this->getModes() as $_code=>$_label): ?>
+                <li><a href="#" class="button icon-<?php echo strtolower($_code); ?> toggle-<?php echo strtolower($_code); ?> <?php if($this->isModeActive($_code)): ?>active<?php endif; ?>" title="<?php echo $_label ?>"><span class="a11y"><?php echo $_label ?></span></a></li>
+                <?php endforeach; ?>
+            </ul>
+            <?php endif; ?>
+        <?php endif; ?>
+    </div>
+
+</div>
+
+<?php endif ?>

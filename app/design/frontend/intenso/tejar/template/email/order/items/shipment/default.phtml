@@ -1,0 +1,97 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php $_item = $this->getItem() ?>
+<?php $_order = $this->getItem()->getOrder() ?>
+<?php
+
+	// /* 3SD CODE ASSOCIATE PRODUCT NAME */
+	// if($_item->getSku() == ''){
+	// 	$configItemId = Mage::getModel('catalog/product')->load($_item->getId()) ;
+	// } else {
+	// 	$configItemId = Mage::getModel('catalog/product')->loadByAttribute('sku', $_item->getSku());
+	// }
+	// /*--------------------------------------------------------*/
+
+	// if($configItemId == null){
+
+	// 	$productImg = Mage::getModel('catalog/product')->setStoreId(Mage::app()->getStore()->getStoreId())->load($_item->getProductId());
+	// 	// $productImageUrl = Mage::getSingleton('catalog/product_media_config')->getBaseMediaUrl(). '/placeholder/' .Mage::getStoreConfig("catalog/placeholder/small_image_placeholder");
+	// 	// $productImageUrl = $this->helper('catalog/image')->init($productImg, 'thumbnail')->resize(150);
+	// 	$productImageUrl = Mage::getModel('catalog/product_media_config')->getMediaUrl($productImg->getThumbnail());
+	// 	$productName = $this->escapeHtml($_item->getName());
+	// 	$productUrl = "javascript:void(0)";
+
+	// } else {
+	// 	$configItem = Mage::getModel('catalog/product')->loadByAttribute('sku', $_item->getSku());
+	// 	/*--------------------------------------------------------*/
+
+
+	// 	$product = Mage::getModel('catalog/product')->setStoreId(Mage::app()->getStore()->getId())->load($_item->getProductId());
+	// 	//--- To avoid 404 issue in configurable/simple products (related ot visibility)
+	// 	if($product->getTypeId()=="simple"){
+	// 		$parentProducts =  Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($configItemId->getId());
+	// 		if(!empty($parentProducts)){
+	// 			$product = Mage::getModel('catalog/product')->load($parentProducts[0]);
+	// 		}
+	// 	}
+
+
+	// 	//--- GET Product Image Url (Following Admin Check: Configurable Product Image)
+	// 	// $productImageUrl = Mage::getStoreConfig('checkout/cart/configurable_product_image')==="parent"?$this->helper('catalog/image')->init($product, 'thumbnail')->resize(150):$this->helper('catalog/image')->init($configItem, 'thumbnail')->resize(150);
+	// 	$productImageUrl = Mage::getStoreConfig('checkout/cart/configurable_product_image')==="parent"?Mage::getModel('catalog/product_media_config')->getMediaUrl($product->getThumbnail()):Mage::getModel('catalog/product_media_config')->getMediaUrl($configItem->getThumbnail());
+	// 	$productName = $this->escapeHtml($configItemId->getName());
+	// 	$productUrl = $product->getProductUrl();
+	// }
+
+	$cartThumbnailConfig = Mage::getStoreConfig('checkout/cart/configurable_product_image');
+	$product = Mage::getModel('catalog/product')->load($_item->getProductId());
+	$productImageUrl = $this->helper('catalog/image')->init($product, 'thumbnail')->resize(150);
+	$productUrl = $product->getProductUrl();
+	$productName = $this->escapeHtml($_item->getName());
+	if($product->getTypeId() == "configurable"){
+		if($cartThumbnailConfig==="itself"){
+			if($_item->getSku() != ''){
+				$childProduct = Mage::getModel('catalog/product')->loadByAttribute('sku', $_item->getSku());
+				$productImageUrl = $this->helper('catalog/image')->init($childProduct, 'thumbnail')->resize(150);				
+			}
+		}
+	}
+	if($product->getTypeId() == "simple"){
+		if(!$product->isVisibleInSiteVisibility()){
+			$parentProducts =  Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($_item->getProductId());
+			if(!empty($parentProducts)){
+				$parentProduct = Mage::getModel('catalog/product')->load($parentProducts[0]);
+				$productUrl = $parentProduct->getProductUrl();
+			}
+		}
+	}
+
+?>
+
+<tr> <td valign="top"> <table border="0" align="left" cellpadding="0" cellspacing="0" width="100%"> <tr> <td class="item-image" valign="top" width="96" style="padding-right:10px"> <a href="<?php echo $productUrl; ?>"> <img class="" src="<?php echo $productImageUrl ; ?>" alt="" style="max-width: 96px; outline: none;display: block; max-height: 100px; margin-left: auto; margin-right: auto;"> </a> </td> <td class="item-info" valign="top" align="left"> <table border="0" align="left" cellpadding="0" cellspacing="0" width="100%"> <tr> <td valign="top" align="left" class="item-name"> <a href="<?php echo $productUrl; ?>"> <?php echo $productName; ?> </a> </td> </tr> <?php if ($this->getItemOptions()): ?><tr> <td class="item-options" style="padding-bottom:5px;"><dl style="margin:0; padding:0;"><?php foreach ($this->getItemOptions() as $option): ?><dt><strong><em><?php echo $option['label'] ?></em></strong></dt><dd style="margin:0; padding:0 0 0 9px;"><?php echo nl2br($option['value']) ?></dd><?php endforeach; ?></dl> </td> </tr><?php endif; ?> <tr> <td class="item-sku"> SKU <?php echo $this->escapeHtml($this->getSku($_item)) ?> </td> </tr> <tr> <td> <table width="45%" align="left" border="0" align="left" cellpadding="0" cellspacing="0"> <tr> <td class="item-qty">Qty <?php echo $_item->getQty()*1 ?></td> </tr> </table> </td> </tr> </table> </td> </tr> </table> </td> </tr> <?php 	$_giftMessage = $this->helper('giftmessage/message')->getGiftMessageForEntity($_item); ?> <?php 	if($this->helper('giftmessage/message')->getIsMessagesAvailable('order_item', $_item) && $_item->getGiftMessageId()): ?> <?php 	$_giftMessageFrom = trim($this->escapeHtml($_giftMessage->getSender()));
+$_giftMessageTo = trim($this->escapeHtml($_giftMessage->getRecipient()));
+$_giftMessageMessage = trim($this->helper('giftmessage/message')->getEscapedGiftMessage($_item)); ?> <?php if($_giftMessageMessage !="" || $_giftMessageTo !="" || $_giftMessageFrom !="" ): ?> <tr> <td class="item-gift-message"> <table align="left" cellpadding="0" border="0" class="item-gift-message-title" cellspacing="0" style="color:#333;font-size:13px;line-height:26px"> <tr> <td> <strong><?php echo $this->__('Gift Message') ?></strong> </td> </tr> <?php if($_giftMessageFrom !=""): ?> <tr> <td class="gift-form"> <strong><?php echo $this->__('From:') ?></strong> <?php echo $_giftMessageFrom ?> </td> </tr> <?php endif; ?> <?php if($_giftMessageTo !=""): ?> <tr> <td class="gift-to"> <strong><?php echo $this->__('To:') ?></strong> <?php echo $_giftMessageTo ?> </td> </tr> <?php endif; ?> <?php if($_giftMessageMessage !="" ): ?> <tr> <td class="gift-message"> <i>"<?php echo $_giftMessageMessage ?>"</i> </td> </tr> <?php endif; ?> </table> </td> </tr> <?php endif ?> <?php  endif ?>

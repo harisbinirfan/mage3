@@ -1,0 +1,36 @@
+<?php 
+$blockName = $this->getData('identifier');
+$blockTitle = $this->getData('title');
+?>
+<div class="brands" id="slider_<?php echo $blockName; ?>">
+<div class="title-block">
+	<h4 class="title-block-left"><span class="content"><?php echo $blockTitle; ?></span>
+	</h4>
+	<a href="<?php echo Mage::getBaseUrl(); ?>brands" class="title-block-right">View All</a>
+	</div>
+	<div id="featured_<?php echo $blockName; ?>" class="owl-top-narrow">
+		<div class="filter-products">
+			<div class="brand-slider owl-carousel">
+				<div class="item"><div class="ph-item"><div class="ph-col-12"><div class="ph-picture-wrapper"><div class="ph-picture"></div></div><div class="ph-row"><div class="ph-col-8 big"></div><div class="ph-col-2 empty big"></div><div class="ph-col-2 big"></div></div></div></div></div>
+				<div class="item"><div class="ph-item"><div class="ph-col-12"><div class="ph-picture-wrapper"><div class="ph-picture"></div></div><div class="ph-row"><div class="ph-col-8 big"></div><div class="ph-col-2 empty big"></div><div class="ph-col-2 big"></div></div></div></div></div>
+				<div class="item"><div class="ph-item"><div class="ph-col-12"><div class="ph-picture-wrapper"><div class="ph-picture"></div></div><div class="ph-row"><div class="ph-col-8 big"></div><div class="ph-col-2 empty big"></div><div class="ph-col-2 big"></div></div></div></div></div>
+				<div class="item"><div class="ph-item"><div class="ph-col-12"><div class="ph-picture-wrapper"><div class="ph-picture"></div></div><div class="ph-row"><div class="ph-col-8 big"></div><div class="ph-col-2 empty big"></div><div class="ph-col-2 big"></div></div></div></div></div>
+				<div class="item"><div class="ph-item"><div class="ph-col-12"><div class="ph-picture-wrapper"><div class="ph-picture"></div></div><div class="ph-row"><div class="ph-col-8 big"></div><div class="ph-col-2 empty big"></div><div class="ph-col-2 big"></div></div></div></div></div>
+				<div class="item"><div class="ph-item"><div class="ph-col-12"><div class="ph-picture-wrapper"><div class="ph-picture"></div></div><div class="ph-row"><div class="ph-col-8 big"></div><div class="ph-col-2 empty big"></div><div class="ph-col-2 big"></div></div></div></div></div>
+			</div>
+		</div> 
+	</div>
+</div>
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function(){
+	new Ajax.Request("/tejar_ajax/index/featuredSlider/form_key/<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>/",{
+		parameters:{'id':"<?php echo $blockName; ?>"},
+		onSuccess: function(transport)    {
+			if(200 == transport.status)    {
+				var json = transport.responseText.evalJSON(true);
+				$('slider_<?php echo $blockName; ?>').update(json);
+			}
+		}
+	});
+});
+</script>

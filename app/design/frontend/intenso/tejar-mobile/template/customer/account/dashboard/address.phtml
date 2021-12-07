@@ -1,0 +1,64 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+
+
+
+<div class="box-account box-recent">
+	<div class="box-head">
+		<h3><?php echo $this->__('Address Book') ?></h3>
+		<a href="<?php echo $this->getAddressBookUrl() ?>" class="btn-clean" title="<?php echo $this->__('Manage Addresses') ?>"><?php echo $this->__('Manage Addresses') ?></a>
+	</div>
+</div>
+<div class="section-offset-fluied">
+	<div class="box">
+		<div class="box-title">
+			<div class="btn-title">
+				<div class="title-left">
+					<h5><?php echo $this->__('Default Billing Address') ?></h5>
+				</div>
+				<div class="title-right">
+					<h5>
+						<a class="icon-edit" href="<?php echo $this->getPrimaryBillingAddressEditUrl() ?>"><span class="hide"><?php echo $this->__('Edit Address') ?></span></a>
+					</h5>
+				</div>
+			</div>
+		</div>
+		<div class="box-content">
+			<address>
+				<?php echo $this->getPrimaryBillingAddressHtml() ?>
+			</address>
+		</div>
+	</div>
+</div>
+<div class="section-offset-fluied">	
+	<div class="box">
+		<div class="box-title">
+			<div class="btn-title">
+				<div class="title-left">
+					<h5><?php echo $this->__('Default Shipping Address') ?></h5>
+				</div>
+				<div class="title-right">
+					<h5>
+						<a class="icon-edit" href="<?php echo $this->getPrimaryShippingAddressEditUrl() ?>"><span class="hide"><?php echo $this->__('Edit Address') ?></span></a>
+					</h5>
+				</div>
+			</div>
+		</div>
+		<div class="box-content">
+			<address>
+				<?php echo $this->getPrimaryShippingAddressHtml() ?>
+			</address>
+		</div>
+	</div>
+</div>
+
+
+	

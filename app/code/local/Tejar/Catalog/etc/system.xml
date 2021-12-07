@@ -1,0 +1,204 @@
+<config>
+    <sections>
+		<catalog>
+			<groups>
+                <related translate="label">
+					<label>Related Product</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>335</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+					<fields>
+						<enabled translate="label">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+						</enabled>
+						<is_ajax translate="label">
+                            <label>Load Ajax</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+						</is_ajax>
+						<count translate="label">
+                            <label>Count</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+						</count>
+					</fields>
+				</related>
+				<frontend translate="label">  
+					<fields>					
+						<default_sort_direction translate="label">
+                            <label>Product Listing Sort Direction</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+						</default_sort_direction>
+						<visibility translate="label comment">
+                            <label>Visibility</label>
+							<comment>Show Not Visible Individually Products</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>200</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+						</visibility>
+					</fields>
+				</frontend>
+				<webhook translate="label">
+					<label>Webhook</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>335</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+					<fields>
+					<product_url translate="label">
+                            <label>Product URL</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>200</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+					</product_url>
+					<category_url translate="label">
+                            <label>Category URL</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>200</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+					</category_url>
+					<attributeset_url translate="label">
+                            <label>Attribute Set URL</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>200</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+					</attributeset_url>
+					</fields>
+				</webhook>
+						 <api translate="label">
+			<label>API</label>
+			<frontend_type>text</frontend_type>
+			<sort_order>1000</sort_order>
+			<show_in_default>1</show_in_default>
+			<show_in_website>1</show_in_website>
+			<show_in_store>1</show_in_store>
+			<fields>
+				<airtable_api translate="label comment tooltip">
+					<label>Airtable API</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>16</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+				</airtable_api>
+				<airtable_url translate="label comment tooltip">
+					<label>Airtable Product URL</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>16</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+				</airtable_url>
+				<airtable_category translate="label comment tooltip">
+					<label>Airtable Category URL</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>17</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+				</airtable_category>
+				<airtable_supplier translate="label comment tooltip">
+					<label>Airtable Supplier URL</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>18</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+				</airtable_supplier>
+			</fields>
+		</api>
+        <price>
+          <show_in_website>1</show_in_website>
+        	<fields>
+        		<decimals translate="label comment">
+        			<label>Decimals</label>
+        			<frontend_type>text</frontend_type>
+        			<comment>Decimals</comment>
+        			<sort_order>1</sort_order>
+        			<show_in_default>1</show_in_default>
+        			<show_in_website>1</show_in_website>
+        		</decimals>
+        	</fields>
+        </price>
+        <image_optimizer translate="label">
+					<label>Image Optimize</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1000</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+					<fields>
+						<enabled translate="label">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+						</enabled>	
+						<imagick_options translate="label comment tooltip">
+							<label>ImageMagick Utility JPG</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>16</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+							<comment>Options for optimization of .jpg files.</comment>
+							<tooltip><![CDATA[The <strong>%filepath%</strong> will be substituted with image file path by the extension.]]></tooltip>
+						</imagick_options>
+						<imagick_options_png translate="label comment tooltip">
+							<label>ImageMagick Utility PNG</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>17</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+							<comment>Options for optimization of .png files.</comment>
+							<tooltip><![CDATA[The <strong>%filepath%</strong> will be substituted with image file path by the extension.]]></tooltip>
+						</imagick_options_png>
+						<imagick_options_gif translate="label comment tooltip">
+							<label>ImageMagick Utility GIF</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>18</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+							<comment>Options for optimization of .gif files.</comment>
+							<tooltip><![CDATA[The <strong>%filepath%</strong> will be substituted with image file path by the extension.]]></tooltip>
+						</imagick_options_gif>
+					</fields>
+				</image_optimizer>
+			</groups>
+		</catalog>
+	</sections>
+</config>

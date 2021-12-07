@@ -1,0 +1,375 @@
+<?php if ($this->getIsNeedToDisplaySideBar()):?>
+
+<div class="cart_sidebar">
+	<div class="sidebar-wrapper">
+	<form action="<?php echo $this->getUrl('checkout/cart/ajaxUpdate'); ?>" method="post" id="sidebar_cart_update">
+		<div class="sidebar-title">
+			  <h5 class="subtotal">
+            <?php echo $this->__('Subtotal:') ?>&nbsp;
+            <?php if ($this->canApplyMsrp()): ?>
+                <span class="price" title="<?php echo $this->__('ORDER TOTAL WILL BE DISPLAYED BEFORE YOU SUBMIT THE ORDER'); ?>">
+                    [?]
+                </span>
+            <?php else: ?>
+                <span class="price">
+                    <?php if ($_subtotalInclTax = $this->getSubtotalInclTax()): ?>
+                        <?php echo Mage::helper('checkout')->formatPrice($_subtotalInclTax) ?>
+                    <?php else: ?>
+                        <?php echo Mage::helper('checkout')->formatPrice($this->getSubtotal()) ?>
+                    <?php endif; ?>
+                </span>
+            <?php endif; ?>
+        </h5>
+		 <?php
+        $store = Mage::app()->getStore();
+        $code  = $store->getCode();
+        $display_subtotal_price = Mage::getStoreConfig("tax/cart_display/subtotal", $code);
+    ?>
+    <?php $_cartQty = $this->getSummaryCount(); ?>
+    <?php
+        if(!$_cartQty) $_cartQty = 0;
+        $_subtotal = $this->helper('checkout')->formatPrice(Mage::getSingleton('checkout/cart')->getQuote()->getGrandTotal());
+    ?>
+		
+		<?php if($_cartQty && $this->isPossibleOnepageCheckout()){ ?>
+			<?php  if(Mage::getSingleton('customer/session')->isLoggedIn() || !Mage::getStoreConfig('onestepcheckout/general/active',  Mage::app()->getStore())){?>
+				<a href="<?php echo $this->helper('onestepcheckout')->getCheckoutUrl(); //$this->getCheckoutUrl() ?>" class="btn"><?php echo $this->__('Proceed to checkout') ?></a>
+			<?php }else{?>
+			<a data-reveal-id="myModal" id="cart_sidebar_checkout" onclick="jQuery('#guest-checkout-button').show();" class="btn"><?php echo $this->__('Proceed to checkout') ?></a>
+		<?php } ?>
+		<?php } ?>
+		</div>
+		<div class="sidebar-content">
+
+
+   
+    <?php //$_items = $this->getRecentItems();
+			
+	?>
+    <?php //$_items = $this->getRecentItems();
+			
+	?>
+	
+	
+    <span class="cart-qty hide"><?php echo $_cartQty ?></span>
+	
+                <?php $_items = $this->getRecentItems() ?>
+                <?php if(count($_items)): 
+				//echo "<pre>"; var_dump($_items);die;?>
+				
+				 
+						<ul id="cart-sidebar" class="">
+							<?php $i=0; 
+							foreach($_items as $_item): ?>
+
+							<?php if ($i != 0 && $i % 5 == 0): ?>
+							
+							</ul>
+							<ul id="cart-sidebar" class="">
+							<?php endif; ?>
+							<?php echo $this->getItemHtml($_item) ?>
+							<?php $i++; ?>
+						<?php endforeach; ?>
+						</ul>
+					
+                  <?php else: ?>
+				<p class="small cart-empty"><?php echo $this->__('Your shopping cart is currently empty.') ?></p>
+    <?php endif ?>
+		</div>
+	</form>
+ 	</div>
+	<style>
+#main_navigation_wrap{
+	width: calc(100% - 230px);
+}
+.products-grid,
+section.owl-slider,
+.container {
+    min-width: 1024px;
+}
+.breadcrumbs-container,
+.main-container{
+	width: calc(100% - 230px);
+}
+.orbit-container .orbit-slides-container > *, .orbit-container {
+    min-height: 276px;
+}
+.owl-bg {
+  background: transparent; 
+  background-image: none;
+}
+
+#main_navigation_wrap,
+.cart_sidebar{
+	float: left;
+}
+.cart_sidebar {
+    position: fixed;
+    width: 230px;
+    z-index: 2;
+    top: 64px;
+    right: 0;
+	background: #fff;
+	height: 100%;
+	border-left: 1px solid #ccc;
+	
+}
+.sidebar-title{
+	background: #34495e;
+	margin-top: -4px;
+    padding: 5.5px 5px 5.5px;
+	text-align: center;	
+	margin-left: -1px;
+}
+.sidebar-content{
+	background: #fff;
+	margin-top: 0px;
+    padding: 10px 5px;	
+	// border-left: 1px solid #ccc;
+	display: inline-block;
+	min-height: 735px !important;
+	overflow-y: auto;
+	height: 735px;
+	width: 100%;
+}
+.catalog-category-view .cart_sidebar {
+    padding: 0; 
+    width: 230px;
+    z-index: 1;
+}
+.cart_sidebar .qty-wrapper.product_center {
+    width: 90px;
+}
+.cart_sidebar .item-msg.error {
+    font-size: 0.8rem;
+    padding: 3px 15px;
+}
+.main-footer {
+   	width: calc(100% - 230px);
+}
+.top-bar-section .has-dropdown:last-child > a:after{
+	content: none;
+}
+.top-bar-section .right li .cart-dropdown{
+	display: none !important;
+}
+</style>
+</div>
+<script>
+				
+					var myHTML = jQuery('.cart-qty').html();
+						jQuery('#cart-qty').html(myHTML);
+				
+				 //<![CDATA[
+			var productAddToCartFormSidebar = new VarienForm('sidebar_cart_update');
+			productAddToCartFormSidebar.submit = function(button, url, customQtyId, buttonId, flag) {
+			
+				if (this.validator.validate()) {
+						
+				//===================ZEE CODE===========//
+				
+					//if flag value is null or empty it means user has directly edited the cart
+					
+					if(flag != "" && flag != null){
+						document.getElementById(buttonId+"_mini_plus").disabled = "disabled";
+						document.getElementById(buttonId+"_mini_minus").disabled = "disabled";
+						document.getElementById(buttonId+"_"+flag).style.background = "#01B4E5";
+						if(flag=="mini_minus"){
+						
+						document.getElementById(buttonId+"_mini_plus").style.background = "#CCCCCC";
+							var newCustomQtyVal = parseInt(document.getElementById(customQtyId).value)-1;
+							document.getElementById(customQtyId).value = newCustomQtyVal;
+						}else if(flag=="mini_plus"){
+						document.getElementById(buttonId+"_mini_minus").style.background = "#CCCCCC";
+							var newCustomQtyVal = parseInt(document.getElementById(customQtyId).value)+1;
+							document.getElementById(customQtyId).value = newCustomQtyVal;
+						}
+					}else{
+					
+						document.getElementById(buttonId+"_mini_plus").disabled = "disabled";
+						document.getElementById(buttonId+"_mini_minus").disabled = "disabled";
+						document.getElementById(buttonId+"_mini_plus").style.background = "#01B4E5";
+						document.getElementById(buttonId+"_mini_minus").style.background = "#01B4E5";
+					}
+				//===================END ZEE CODE===========//	
+				
+					var form = this.form;
+					var oldUrl = form.action;
+
+					if (url) {
+					   form.action = url;
+					}
+					
+					var e = null;
+					if (!url) {
+						url = jQuery('#sidebar_cart_update').attr('action');
+					  
+					}
+					if(url.indexOf("wishlist/index/cart") != -1){
+						url = url.replace("wishlist/index/cart","ajaxcart/index/add"); // New Code
+					} else {
+						
+						url = url.replace("checkout/cart","ajaxcart/index"); // New Code
+					}
+					url = url.replace("http://", "//");
+					url = url.replace("https://", "//");
+					var data = jQuery('#sidebar_cart_update').serialize();
+					data += '&isAjax=1';
+					var is_quickview = false;
+					if(jQuery("body").hasClass("quickview-index-view")){
+						is_quickview = true;
+					}
+					if(is_quickview)
+						window.parent.jQuery("#loading-mask").show();
+					else
+							
+						
+					try {
+						
+						jQuery.ajax({
+							url : url,
+							dataType : 'json',
+							type : 'post',
+							data : data,
+							success : function(data) {
+								if(is_quickview)
+									window.parent.jQuery('#loading-mask').hide();
+								else
+									jQuery('#loading-mask').hide();
+								if(data.status == 'ERROR'){
+									if(is_quickview)
+										window.parent.alert(data.message.replace("<br/>",""));
+									else
+										alert(data.message.replace("<br/>",""));
+								}else{
+									if(is_quickview){
+										
+										if(window.parent.jQuery('.m-hide .mini-cart')){
+											window.parent.jQuery('.m-hide .mini-cart').replaceWith(data.toplink);
+										}
+										if(jQuery('.m-hide .cart_sidebar')){
+										   jQuery('.m-hide .cart_sidebar').replaceWith(data.cart_sidebar);
+										   jQuery(".sidebar-content").css("height", jQuery(window).height() - 150);
+										}
+										if(window.parent.jQuery('.fixed-header .mini-cart')){
+											window.parent.jQuery('.fixed-header .mini-cart').replaceWith(data.toplink);
+										}
+										if(window.parent.jQuery('.sticky-header .mini-cart')){
+											window.parent.jQuery('.sticky-header .mini-cart').replaceWith(data.toplink);
+										}
+										if(window.parent.jQuery('.col-right .block.block-cart')){
+											window.parent.jQuery('.col-right .block.block-cart').replaceWith(data.cart_sidebar);
+										}
+										window.parent.jQuery('#after-loading-success-message #success-message-container .msg-box').html(data.message);
+										<?php $code = Mage::app()->getStore();?>
+										<?php $autoclose = Mage::getStoreConfig('ajaxcart/addtocart/autoclose', $code);?>
+										ajaxcart_sec = <?php echo ($autoclose && is_numeric($autoclose))?$autoclose:5; ?>;
+										timer_sec = ajaxcart_sec;
+										window.parent.jQuery('#after-loading-success-message').fadeIn(200);
+										ajaxcart_timer = setInterval(function(){
+											timer_sec --;
+											window.parent.jQuery('#after-loading-success-message .timer').html(timer_sec);
+										},1000)
+										setTimeout(function(){
+											window.parent.jQuery('#after-loading-success-message').fadeOut(200);
+											clearTimeout(ajaxcart_timer);
+											setTimeout(function(){
+												window.parent.jQuery('#after-loading-success-message .timer').html(ajaxcart_sec);
+											}, 1000);
+										},ajaxcart_sec*1000);
+									}
+									else {
+										
+								
+									//var myHTML = jQuery('.cart-qty').html();
+									//============== ZEE CODE=====================// 
+										//--- Getting Cart Items Count From Server Side on Cart Page & Not Displaying MiniCart on Hover 	
+										jQuery('#cart-qty').html(data.cart_count);
+									//============== ZEE CODE=====================// 
+										if(jQuery('.m-hide .mini-cart')){
+											jQuery('.m-hide .mini-cart').replaceWith(data.toplink);
+											
+										}
+										if(jQuery('.m-hide .cart_sidebar')){
+										   jQuery('.m-hide .cart_sidebar').replaceWith(data.cart_sidebar);
+										   jQuery(".sidebar-content").css("height", jQuery(window).height() - 150);
+										}
+										if(jQuery('.cart ')){
+											jQuery('.cart ').replaceWith(data.shoping_cart);
+										}
+										if(jQuery('.fixed-header .mini-cart')){
+											jQuery('.fixed-header .mini-cart').replaceWith(data.toplink);
+										}
+										if(jQuery('.sticky-header .mini-cart')){
+											jQuery('.sticky-header .mini-cart').replaceWith(data.toplink);
+										}
+										if(jQuery('.col-right .block.block-cart')){
+											jQuery('.col-right .block.block-cart').replaceWith(data.cart_sidebar);
+										}
+										
+										jQuery('#after-loading-success-message #success-message-container .msg-box').html(data.message);
+										<?php $autoclose = Mage::getStoreConfig('ajaxcart/addtocart/autoclose', $code);?>
+										ajaxcart_sec = <?php echo ($autoclose && is_numeric($autoclose))?$autoclose:5; ?>;
+										timer_sec = ajaxcart_sec;
+										jQuery('.topCartContent').show();
+										ajaxcart_timer = setInterval(function(){
+											timer_sec --;
+											jQuery('#after-loading-success-message .timer').html(timer_sec);
+										},1000);
+										
+									 
+										if(jQuery('#shopping-cart-table').find('td > p.error').html()){
+											jQuery('.col-xs-9>.page-title').after('<ul class="messages"><li class="error-msg"><ul><li><span>Some of the products cannot be ordered in requested quantity.</span></li></ul></li></ul>');
+										}else{
+											jQuery('.col-xs-9>.page-title').after('');
+									
+										}
+									}
+									
+								}
+							}
+							
+						});
+					} catch (e) {
+					} 
+		
+					this.form.action = oldUrl;
+					if (e) {
+						throw e;
+					}
+				}
+			}.bind(productAddToCartFormSidebar);
+					
+		//]]>
+		//--- SIDEBAR Minicart Checkout Popup Initialization ....
+		jQuery('#cart_sidebar_checkout').on('click', function(){
+			jQuery('#myModal.guest-popup').removeClass('guest-forget-popup');
+			jQuery('#guest-checkout-button').show();
+			jQuery('#myModal').addClass('guest-popup');
+			jQuery('#create-acount-action').hide();
+			jQuery('#redirectFlag').val('buyNow');
+			//--- Reset any validations for Forgot Password Form
+			var forgotPasswordForm = new VarienForm('social-forgot-pass');
+			forgotPasswordForm.validator.reset();
+			
+			//--- Reset any validations for Sign in/Login Form
+			var userLoginForm = new VarienForm('login-form');
+			userLoginForm.validator.reset();
+			
+			//--- Reset any validations for Signup/Register Form
+			var userRegisterForm = new VarienForm('social-register-form');
+			userRegisterForm.validator.reset();
+			
+			//--- intitialize Popup with Login Form (hide other forms)
+			jQuery('#account-forgotpassword').hide();
+			jQuery('#account-create').hide();
+			jQuery('#login-form').show();
+			jQuery('#send-friend').hide();
+			jQuery('.tejar-socialconnect-login').show();
+			//--- Hide Messages and Guest checkout button as it is Signup link not BuyNow.
+			jQuery('#myModal .messages').hide();
+			//jQuery('#guest-checkout-button').hide();
+		});
+			</script>
+ 
+<?php endif;?>

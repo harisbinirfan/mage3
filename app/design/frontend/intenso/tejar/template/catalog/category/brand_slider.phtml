@@ -1,0 +1,49 @@
+<?php $category = Mage::registry('current_category'); ?>
+<?php if($category->getIsAnchor()): ?>
+<?php
+
+$collection = $this->getCollection();
+$level = $category->getData('level');
+$_slider = $this->getCurrentSlider();
+$i = 0;
+
+?>
+<?php if($collection->getSize() && count($collection) > 1): ?>
+<section class="category-wrapper owl-top-narrow" id="related_brands" style="">
+	<h3><?php echo $_slider->getTitle(); ?></h3>
+	<div class="filter-products">
+		<div class="gird-container brand-slider owl-carousel">
+		<?php foreach($collection as $childCategory): ?>
+		<?php $i++; ?>
+				<div class="owl-item item gird-item <?php  echo $i>=13&&$level==3? "gird-item--hidden":"";  ?>">
+					<div class="gird-item--image">
+						<a href="<?php echo $category->getUrl().'/filter/manufacturer/'.$childCategory->getUrlKey(); ?>">
+						<img
+							<?php if($childCategory->getCustomThumbnail()):?>
+							src="<?php echo $this->getSkinUrl('images/clear.png'); ?>"
+							data-lazy="<?php echo $this->helper('tejar_catalog/category_image')->init($childCategory, 'custom_thumbnail',$childCategory->getCustomThumbnail()); ?>"
+							class="item-image"
+							<?php else: ?>
+							src="<?php echo $this->getSkinUrl('images/clear.png'); ?>"
+							<?php endif;?>
+							alt="<?php echo $category->getName(); ?>"
+							width="500" height="500"  />
+						</a>
+					</div>
+				</div>
+		<?php endforeach; ?>
+		</div>
+	</div>
+	<script>
+		document.addEventListener("DOMContentLoaded", function(){
+			var brandSliderSlick = $j("#related_brands .gird-container");
+			brandSliderSlick.slick({lazyLoad:"ondemand",prevArrow:'<button class="slick-prev" aria-label="Previous" type="button"><span aria-label="Previous">\u2039</span></button>',nextArrow:'<button class="slick-next" aria-label="Next" type="button"><span aria-label="Next">\u203a</span></button>',speed:1E3,slidesToShow:6,slidesToScroll:3,speed: 300,
+				responsive:[{breakpoint:10240.9,settings:{slidesToShow:10,slidesToScroll:10}},{breakpoint:1920.9,settings:{slidesToShow:9,slidesToScroll:9}},{breakpoint:1680.9,settings:{slidesToShow:8,slidesToScroll:8}},{breakpoint:1440.9,settings:{slidesToShow:7,slidesToScroll:7}},{breakpoint:1280.9,settings:{slidesToShow:6,slidesToScroll:6}},{breakpoint:1024.9,settings:{slidesToShow:5,slidesToScroll:5}},{breakpoint:992.9,settings:{slidesToShow:4,slidesToScroll:4}},{breakpoint:768.9,settings:{slidesToShow:3,slidesToScroll:3}},{breakpoint:480.9,settings:{
+					slidesToShow:2,slidesToScroll:2
+				}}]
+			});
+		});
+	</script>
+</section>
+<?php endif; ?>
+<?php endif; ?>

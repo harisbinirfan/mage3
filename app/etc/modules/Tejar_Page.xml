@@ -1,0 +1,15 @@
+<?xml version="1.0"?>  
+<config>  
+    <modules>  
+        <Tejar_Page>  
+            <active>true</active>  
+            <codePool>local</codePool>
+             <depends>
+		<Mage_Core />
+                <Mage_Page />
+                
+	    </depends>
+        </Tejar_Page>  
+    </modules>  
+</config> 
+

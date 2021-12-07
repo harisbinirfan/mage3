@@ -1,0 +1,112 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    Itactica
+ * @package     Itactica_Intenso
+ * @copyright   Copyright (c) 2014-2015 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php
+/**
+ * Top menu for store
+ *
+ * @see Mage_Page_Block_Html_Topmenu
+ */
+?>
+<?php
+$_isAjax = Mage::getStoreConfig('intenso/header/header_topmenu_ajax',Mage::app()->getStore());
+$_linksArray = @unserialize(Mage::getStoreConfig('intenso/header/main_menu_links', Mage::app()->getStore()));
+?>
+<div id="main_navigation_wrap" class="<?php if($_isAjax): ?>is-ajax<?php endif; ?> nav">
+	<div class="container">
+		<div class="row">
+			<div class="sticky_inner">
+				<?php if (Mage::getStoreConfig('intenso/header/show_categories', Mage::app()->getStore())): ?>
+				<div class="nav_item size_3 nav-root">
+					<div class="nav-link">
+						<button class="open_categories item-categories has-dropdown" data-url="<?php echo Mage::getBaseUrl(); ?>categories" data-dropfall-id="categories">Categories</button>
+					</div>
+				</div>
+				<?php endif ?>
+				<div class="nav_item">
+					<nav class="main_navigation">
+						<?php //--- ZEE CODE ?>
+						<?php $currUrl = Mage::helper('core/url')->getCurrentUrl(); ?>
+						<ul>
+						<?php if (Mage::getStoreConfig('intenso/header/show_home_link', Mage::app()->getStore())) : ?>
+							<li><a href="<?php echo $this->getUrl('') ?>"><?php echo $this->__('Home'); ?></a></li>
+						<?php endif; ?>
+
+						<?php if ($_linksArray): ?>
+						<?php foreach ($_linksArray as $menuItem): ?>
+							<li <?php echo strstr($currUrl,rtrim($menuItem['url'], '/'))? "class='current'":""; ?>>
+								<a href="<?php echo rtrim($this->getUrl($menuItem['url']), '/'); ?>" ><?php echo $menuItem['menu_item']; ?></a>
+								<?php if ($menuItem['static_block']): ?>
+									<div class="dropdown arrow-box">
+										<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId($menuItem['static_block'])->toHtml(); ?>
+									</div>
+								<?php endif; ?>
+							</li>
+						<?php endforeach; ?>
+					<?php endif; ?>
+						</ul>
+					</nav><!--/ .main_navigation-->
+				</div>
+			</div><!--/ .sticky_inner -->
+		</div><!--/ .row-->
+	</div><!--/ .container-->
+	<div class="dropdown-root">
+		<div class="dropdown-background">
+		  <div class="alternate-background"></div>
+		</div>
+		<div class="dropdown-arrow"></div>
+		<div class="dropdown-container">
+			<div class="dropdown-section" data-dropfall="categories">
+				<div class="dropdown-content">
+					<div class="sub-nav-primary">
+						<?php if(!$_isAjax): ?>
+							<?php $_menu = $this->getHtml('level-top'); ?>
+							<?php if ($_menu): ?>
+								<?php echo $_menu ?>
+							<?php endif ?>
+						<?php else : ?>
+							<div id="megamenu"></div>
+						<?php endif ?>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div><!--/ .main_navigation_wrap-->
+<?php if($_isAjax): ?>
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function(){
+	var body = document.getElementsByTagName("BODY")[0];
+	var url = "/tejar_ajax/index/topMenu/";
+	if(body.className.match(new RegExp('(\\s|^)'+'catalog-category-view'+'(\\s|$)'))){
+		 url = document.location.href;
+	}
+	new Ajax.Request(url  + (url.match(new RegExp('\\?')) ? '&isAjax=true' : '?isAjax=true' ) ,{
+		method:'get',
+		onSuccess: function(transport)    {
+			if(200 == transport.status) {
+				var json = transport.responseText.evalJSON(true);
+				if(body.className.match(new RegExp('(\\s|^)'+'catalog-category-view'+'(\\s|$)'))){
+					$("megamenu").update(json.topMenu);
+				} else {
+					$("megamenu").update(json);
+				}
+				new globalNavDropdowns(".nav");
+				new globalChildNavDropdowns(".sub-nav-primary");
+			}
+		},
+		onFailure: function(transport){
+			$j("#ajax-errors").show();
+		}
+	});
+});
+</script>
+
+<?php endif; ?>

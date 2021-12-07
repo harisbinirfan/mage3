@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<modules>
+		<Tejar_CustomShippingMethod>
+		<version>1.0.0</version>
+		</Tejar_CustomShippingMethod>
+	</modules>
+	 <global>
+		<models>
+			<customshippingmethod>
+				<class>Tejar_CustomShippingMethod_Model</class>
+			</customshippingmethod>
+		</models>
+		<helpers>
+			<customshippingmethod>
+				<class>Tejar_CustomShippingMethod_Helper</class>
+			</customshippingmethod>
+		</helpers>
+	</global>
+	 
+	<default>
+		<carriers>
+			<customshippingmethod>
+				<model>customshippingmethod/carrier</model>
+				<active>1</active>
+				<order_status>pending</order_status>
+				 <title>Store Pickup</title>
+				<allowspecific>1</allowspecific>
+				<price>1</price>
+				<sort_order>101</sort_order>
+			</customshippingmethod>
+		</carriers>
+	</default>
+	 
+	<frontend>
+		<routers>
+			<customshippingmethod>
+				<use>standard</use>
+				<args>
+				<module>Tejar_CustomShippingMethod</module>
+				<frontname>customshippingmethod</frontname>
+				</args>
+			</customshippingmethod>
+		</routers>
+	</frontend>
+</config>

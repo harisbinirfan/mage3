@@ -1,0 +1,145 @@
+
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php if(Mage::getStoreConfig('intenso/product_page/product_socail_sharing', Mage::app()->getStore())): ?>
+<!--=========================================== ZEE CODE ==============================================-->
+<!-- Add JS support for Social Media Share Actions -->
+<?php $_configFontStyles = explode(',' , Mage::getStoreConfig('intenso/product_page/product_sharing_multiselect' , Mage::app()->getStore())); ?>
+<!--=========================================== ZEE CODE ==============================================-->
+<?php endif; ?>
+<?php $sendToFriendconfigValue = Mage::getStoreConfig('sendfriend/email/allow_guest',  Mage::app()->getStore()); ?>
+<?php $oneStepCheckout = Mage::helper('onestepcheckout')->enabledOnestepcheckout(); ?>
+<?php $_product = $this->getProduct(); ?>
+<?php $_wishlistSubmitUrl = $this->helper('wishlist')->getAddUrl($_product); ?>
+<?php $_compareUrl = $this->helper('catalog/product_compare')->getAddUrl($_product); ?>
+
+	<?php if(Mage::getStoreConfig('ajaxcart/addtolinks/enableproduct')): ?>
+		<ul class="add-to">
+			<?php if ($this->helper('wishlist')->isAllow()) : ?>
+				<li class="wishlist_pro">
+					<a id="wishlist-id-<?php echo $_product->getId(); ?>"
+					href="#" onclick="ajaxWishlist(this,'<?php echo $_wishlistSubmitUrl ?>','<?php echo $_product->getId()?>'); return false;">
+						<?php echo $this->__('Add to Wishlist') ?>
+					</a>
+				</li>
+			<?php endif; ?>
+			<?php if($_compareUrl) : ?>
+				<li class="compare_pro">
+					<a id="compare-id-<?php echo $_product->getId(); ?>"
+					href="#"
+					onclick="ajaxCompare(this,'<?php echo $_compareUrl?>','<?php echo $_product->getId()?>'); return false;"
+					class="link-compare">
+						<?php echo $this->__('Add to Compare') ?>
+					</a>
+				</li>
+			<?php endif; ?>
+			<?php if(!Mage::getStoreConfig('intenso/product_page/product_socail_sharing', Mage::app()->getStore()) || $_configFontStyles == null): ?>
+				<?php if ($this->canEmailToFriend()): ?>
+					<li class="email-friend">
+					<?php if($sendToFriendconfigValue || Mage::getSingleton('customer/session')->isLoggedIn()){?>
+						<a id="sendFriendlink" href="#" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Email to a Friend')) ?>" data-reveal-id="myModal"><?php echo $this->__('Email to a Friend') ?></a>
+					<?php }elseif(!$sendToFriendconfigValue && !Mage::getSingleton('customer/session')->isLoggedIn() && $oneStepCheckout){?>
+						<a onclick="jQuery('#signin').trigger('click');" data-reveal-id="myModal" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Email to a Friend')) ?>" href="javascript:void(0);"><?php echo $this->__('Email to a Friend') ?></a>
+					<?php }?>
+					</li>
+				<?php endif; ?>
+			<?php endif; ?>
+	<?php else : ?>
+		<ul class="add-to">
+			<?php if ($this->helper('wishlist')->isAllow()) : ?>
+				<li class="wishlist_pro"><a href="<?php echo $_wishlistSubmitUrl ?>" onclick="productAddToCartForm.submitLight(this, this.href); return false;" class=""><?php echo $this->__('Add to Wishlist') ?></a></li>
+			<?php endif; ?>
+			<?php if($_compareUrl) : ?>
+				<li class="compare_pro"><a href="<?php echo $_compareUrl ?>" ><?php echo $this->__('Add to Compare') ?></a></li>
+			<?php endif; ?>
+			<?php if(!Mage::getStoreConfig('intenso/product_page/product_socail_sharing', Mage::app()->getStore())): ?>
+				<?php if ($this->canEmailToFriend()): ?>
+					<li class="email-friend">
+					<?php if($sendToFriendconfigValue || Mage::getSingleton('customer/session')->isLoggedIn()){?>
+						<a id="sendFriendlink" href="#" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Email to a Friend')) ?>" data-reveal-id="myModal"><?php echo $this->__('Email to a Friend') ?></a>
+					<?php }elseif(!$sendToFriendconfigValue && !Mage::getSingleton('customer/session')->isLoggedIn() && $oneStepCheckout){?>
+						<a onclick="jQuery('#signin').trigger('click');" data-reveal-id="myModal" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Email to a Friend')) ?>" href="javascript:void(0);"><?php echo $this->__('Email to a Friend') ?></a>
+					<?php } elseif(!$oneStepCheckout && !Mage::getSingleton('customer/session')->isLoggedIn()){ ?>
+							<a href="<?php echo $this->helper('catalog/product')->getEmailToFriendUrl($_product) ?>" class="icons-mail-2" aria-label="<?php echo Mage::helper('core')->quoteEscape($this->__('Email to a Friend')) ?>" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Email to a Friend')) ?>"></a>
+						<?php } ?>
+					</li>
+				<?php endif; ?>
+			<?php endif; ?>
+	<?php endif;?>
+
+
+	</ul>
+<!--========================================== ZEE CODE ======================================-->
+	<div class="social-wrapper">
+	<!-- Adding Buttons to support for Social Media (FB, Twitter, Gplus, Pinterest) Sharing on Product Page inside Side Bar...
+	-->
+	<?php $sendToFriendconfigValue = Mage::getStoreConfig('sendfriend/email/allow_guest'); ?>
+		<ul class="share-list">
+			<?php if(Mage::getStoreConfig('intenso/product_page/product_socail_sharing', Mage::app()->getStore())): ?>
+
+				<?php if ($this->canEmailToFriend()): ?>
+					<li>
+						<?php if($sendToFriendconfigValue || Mage::getSingleton('customer/session')->isLoggedIn()){?>
+							<a id="sendFriendlink" href="#" data-reveal-id="myModal" class="icons-mail-2" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Email to a Friend')) ?>" aria-label="Email To Friend"></a>
+						<?php }elseif(!$sendToFriendconfigValue && !Mage::getSingleton('customer/session')->isLoggedIn() && $oneStepCheckout){?>
+							<a onclick="jQuery('#signin').trigger('click');" href="javascript:void(0);" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Email to a Friend')) ?>" class="icons-mail-2" aria-label="Email To Friend"></a>
+						<?php } elseif(!$oneStepCheckout && !Mage::getSingleton('customer/session')->isLoggedIn()){ ?>
+							<a href="<?php echo $this->helper('catalog/product')->getEmailToFriendUrl($_product) ?>" class="icons-mail-2" aria-label="<?php echo Mage::helper('core')->quoteEscape($this->__('Email to a Friend')) ?>" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Email to a Friend')) ?>"></a>
+						<?php } ?>
+					</li>
+				<?php endif; ?>
+				<?php foreach($_configFontStyles as $_socialShare): ?>
+					<?php if($_socialShare == "facebook"): ?>
+						<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+						<li><a class="icons-facebook-7" onclick="shareIt('fb', '<?php echo Mage::helper('core/url')->getCurrentUrl();?>');"></a></li>
+					<?php elseif($_socialShare == "twitter"): ?>
+						<script async src="https://connect.facebook.net/en_US/all.js"></script>
+						<li><a class="icons-twitter" onclick="shareIt('twitter', 'https://twitter.com/intent/tweet?text=<?php echo urlencode($_product->getName()); ?>&url=<?php echo urlencode(Mage::helper('core/url')->getCurrentUrl());?>');" title="Share on Twitter"></a></li>
+					<?php elseif($_socialShare == "googleplus"): ?>
+						<script async src="https://apis.google.com/js/platform.js"></script>
+						<li><a onclick="shareIt('gplus', 'https://plus.google.com/share?url=<?php echo Mage::helper('core/url')->getCurrentUrl(); ?>');"  class="icons-gplus"></a></li>
+					<?php elseif($_socialShare == "pinterest"): ?>
+						<script async type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>
+						<li><a data-pin-do="buttonPin" data-pin-custom="true" href="https://www.pinterest.com/pin/create/button/?url=<?php echo Mage::helper('core/url')->getCurrentUrl(); ?>&media=<?php echo $this->helper('catalog/image')->init($_product, 'image')->resize(450,298); ?>" class="icons-pinterest-3"></a></li>
+					<?php elseif($_socialShare == "tumblr"): ?>
+						<script async id="tumblr-js" src="https://assets.tumblr.com/share-button.js"></script>
+						<li><a onclick="shareIt('tumblr', 'https://www.tumblr.com/share?url=<?php echo Mage::helper('core/url')->getCurrentUrl(); ?>');" data-color="white" class="icons-tumblr-1" ></a></li>
+					<?php elseif($_socialShare == "whatsapp"): ?>
+					<li><a onclick="shareIt('whatsapp', 'https://api.whatsapp.com/send?text=<?php echo Mage::helper('core/url')->getCurrentUrl(); ?>');" data-action="share/whatsapp/share" class="whatsapp_share icons-whatsapp" ><svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 48 48"><path fill="#fff" d="M4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98c-0.001,0,0,0,0,0h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303z"></path><path fill="#fff" d="M4.868,43.803c-0.132,0-0.26-0.052-0.355-0.148c-0.125-0.127-0.174-0.312-0.127-0.483l2.639-9.636c-1.636-2.906-2.499-6.206-2.497-9.556C4.532,13.238,13.273,4.5,24.014,4.5c5.21,0.002,10.105,2.031,13.784,5.713c3.679,3.683,5.704,8.577,5.702,13.781c-0.004,10.741-8.746,19.48-19.486,19.48c-3.189-0.001-6.344-0.788-9.144-2.277l-9.875,2.589C4.953,43.798,4.911,43.803,4.868,43.803z"></path><path fill="#cfd8dc" d="M24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,4C24.014,4,24.014,4,24.014,4C12.998,4,4.032,12.962,4.027,23.979c-0.001,3.367,0.849,6.685,2.461,9.622l-2.585,9.439c-0.094,0.345,0.002,0.713,0.254,0.967c0.19,0.192,0.447,0.297,0.711,0.297c0.085,0,0.17-0.011,0.254-0.033l9.687-2.54c2.828,1.468,5.998,2.243,9.197,2.244c11.024,0,19.99-8.963,19.995-19.98c0.002-5.339-2.075-10.359-5.848-14.135C34.378,6.083,29.357,4.002,24.014,4L24.014,4z"></path><path fill="#40c351" d="M35.176,12.832c-2.98-2.982-6.941-4.625-11.157-4.626c-8.704,0-15.783,7.076-15.787,15.774c-0.001,2.981,0.833,5.883,2.413,8.396l0.376,0.597l-1.595,5.821l5.973-1.566l0.577,0.342c2.422,1.438,5.2,2.198,8.032,2.199h0.006c8.698,0,15.777-7.077,15.78-15.776C39.795,19.778,38.156,15.814,35.176,12.832z"></path><path fill="#fff" fill-rule="evenodd" d="M19.268,16.045c-0.355-0.79-0.729-0.806-1.068-0.82c-0.277-0.012-0.593-0.011-0.909-0.011c-0.316,0-0.83,0.119-1.265,0.594c-0.435,0.475-1.661,1.622-1.661,3.956c0,2.334,1.7,4.59,1.937,4.906c0.237,0.316,3.282,5.259,8.104,7.161c4.007,1.58,4.823,1.266,5.693,1.187c0.87-0.079,2.807-1.147,3.202-2.255c0.395-1.108,0.395-2.057,0.277-2.255c-0.119-0.198-0.435-0.316-0.909-0.554s-2.807-1.385-3.242-1.543c-0.435-0.158-0.751-0.237-1.068,0.238c-0.316,0.474-1.225,1.543-1.502,1.859c-0.277,0.317-0.554,0.357-1.028,0.119c-0.474-0.238-2.002-0.738-3.815-2.354c-1.41-1.257-2.362-2.81-2.639-3.285c-0.277-0.474-0.03-0.731,0.208-0.968c0.213-0.213,0.474-0.554,0.712-0.831c0.237-0.277,0.316-0.475,0.474-0.791c0.158-0.317,0.079-0.594-0.04-0.831C20.612,19.329,19.69,16.983,19.268,16.045z" clip-rule="evenodd"></path></svg></a></li>
+					<style>
+					a.whatsapp_share svg {
+					position: absolute;
+					width: 34px;
+					height: 34px;
+					top: -12px;
+					right: 17%;
+					}
+					.share-list li a {
+					position: relative;
+					}
+					.share-list li {
+					width: 13%;
+					}
+					.icons-whatsapp:before {
+					content: '';
+					}
+					</style>
+					<?php endif; ?>
+				<?php endforeach; ?>
+			<?php endif ; ?>
+			<!--<li><a data-color="white" class="tumblr-share-button" href="https://www.tumblr.com/share"></a></li>-->
+		</ul>
+	</div>
+<?php if(Mage::getStoreConfig('intenso/product_page/product_socail_sharing', Mage::app()->getStore())): ?>
+<script type="text/javascript">
+function shareIt(type, url){var top = screen.height/4;var left = screen.width/4;if(type=='fb'){window.open("https://www.facebook.com/sharer/sharer.php?u="+url, "Facebook", "height=400,width=550,resizable=1,top="+top+", left="+left);}else if(type=='twitter'){window.open(url, "Twitter", "height=400,width=550,resizable=1,top="+top+", left="+left);}else if(type=='gplus'){window.open(url, "GPlus", "height=400,width=550,resizable=1,top="+top+", left="+left);}else if(type=='tumblr'){window.open(url, "Tumblr", "height=400,width=550,resizable=1,top="+top+", left="+left);} else if(type=='whatsapp'){window.open(url, "Whatsapp", "height=400,width=550,resizable=1,top="+top+", left="+left);}}
+</script>
+<?php endif; ?>

@@ -1,0 +1,19 @@
+<?php 
+$store = Mage::app()->getStore();
+$code  = $store->getCode();
+$enable = Mage::getStoreConfig('filterproducts/config1/active',$code);
+?>
+<?php if($enable == 1): ?>
+	<?php if($this->getLayout()->createBlock('filterproducts/bestsellers_home_list')):?>
+		<div class="bg-white section-content no-space owl-bg ">
+		<!-- Featured Slider -->
+			<div class="container">
+				<h4 class="owl-title"><span class="content"><?php echo Mage::getStoreConfig('filterproducts/config1/title',$code); ?></span><a href="<?php echo $this->getUrl('best-seller') ?>" class="owl-side-link">View All</a></h4>
+					<div id="featured_product_bestseller" class="owl-top-narrow">
+						<?php // echo $this->getChildHtml('hellodear'); ?>
+							<?php echo $this->getLayout()->createBlock('filterproducts/bestsellers_home_list')->setProductsCount(8)->setTemplate('filterproducts/list.phtml')->toHtml(); ?>
+					</div>
+				</div>
+			</div>
+	<?php endif;?>
+<?php endif;?>

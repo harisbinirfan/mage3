@@ -1,0 +1,51 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php
+    $columns = $this->getColumns();
+?>
+
+<table class="table_type_1 theme_table wishlist_table" id="wishlist-table">
+    <thead>
+        <tr>
+		<?php $i= 0;
+		
+		?>
+            <?php foreach ($columns as $column): ?>
+                <th class="<?php if($i==0){ echo "product_image_col";}elseif($i==1){ echo "product_title_col";} elseif($i==2){ echo "product_price_col";} elseif($i==3){ echo "product_qty_col";} elseif($i==4){ echo "product_action_col";}   ?>"><?php echo $column->getTitle();?></th>
+            <?php $i++; endforeach; ?>
+        </tr>
+    </thead>
+    <tbody>
+        <?php if (count($this->getItems())): ?>
+            <?php foreach ($this->getItems() as $item): ?>
+                <tr id="item_<?php echo $item->getId();?>">
+                    <?php foreach ($columns as $column): ?>
+                        <td><?php $column->setItem($item); echo $column->toHtml($item);?></td>
+                    <?php endforeach; ?>
+                </tr>
+            <?php endforeach ?>
+        <?php else: ?>
+            <td colspan="<?php echo count($columns);?>" class="wishlist-empty"><?php echo $this->__('This Wishlist has no Items');?></td>
+        <?php endif; ?>
+    </tbody>
+
+<?php foreach ($columns as $column): ?>
+    <?php echo $column->getAdditionalHtml();?>
+<?php endforeach; ?>
+<script type="text/javascript">
+//<![CDATA[
+    decorateTable('wishlist-table');
+
+<?php foreach ($columns as $column): ?>
+    <?php echo $column->getJs();?>
+<?php endforeach; ?>
+//]]>
+</script>

@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Intenso Premium Theme
+ * 
+ * @category    Itactica
+ * @package     Itactica_Billboard
+ * @copyright   Copyright (c) 2015 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+-->
+<config>
+    <modules>
+        <Tejar_Billboard>
+            <version>1.9.3</version>
+        </Tejar_Billboard>
+    </modules>
+    <global>
+	     <resources>
+            <itactica_billboard_setup>
+                <setup>
+					<module>Tejar_Billboard</module>
+					<class>Tejar_Billboard_Model_Resource_Setup</class>
+                </setup>
+            </itactica_billboard_setup>
+        </resources>
+        <helpers>
+            <tejar_billboard>
+				<class>Tejar_Billboard_Helper</class>
+			</tejar_billboard>
+            <!-- <itactica_billboard>
+				<rewrite>
+					<class>Tejar_Billboard_Helper</class>
+				</rewrite>
+            </itactica_billboard> -->
+        </helpers>
+		<blocks>
+            <itactica_billboard>
+				<rewrite>
+					<adminhtml_unit_edit_tab_form>Tejar_Billboard_Block_Adminhtml_Unit_Edit_Tab_Form</adminhtml_unit_edit_tab_form>
+				</rewrite>
+            </itactica_billboard>
+        </blocks>
+		 <models>
+            <tejar_billboard>
+				<class>Tejar_Billboard_Model</class>
+			</tejar_billboard>
+            <itactica_billboard>
+				<rewrite>
+					<unit_attribute_source_columns>Tejar_Billboard_Model_Unit_Attribute_Source_Columns</unit_attribute_source_columns>
+				</rewrite>
+            </itactica_billboard>
+		   <itactica_billboard>
+				<rewrite>
+					<unit_attribute_source_images>Tejar_Billboard_Model_Unit_Attribute_Source_Images</unit_attribute_source_images>
+				</rewrite>
+            </itactica_billboard>
+        </models>
+    </global>
+	<admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Tejar_Billboard before="Itactica_Billboard">Tejar_Billboard_Adminhtml</Tejar_Billboard>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+</config>
+

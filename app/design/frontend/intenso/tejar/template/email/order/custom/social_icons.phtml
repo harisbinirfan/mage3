@@ -1,0 +1,113 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/**
+ * @var $this Mage_Sales_Block_Order_Totals
+ * @see Mage_Sales_Block_Order_Totals
+ */
+?>
+<?php  $linksArrayTwo = @unserialize(Mage::getStoreConfig('intenso/footer/sec_menu_links_2', Mage::app()->getStore())); ?>
+<?php if(Mage::getStoreConfig('intenso/footer/mobile_social',Mage::app()->getStore())): ?>
+ <tr>
+	<td align="center" valign="top" id="templateFooter">
+		<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" class="templateContainer">
+			<tr>
+				<td valign="top" class="footerContainer">
+					<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnFollowBlock" style="min-width:100%;">
+						<tbody class="mcnFollowBlockOuter">
+							<tr>
+								<td align="center" valign="top" style="padding:0" class="mcnFollowBlockInner">
+									<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnFollowContentContainer" style="min-width:100%;">
+										<tbody>
+											<tr>
+												<td align="center" class="mcnFollowBlockInnerContainer">
+													<table border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width:100%;" class="mcnFollowContent">
+														<tbody>
+															<tr>
+																<td align="center" valign="top">
+																<h3 style="text-align: center;font-weight: 400;padding-bottom:15px;font-size: 18px;">CONNECT WITH US</h3>
+																	<table align="center" border="0" cellpadding="0" cellspacing="0">
+																		<tbody>
+																			<tr>
+																				<td align="center" valign="top">
+																					<?php foreach ($linksArrayTwo as $menuItemTwo): ?>
+																					<?php if($menuItemTwo['type'] === '0'): ?>
+																					<table align="center" border="0" cellpadding="0" cellspacing="0" style="display:inline;">
+																						<tbody>
+																							<tr>
+																								<td valign="top" style="padding-right:10px; padding-bottom:0;" class="mcnFollowContentItemContainer">
+																									<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnFollowContentItem">
+																										<tbody>
+																											<tr>
+																												<td align="center" valign="middle" style="padding-top:5px; padding-right:10px; padding-bottom:5px; padding-left:9px;">
+																													<table align="center" border="0" cellpadding="0" cellspacing="0" width="">
+																														<tbody>
+																															<tr>
+																																<td align="center" valign="middle" width="32" class="mcnFollowIconContent">
+																																	<a href="<?php if ($menuItemTwo['url']) echo ' '.$menuItemTwo['url']; ?>" target="_blank" title="<?php if ($menuItemTwo['menu_item']) echo ' '.$menuItemTwo['menu_item']; ?>" style="display: block;">
+																																		<img src="<?php echo $this->getSkinUrl('email/'); ?><?php echo strtolower($menuItemTwo['menu_item']); ?>.png" style="display:block;" height="32" width="32" class="">
+																																	</a>
+																																</td>
+																															</tr>
+																														</tbody>
+																													</table>
+																												</td>
+																											</tr>
+																										</tbody>
+																									</table>
+																								</td>
+																							</tr>
+																						</tbody>
+																					</table>
+																					<?php endif; ?>
+																					<?php endforeach;  ?>
+																				</td>
+																			</tr>
+																		</tbody>
+																	</table>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</td>
+</tr>
+<tr>
+	<td style="padding-top: 15px; padding-bottom: 0;" width="100%" class="wrapper-padding">
+		<div style="background-color:rgb(214,214,214);font-size:1px;height:1px"></div>
+	</td>
+</tr>
+<?php endif;  ?>
+ 

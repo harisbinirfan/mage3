@@ -1,0 +1,17 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license/regular
+ */
+/**
+ * Scripts added before the body closing tag
+ */
+?>
+<?php $helper = Mage::helper('itactica_intenso');$storeId = $this->getRequest()->getParam('store-id');$d = $helper->getStoreDesignConfig($storeId);?>
+<?php if ($d['tejar_custom']['head_script']) : ?>
+<?php echo $d['tejar_custom']['head_script']; ?>
+<?php endif; ?>

@@ -1,0 +1,473 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php
+/**
+ * Category view template
+ *
+ * @see Mage_Catalog_Block_Category_View
+ */
+?>
+<?php
+    $_helper    = $this->helper('catalog/output');
+    $_category  = $this->getCurrentCategory();
+    $filters = array();
+  	$appliedFilters = Mage::getSingleton('catalog/layer')->getState()->getFilters();
+  	foreach($appliedFilters as $filter) {
+  		$filters[] = $filter->getFilter()->getRequestVar();
+  	}
+    $orbitSliderBlock = "";
+    
+	$displayMode = $_category->getData('display_mode');
+    $_imgHtml   = '';
+    if ($_imgUrl = $_category->getImageUrl()) {
+        $_imgHtml = '<p class="category-image"><img src="'.$_imgUrl.'" alt="'.$this->escapeHtml($_category->getName()).'" title="'.$this->escapeHtml($_category->getName()).'" /></p>';
+        $_imgHtml = $_helper->categoryAttribute($_category, $_imgHtml, 'image');
+    }
+    if ($_orbitSliderId = $_category->getData('category_orbitslider')) {
+        $orbitSliderBlock = Mage::app()->getLayout()
+            ->createBlock('itactica_orbitslider/slider_widget_view')
+            ->setData('slider_id',$_orbitSliderId)
+            ->setTemplate('itactica_orbitslider/view.phtml')
+            ->toHtml();
+    } else {
+		if(!$orbitSliderBlock) {
+			$orbitSliderBlock = Mage::app()->getLayout()
+				->createBlock('itactica_orbitslider/view')
+				->setData('identifier',$_category->getUrlKey())
+				->setTemplate('itactica_orbitslider/view.phtml')
+				->toHtml();
+		} else {
+			$orbitSliderBlock = '';
+		}
+    }
+	$_logoSliderId = $_category->getData('category_logoslider');
+	$slider = Mage::getModel('itactica_logoslider/slider')->setStoreId(Mage::app()->getStore()->getId())->load($_logoSliderId);
+
+
+  if(empty($_category->getChildrenCategories()) && $_category->getCollectionType() == null){
+		$logoSliderBlock = Mage::app()->getLayout()
+			->createBlock('itactica_logoslider/view')
+			->setData('identifier','shop_by_brands')
+			->setStoreId(Mage::app()->getStore()->getId())
+			->setTemplate('catalog/category/brand_slider.phtml')
+			->toHtml();
+	} else {
+		$logoSliderBlock = '';
+	}
+  $parentCategory = (!empty($_category->getChildrenCategories())) && ($_category->getCollectionType() == null);
+  $middleCategory = ((count($_category->getParentCategories()) > 1) && (count($_category->getChildrenCategories()) > 0)) && ($_category->getCollectionType() == null);
+?>
+<?php $headingTitle = Mage::getStoreConfig('design/product_meta/category_h1_title', Mage::app()->getStore()->getId()); ?>
+
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+
+
+<?php if($parentCategory): ?>
+	<div class="main-heading">
+		<h1 itemprop="name"><?php echo $_category->getName(); ?><?php echo $headingTitle != "" && $_category->getCollectionType() == null  ? "<span class='hide'>".$headingTitle."</span>":""; ?></h1>
+	</div>
+<?php endif; ?>
+<?php if($this->getChildHtml('catalog_category_navigation') && ($displayMode == "PAGE" || $displayMode == "PRODUCTS_AND_PAGE")): ?>
+  <?php if($displayMode == "PAGE"): ?>
+		<h1 class="hide" itemprop="name"><?php echo $_category->getName(); ?><?php echo $headingTitle != "" && $_category->getCollectionType() == null  ? "<span class='hide'>".$headingTitle."</span>":""; ?></h1>
+  <?php endif; ?>
+	<?php echo $this->getChildHtml('catalog_category_navigation'); ?>
+<?php else: ?>
+<?php if($_imgUrl): ?>
+    <?php echo $_imgHtml ?>
+<?php endif; ?>
+<?php echo $orbitSliderBlock; ?>
+<?php endif; ?>
+
+
+<?php if($_subCategories = $_category->getChildrenCategories()): ?>
+<?php
+	$_categoryIds = array(); foreach($_subCategories as $_subCategory) $_categoryIds[] = $_subCategory->getId();
+	$_subCategories = Mage::getModel('catalog/category')->getCollection()
+	->addAttributeToSelect('*')
+	->addIsActiveFilter(1)
+	->addAttributeToFilter('collection_type',['eq'=>1])
+	->addAttributeToFilter('entity_id', array('in' => $_categoryIds))
+	->addOrderField('position');
+?>
+<?php if($_subCategories->getSize() > 0): ?>
+<div class="category__banner">
+	<div class="__row store__row">
+		<div class="__column __span12 store__column">
+			<div id="banner_row">
+				<?php $i = 0; ?>
+				<?php $threeCol = 0; ?>
+				<?php $fiveCol = 0; ?>
+				<?php $image = array(); ?>
+				<?php $horizontal = 0; ?>
+				<?php foreach($_subCategories as $_subCategory): ?>
+				<?php
+					$oneColLarge = preg_match ('~1col_large~', $_subCategory->getThumbnail());
+					$twoColMedium = preg_match ('~2col_medium~', $_subCategory->getThumbnail());
+					$fourColSmall = preg_match ('~4col_small~', $_subCategory->getThumbnail());
+
+					$threeColLarge = preg_match ('~3col_large~', $_subCategory->getThumbnail());
+					$threeColMedium = preg_match ('~3col_medium~', $_subCategory->getThumbnail());
+
+					$fiveColLarge = preg_match ('~5col_large~', $_subCategory->getThumbnail());
+					$fiveColSmall = preg_match ('~5col_small~', $_subCategory->getThumbnail());
+
+          if($_subCategory->getThumbnail()){
+						$mediaUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+						$mediaImagePath = Mage::getBaseDir('media') . DS . "wysiwyg/brand_alt/" . $_subCategory->getThumbnail();
+						$mediaImageUrl	 = $mediaUrl . "wysiwyg/brand_alt/" . $_subCategory->getThumbnail();
+						$imgAltUrl = "";
+						if(file_exists($mediaImagePath)){
+							$imgAltUrl = $mediaImageUrl;
+						}
+					}
+				?>
+
+
+				<?php if($oneColLarge): ?>
+				<!-- Start Large Image -->
+					<?php $image[] = "Large" ?>
+				<div class="category__container">
+					<div class="category__row __double">
+						<div class="category__tile category__large category__image category__ungrouped category__flexHeight">
+							<div class="category__content">
+								<div class="category__innerContent">
+									<?php if($imgAltUrl): ?>
+									<a href="<?php echo $_subCategory->getUrl(); ?>" class="alt__link">
+									<?php else: ?>
+									<a href="<?php echo $_subCategory->getUrl(); ?>" class="image__overlay"></a>
+									<?php endif; ?>
+										<div class="category__imageTile category__medium category__cover category__hasLink">
+											<div class="category__imageColumn">
+												<img src="<?php echo $this->getSkinUrl('images/clear.png'); ?>" data-src="<?php echo $this->helper('itactica_featuredcategories/category')->resize('catalog/category/'.$_subCategory->getThumbnail()); ?>" class="category__image category__cover lazyload"  style="vertical-align:middle;"/>
+												<?php if($imgAltUrl): ?>
+												<img src="<?php echo $this->getSkinUrl('images/clear.png'); ?>" data-src="<?php echo $imgAltUrl; ?>" class="alt-image category__image category__cover alt-lazyload"  style="vertical-align:middle;"/>
+												<?php endif; ?>
+											</div>
+										</div>
+									<?php if($imgAltUrl): ?>
+									</a>
+									<?php endif; ?>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+					<!-- END Large Image -->
+				<?php endif; ?>
+
+
+
+
+				<?php if($twoColMedium): ?>
+				<!-- Start Medium Image -->
+				<?php $image[] = "Medium" ?>
+				<?php if($i === 0): ?>
+				<div class="category__container">
+					<div class="category__row __double">
+					<?php endif; ?>
+						<div class="category__half">
+							<div class="category__tile category__medium category__image category__grouped">
+								<div class="category__content">
+									<div class="category__innerContent">
+										<?php if($imgAltUrl): ?>
+										<a href="<?php echo $_subCategory->getUrl(); ?>" class="alt__link">
+										<?php else: ?>
+										<a href="<?php echo $_subCategory->getUrl(); ?>" class="image__overlay"></a>
+										<?php endif; ?>
+										<div class="category__imageTile category__medium category__cover category__hasLink">
+											<div class="category__imageColumn">
+												<img src="<?php echo $this->getSkinUrl('images/clear.png'); ?>" data-src="<?php echo $this->helper('itactica_featuredcategories/category')->resize('catalog/category/'.$_subCategory->getThumbnail()); ?>" class="category__image category__cover lazyload"  style="vertical-align:middle;"/>
+												<?php if($imgAltUrl): ?>
+												<img src="<?php echo $this->getSkinUrl('images/clear.png'); ?>" data-src="<?php echo $imgAltUrl; ?>" class="alt-image category__image category__cover alt-lazyload"  style="vertical-align:middle;"/>
+												<?php endif; ?>
+											</div>
+										</div>
+										<?php if($imgAltUrl): ?>
+										</a>
+										<?php endif; ?>
+									</div>
+								</div>
+							</div>
+						</div>
+					<?php $i++; ?>
+					<?php if($i === 2): ?>
+						</div>
+					</div>
+					<?php $i=0; ?>
+				<?php endif; ?>
+				<!-- END Medium Image -->
+				<?php endif; ?>
+
+
+
+
+				<?php if($fourColSmall): ?>
+				<!-- Start Small Image -->
+				<?php $image[] = "Small" ?>
+				<?php if($i === 0): ?>
+				<div class="category__container">
+					<div class="category__row __single">
+				<?php endif; ?>
+						<div class="category__tile category__mini category__image category__ungrouped category__variableHeight" style="">
+							<div class="category__content">
+								<div class="category__innerContent">
+									<?php if($imgAltUrl): ?>
+									<a href="<?php echo $_subCategory->getUrl(); ?>" class="alt__link">
+									<?php else: ?>
+									<a href="<?php echo $_subCategory->getUrl(); ?>" class="image__overlay"></a>
+									<?php endif; ?>
+									<div class="category__imageTile category__medium category__cover category__hasLink">
+										<div class="category__imageColumn">
+											<img src="<?php echo $this->getSkinUrl('images/clear.png'); ?>" data-src="<?php echo $this->helper('itactica_featuredcategories/category')->resize('catalog/category/'.$_subCategory->getThumbnail()); ?>" class="category__image category__cover lazyload"  style="vertical-align:middle;"/>
+											<?php if($imgAltUrl): ?>
+											<img src="<?php echo $this->getSkinUrl('images/clear.png'); ?>" data-src="<?php echo $imgAltUrl; ?>" class="alt-image category__image category__cover alt-lazyload"  style="vertical-align:middle;"/>
+											<?php endif; ?>
+										</div>
+									</div>
+									<?php if($imgAltUrl): ?>
+									</a>
+									<?php endif; ?>
+								</div>
+							</div>
+						</div>
+				<?php $i++; ?>
+				<?php if($i === 4): ?>
+					</div>
+				</div>
+				<?php $i=0; ?>
+				<?php endif; ?>
+				<!-- Start Small Image -->
+				<?php endif; ?>
+
+
+
+
+				<?php if($threeColLarge || $threeColMedium): ?>
+				<!-- Start Medium Image -->
+				<?php $image[] = "Medium" ?>
+				<?php if($i === 0): ?>
+				<div class="category__container">
+					<div class="category__row __double">
+				<?php endif; ?>
+				<?php if($threeColLarge || ($threeColMedium && $threeCol === 0)): ?>
+					<div class="category__half">
+				<?php endif; ?>
+						<div class="category__tile <?php echo $threeColMedium ? "category__small":"category__medium"; ?> category__image category__grouped">
+							<div class="category__content">
+								<div class="category__innerContent">
+									<?php if($imgAltUrl): ?>
+									<a href="<?php echo $_subCategory->getUrl(); ?>" class="alt__link">
+									<?php else: ?>
+									<a href="<?php echo $_subCategory->getUrl(); ?>" class="image__overlay"></a>
+									<?php endif; ?>
+									<div class="category__imageTile category__medium category__cover category__hasLink">
+										<div class="category__imageColumn">
+											<img src="<?php echo $this->getSkinUrl('images/clear.png'); ?>" data-src="<?php echo $this->helper('itactica_featuredcategories/category')->resize('catalog/category/'.$_subCategory->getThumbnail()); ?>" class="category__image category__cover lazyload"  style="vertical-align:middle;"/>
+											<?php if($imgAltUrl): ?>
+											<img src="<?php echo $this->getSkinUrl('images/clear.png'); ?>" data-src="<?php echo $imgAltUrl; ?>" class="alt-image category__image category__cover alt-lazyload"  style="vertical-align:middle;"/>
+											<?php endif; ?>
+										</div>
+									</div>
+									<?php if($imgAltUrl): ?>
+									</a>
+									<?php endif; ?>
+								</div>
+							</div>
+						</div>
+				<?php if($threeColLarge || ($threeColMedium && $threeCol === 1)): ?>
+					</div>
+				<?php endif; ?>
+				<?php if($threeColMedium) $threeCol++; ?>
+				<?php $i++; ?>
+				<?php if($i === 3): ?>
+					</div>
+				</div>
+				<?php $i=0; ?>
+				<?php endif; ?>
+				<!-- END Medium Image -->
+				<?php endif; ?>
+
+
+
+				<?php if($fiveColLarge || $fiveColSmall): ?>
+				<!-- Start Medium Image -->
+				<?php $image[] = "Medium" ?>
+				<?php if($i === 0): ?>
+				<div class="category__container">
+					<div class="category__row __double">
+				<?php endif; ?>
+				<?php if($fiveColLarge || ($fiveColSmall && $fiveCol === 0)): ?>
+					<div class="category__half">
+				<?php endif; ?>
+						<div class="category__tile <?php echo $fiveColSmall ? "category__mini":"category__medium"; ?> category__image category__grouped">
+							<div class="category__content">
+								<div class="category__innerContent">
+									<?php if($imgAltUrl): ?>
+									<a href="<?php echo $_subCategory->getUrl(); ?>" class="alt__link">
+									<?php else: ?>
+									<a href="<?php echo $_subCategory->getUrl(); ?>" class="image__overlay"></a>
+									<?php endif; ?>
+									<div class="category__imageTile category__medium category__cover category__hasLink">
+										<div class="category__imageColumn">
+											<img src="<?php echo $this->getSkinUrl('images/clear.png'); ?>" data-src="<?php echo $this->helper('itactica_featuredcategories/category')->resize('catalog/category/'.$_subCategory->getThumbnail()); ?>" class="category__image category__cover lazyload"  style="vertical-align:middle;"/>
+											<?php if($imgAltUrl): ?>
+											<img src="<?php echo $this->getSkinUrl('images/clear.png'); ?>" data-src="<?php echo $imgAltUrl; ?>" class="alt-image category__image category__cover alt-lazyload"  style="vertical-align:middle;"/>
+											<?php endif; ?>
+										</div>
+									</div>
+									<?php if($imgAltUrl): ?>
+									</a>
+									<?php endif; ?>
+								</div>
+							</div>
+						</div>
+				<?php if($fiveColLarge || ($fiveColSmall && $fiveCol === 3)): ?>
+					</div>
+				<?php endif; ?>
+				<?php if($fiveColSmall) $fiveCol++; ?>
+				<?php $i++; ?>
+				<?php if($i === 5): ?>
+					</div>
+				</div>
+				<?php $i=0; ?>
+				<?php endif; ?>
+				<!-- END Medium Image -->
+				<?php endif; ?>
+
+
+
+
+
+				<?php endforeach; ?>
+
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+var Banner = function(){
+
+	function removeClass(element , className){
+		element.className = element.className.replace(new RegExp("(^|\\s+)" + className + "(\\s+|$)"), ' ').strip();
+		return element;
+	}
+
+	function addClass(element , className){
+		if (!hasClass(element, className))
+		element.className += (element.className ? ' ' : '') + className;
+		return element;
+	}
+
+	function hasClass(element , className){
+		var elementClassName = element.className;
+		return (elementClassName.length > 0 && (elementClassName == className ||
+		new RegExp("(^|\\s)" + className + "(\\s|$)").test(elementClassName)));
+	}
+
+	function Banner(reference){
+
+		var reference = document.getElementById(reference);
+		if(!reference) return;
+		var banners = reference.getElementsByTagName('a');
+
+		var action = function(event){
+			if(event.type === "mouseover"){
+				addClass(this, 'image__overlay_visible');
+			} else if(event.type === "mouseleave"){
+				if(hasClass(this, 'image__overlay_visible')){
+					removeClass(this, 'image__overlay_visible');
+				}
+			}
+		}
+
+		var events = function(){
+			for(var i=0; i < banners.length; i++){
+				if (document.addEventListener) {
+					banners[i].addEventListener("mouseover", action);
+					banners[i].addEventListener("mouseleave", action);
+				} else {
+					banners[i].attachEvent("mouseover", action);
+					banners[i].attachEvent("mouseleave", action);
+				}
+			}
+		}
+
+		events();
+	}
+	return Banner;
+}();
+
+Banner('banner_row');
+</script>
+<?php endif; ?>
+<?php endif; ?>
+
+<?php if(empty($filters)): ?>
+<?php echo $this->getChildHtml('category_slider'); ?>
+<?php endif; ?>
+
+<?php if(empty($filters)): ?>
+<?php echo $logoSliderBlock; ?>
+<?php endif; ?>
+
+<?php if($_category->getData('intenso_menu_top_block')): ?>
+	<?php
+		$helper = Mage::helper('cms');
+        $processor = $helper->getPageTemplateProcessor();
+        $html = $processor->filter($_category->getData('intenso_menu_top_block'));
+		echo $html;
+	?>
+<?php endif; ?>
+
+<?php if($middleCategory && empty($filters)): ?>
+	<?php echo Mage::app()->getLayout()->createBlock('filterproducts/sale_home_list')->setCacheLifetime(0)->setProductsCount(10)->setTemplate('filterproducts/list/category.phtml')->toHtml(); ?>
+	<?php echo Mage::app()->getLayout()->createBlock('filterproducts/newproduct_home_list')->setCacheLifetime(0)->setProductsCount(10)->setTemplate('filterproducts/list/category.phtml')->toHtml(); ?>
+	<?php echo Mage::app()->getLayout()->createBlock('filterproducts/bestsellers_home_list')->setCacheLifetime(0)->setProductsCount(10)->setTemplate('filterproducts/list/category.phtml')->toHtml(); ?>
+	<?php echo Mage::app()->getLayout()->createBlock('filterproducts/mostviewed_home_list')->setCacheLifetime(0)->setProductsCount(10)->setTemplate('filterproducts/list/category.phtml')->toHtml(); ?>
+<?php endif; ?>
+
+<?php if($this->isContentMode() && $this->isMixedMode()): ?>
+<?php if($this->getChildHtml('featuredcategories_view')):?>
+	<?php echo $this->getChildHtml('featuredcategories_view'); ?>
+<?php endif; ?>
+<?php endif; ?>
+
+<?php if($this->isContentMode()): ?>
+    <?php echo $this->getCmsBlockHtml() ?>
+
+<?php elseif($this->isMixedMode()): ?>
+    <?php echo $this->getCmsBlockHtml() ?>
+    <?php echo $this->getProductListHtml() ?>
+	<?php echo $this->getChildHtml('catalog_list_script'); ?>
+<?php else: ?>
+    <?php echo $this->getProductListHtml() ?>
+	<?php echo $this->getChildHtml('catalog_list_script'); ?>
+<?php endif; ?>
+
+<?php if($_category->getDescription()): ?>
+<div class="clearfix"></div>
+<div class="category__description_wrapper" data-accordion-group>
+	<div class="category__description" id="category__description" data-accordion>
+		<div class="category__description_content" data-content>
+			<?php echo $_category->getDescription(); ?>
+		</div>
+		<button class="category__description_action" data-control>
+			<?php echo $this->__('Load More'); ?>
+		</button>
+	</div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+	jQuery('.category__description[data-accordion]').accordion();
+});
+</script>
+<?php endif; ?>

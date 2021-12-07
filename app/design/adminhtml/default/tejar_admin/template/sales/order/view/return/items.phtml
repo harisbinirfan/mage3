@@ -1,0 +1,184 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     default_default
+ * @copyright   Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php $_order = $this->getOrder() ?>
+<?php  
+	$formUrl =  $this->getUrl('*/sales_order/return',
+            array(
+                'order_id'=>$_order->getId(),
+                'reload' => 1
+            )
+        );
+		
+	$id = substr('returnproduct_order_' . $_order->getId() . '_', 0, -1);
+	
+	$this->setChild('save_button',
+		$this->getLayout()->createBlock('adminhtml/widget_button')
+			->setData(array(
+				'label'   => Mage::helper('sales')->__('Return'),
+				'class'   => 'go',
+				'onclick'   => 'returnProductController.postReturnProduct(\''.$id.'\')'
+			))
+	);
+	
+	
+	// $rId = substr('receivedproduct_order_' . $_order->getId() . '_', 0, -1);
+	
+	$this->setChild('received_button',
+		$this->getLayout()->createBlock('adminhtml/widget_button')
+		->setData(array(
+			'label'   => Mage::helper('sales')->__('Received'),
+			'class'   => 'save',
+			'onclick'   => 'returnProductController.postReceivedProduct(\''.$id.'\')'
+		))
+	);
+	
+	
+	
+?>
+
+
+<form id="<?php echo $id; ?>_form" action="<?php echo $formUrl; ?>">
+<fieldset>
+<div class="grid np">
+  <div class="hor-scroll">
+    <table cellspacing="0" class="data order-tables">
+        <col />
+        <col width="1" />
+        <col width="1" />
+        <thead>
+            <tr class="headings">
+                <th><?php echo $this->helper('sales')->__('Product') ?></th>
+                <th class="a-center"><?php echo $this->helper('sales')->__('Qty') ?></th>
+				<th class="a-center"><?php echo $this->helper('sales')->__('Return Qty') ?></th>
+            </tr>
+        </thead>
+        <?php $_items = $this->getItemsCollection() ?>
+        <?php $i=0;foreach ($_items as $_item):?>
+            <?php if ($_item->getParentItem()) continue; else $i++;?>
+            <tbody class="<?php echo $i%2?'even':'odd' ?>">
+                <?php echo $this->getItemHtml($_item) ?>
+            </tbody>
+        <?php endforeach; ?>
+			<tfoot>
+				<tr>
+					<td colspan="3" class="a-right" style="padding:5px;"><?php echo $this->getChildHtml('save_button'); ?>
+					<?php echo $this->getChildHtml('received_button'); ?></td>
+				</tr>
+			</tfoot>
+    </table>
+  </div>
+</div>
+</fieldset> 
+</form>
+ 
+<br />
+<script>
+var returnProductController = {
+	 postReturnProduct: function(container) {
+		 
+		 
+		if(!$(this.getFieldId(container, 'form')).validator) {
+			$(this.getFieldId(container, 'form')).validator = new Validation(this.getFieldId(container, 'form'));
+		}
+
+		if(!$(this.getFieldId(container, 'form')).validator.validate()) {
+			return false;
+		}
+		
+		triggerAjax = false;
+		$$('[id*=select_returnproduct_item_]').each(function(element){
+			if(element.getValue()){
+				triggerAjax = true;
+			}
+		});
+		
+		if(triggerAjax){
+			var that = this;
+			new Ajax.Request($(this.getFieldId(container, 'form')).action, {
+				parameters: Form.serialize($(this.getFieldId(container, 'form')), true),
+				loaderArea: container,
+				onSuccess: function(transport) {
+					var json = transport.responseText.evalJSON(true);
+					if(json.message){
+						that.showMessage(json.message);
+					}
+					$(that.getFieldId(container, 'form')).reset();
+				}
+			});
+		}
+    },
+	postReceivedProduct: function(container) {
+		 
+		 
+		if(!$(this.getFieldId(container, 'form')).validator) {
+			$(this.getFieldId(container, 'form')).validator = new Validation(this.getFieldId(container, 'form'));
+		}
+
+		if(!$(this.getFieldId(container, 'form')).validator.validate()) {
+			return false;
+		}
+		
+		triggerAjax = false;
+		$$('[id*=select_returnproduct_item_]').each(function(element){
+			if(element.getValue()){
+				triggerAjax = true;
+			}
+		});
+		
+		var action = $(this.getFieldId(container, 'form')).action;
+		result = action.replace(/return/gm,"received");
+		if(triggerAjax){
+			var that = this;
+			
+			new Ajax.Request(result, {
+				parameters: Form.serialize($(this.getFieldId(container, 'form')), true),
+				loaderArea: container,
+				onSuccess: function(transport) {
+					var json = transport.responseText.evalJSON(true);
+					if(json.message){
+						that.showMessage(json.message);
+					}
+					$(that.getFieldId(container, 'form')).reset();
+				}
+			});
+		}
+    },
+	getFieldId: function(container, name) {
+        return container + '_' + name;
+    },
+	showMessage: function(message) {
+		var html = '<ul class="messages">';
+		message.each(function(msg){
+			html += '<li class="'+msg.type+'-msg"><ul><li>' + msg.text + '</li></ul></li>';
+		});
+		html += '</ul>';
+		$('messages').update(html);
+	}
+};
+
+
+</script>

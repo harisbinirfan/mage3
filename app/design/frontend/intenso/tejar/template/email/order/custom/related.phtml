@@ -1,0 +1,182 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/**
+ * @var $this Mage_Sales_Block_Order_Totals
+ * @see Mage_Sales_Block_Order_Totals
+ */
+?>
+<?php $_order = $this->getOrder() ?>
+<?php $itemIds = array();
+$products = array();
+$parentItemIds = array();
+$storeId = $_order->getStore()->getId();
+$attribute = Mage::getSingleton('eav/config')->getAttribute(Mage_Catalog_Model_Category::ENTITY, 'collection_type');
+$attributeId = $attribute->getAttributeId();
+$attributeTable = $attribute->getBackendTable();
+
+$readAdapter = $_order->getCollection()->getConnection('core_read');
+?>
+<?php foreach($_order->getAllItems() as $item): ?>
+<?php        
+		
+		$product = $item;
+		$productId = $product->getProductId();
+		$itemIds[] = $productId;
+        if ($product && $product->getProductId()) {
+			$parentIds  =  Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($productId);
+			$parentItemIds = array_merge($parentItemIds,$parentIds);
+			if(!empty($parentIds)){
+				$product = Mage::getModel('catalog/product')->load($parentIds[0]);	
+			} else {
+				$product = Mage::getModel('catalog/product')->load($productId);		
+			}
+        }
+
+		$categoryIds = $product->getCategoryIds();
+		$finalPrice = $product->getFinalPrice();
+		$select = $readAdapter->select()->from(array('e' => 'catalog_product_index_price'), array('entity_id' => 'e.entity_id'))
+			->joinInner(array('at_category_product' => 'catalog_category_product'),"(`e`.`entity_id` = `at_category_product`.`product_id` )", array())
+			->joinInner(array('at_collection_type_default' => $attributeTable),"( `at_collection_type_default`.`entity_id` = `at_category_product`.`category_id` ) AND ( `at_collection_type_default`.`attribute_id` = '".$attributeId."' ) AND `at_collection_type_default`.`store_id` = 0", array())
+			->joinLeft(array('at_collection_type' => $attributeTable),"(`at_collection_type`.`entity_id` = `at_category_product`.`category_id` ) AND ( `at_collection_type`.`attribute_id` = '".$attributeId."' ) AND ( `at_collection_type`.`store_id` = '".$storeId."')", array())
+			->where("e.website_id = {$storeId}")
+			->where("e.final_price <= ?", $finalPrice)
+			->where("at_category_product.category_id IN(?)", $categoryIds)
+			->where("IF(at_collection_type.value_id > 0, at_collection_type.value, at_collection_type_default.value) IS NULL")
+			->group("e.entity_id"); 
+			
+		$autoProductIds = array();
+		foreach ($readAdapter->fetchAll($select) as $row) {
+			if(!in_array($row['entity_id'],$itemIds)){
+				$autoProductIds[] = $row['entity_id'];
+			}
+		}
+		
+		$products = array_merge($products,$product->getRelatedProductIds());
+		
+		$products = array_merge($autoProductIds,$products);		
+		
+?>
+<?php endforeach; ?>
+<?php if(count($products) > 0): ?>
+<?php 
+		$collection = Mage::getModel('catalog/product')->getCollection();
+		$collection->addAttributeToFilter('entity_id', array('in' => $products));
+		$collection->getSelect()->joinLeft(array('parent_product' => $collection->getTable('catalog/product_super_link')),'(e.entity_id = parent_product.product_id)');
+			
+		$productIds = array();
+		foreach ($collection->getConnection()->fetchAll($collection->getSelect()) as $row) {
+			if(array_key_exists("parent_id",$row)){
+				if($row['parent_id'] != NULL){
+					$productIds[] = $row['parent_id'];	
+				}  else {
+					$productIds[] = $row['entity_id'];
+				}
+			} else {
+				$productIds[] = $row['entity_id'];
+			}
+		}
+			
+		$collection = Mage::getModel('catalog/product')->getCollection();
+		$collection->addAttributeToSelect(Mage::getSingleton('catalog/config')->getProductAttributes());
+		$collection->addAttributeToFilter('entity_id', array('in' => $productIds));
+		if(!empty($parentItemIds) || !empty($itemIds)){
+			$collection->addAttributeToFilter('entity_id', array('nin' => array_merge($parentItemIds,$itemIds)));
+		}
+		$collection->getSelect()->order('RAND()');
+		$collection->setPageSize(2);
+		$collection->setCurPage(1);
+
+				
+		Mage::getSingleton('catalog/product_visibility')->addVisibleInCatalogFilterToCollection($collection);
+		Mage::getSingleton('cataloginventory/stock')->addInStockFilterToCollection($collection); 
+	
+?>
+<?php if($collection->getSize() > 0): ?>
+<tr>
+	<td style="padding-top: 15px; padding-bottom: 15px;" width="100%" class="wrapper-padding">
+		<div style="background-color:rgb(214,214,214);font-size:1px;height:1px"></div>
+	</td>
+</tr>
+<tr>
+	<td class="item-container" valign="top">
+		<table border="0" align="left" cellpadding="0" cellspacing="0" width="100%">
+			<tbody>
+				<tr> 
+					<h5 style="margin-bottom: 10px; margin-top: 0;"><?php echo $this->__('Related Products') ?></h5>
+				</tr>				
+			</tbody>
+		</table>
+	</td>
+</tr>
+<tr>
+	<td class="item-container" valign="top">
+		<table border="0" align="left" cellpadding="0" cellspacing="0" width="100%">
+			<tbody>
+				<tr> 
+<?php foreach($collection as $item): ?>
+
+<?php $_item = $item; 
+	$cartThumbnailConfig = Mage::getStoreConfig('checkout/cart/configurable_product_image');
+	$product = Mage::getModel('catalog/product')->load($_item->getId());
+	$productImageUrl = $this->helper('catalog/image')->init($product, 'thumbnail')->resize(150);
+	$productUrl = $product->getProductUrl();
+	$productName = $this->escapeHtml($_item->getName());
+	if($_item->getProductType() == "configurable"){
+		if($cartThumbnailConfig==="itself"){
+			if($_item->getSku() != ''){
+				$childProduct = Mage::getModel('catalog/product')->loadByAttribute('sku', $_item->getSku());
+				$productImageUrl = $this->helper('catalog/image')->init($childProduct, 'thumbnail')->resize(150);				
+			} else if($options = $_item->getProductOptions()) {
+				if(array_key_exists('info_buyRequest',$options)){
+					if(array_key_exists('super_attribute',$options['info_buyRequest'])){
+						$childProduct = Mage::getModel('catalog/product_type_configurable')->getProductByAttributes($options['info_buyRequest']['super_attribute'], $product);
+						$childProduct = Mage::getModel('catalog/product')->load($childProduct->getId());
+						$productImageUrl = $this->helper('catalog/image')->init($childProduct, 'thumbnail')->resize(150);
+					}
+				}
+			}
+		}
+	}
+	if($_item->getProductType() == "simple"){
+		if(!$product->isVisibleInSiteVisibility()){
+			$parentProducts =  Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($_item->getProductId());
+			if(!empty($parentProducts)){
+				$parentProduct = Mage::getModel('catalog/product')->load($parentProducts[0]);
+				$productUrl = $parentProduct->getProductUrl();
+			}
+		}
+	}
+
+?>
+	<td valign="top"> <table border="0" align="left" cellpadding="0" cellspacing="0" width="100%"> <tr> <td class="item-image" valign="top" width="96" style="padding-right:10px"> <a href="<?php echo $productUrl; ?>"> <img class="" src="<?php echo $productImageUrl ; ?>" alt="<?php echo $productName; ?>" style="max-width: 96px; outline: none;display: block; max-height: 100px; margin-left: auto; margin-right: auto;"> </a> </td> <td class="item-info" valign="top" align="left"> <table border="0" align="left" cellpadding="0" cellspacing="0" width="100%"> <tr> <td valign="top" align="left" class="item-name"> <a href="<?php echo $productUrl; ?>"> <?php echo $productName; ?> </a> </td> </tr> <?php if ($this->getItemOptions()): ?><tr> <td class="item-options" style="padding-bottom:5px;"><dl style="margin:0; padding:0;"><?php foreach ($this->getItemOptions() as $option): ?><dt><strong><em><?php echo $option['label'] ?></em></strong></dt><dd style="margin:0; padding:0 0 0 9px;"><?php echo nl2br($option['value']) ?></dd><?php endforeach; ?></dl> </td> </tr><?php endif; ?> </table> </td> </tr></tbody></table></td>
+<?php endforeach; ?>
+</tr>
+				</tbody>
+			</table>
+		</td>
+	</tr>
+<?php endif; ?>
+<?php endif; ?>

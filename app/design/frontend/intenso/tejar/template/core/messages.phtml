@@ -1,0 +1,27 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php if($this->getMessagesBlock()->getMessageCollection()->count()): ?>
+    <div>
+        <?php //echo $this->getMessagesBlock()->getGroupedHtml(); ?>
+        
+    </div>
+<?php $this->getMessagesBlock()->getMessageCollection()->clear(); ?>
+<?php endif; ?>

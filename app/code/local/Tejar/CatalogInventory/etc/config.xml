@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<config> 
+	<modules>
+        <Tejar_CatalogInventory>
+            <version>0.0.1</version>
+        </Tejar_CatalogInventory>
+    </modules>
+    <global>
+		<models>
+            <tejar_catalogInventory>
+                <class>Tejar_CatalogInventory_Model</class>
+            </tejar_catalogInventory>
+        </models>
+	</global>
+	<frontend>
+		<events>
+            <sales_quote_item_qty_set_after>
+                <observers>
+					<inventory>
+                        <type>disabled</type>
+                    </inventory>
+                    <tejar_catalogInventory>
+                        <class>tejar_catalogInventory/observer</class>
+                        <method>checkQuoteItemQty</method>
+                    </tejar_catalogInventory>
+                </observers>
+            </sales_quote_item_qty_set_after>
+        </events>
+	</frontend>
+</config>

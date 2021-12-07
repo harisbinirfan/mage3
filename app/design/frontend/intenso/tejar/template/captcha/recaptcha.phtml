@@ -1,0 +1,51 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+
+<?php
+$currentUrl = Mage::helper('core/url')->getCurrentUrl();
+$url = Mage::getSingleton('core/url')->parseUrl($currentUrl);
+// $path = $url->getPath();
+$action = Mage::app()->getFrontController()->getAction();
+$path = $action->getFullActionName('/');
+$siteKey =  Mage::helper('tejar_captcha')->getConfigNode('public_key');
+?>
+<?php if(Mage::helper('tejar_captcha')->getConfigNode('recaptcha_enable')): ?>
+	<?php $captcha = $this->getCaptchaModel(); ?>
+	<p>This site is protected by reCAPTCHA and the Google
+    <a href="https://policies.google.com/privacy">Privacy Policy</a> and
+    <a href="https://policies.google.com/terms">Terms of Service</a> apply.</p>
+<input type="hidden" id="appToken" name="appToken" value="<?php echo md5($captcha->getWord()); ?>" />
+<input type="hidden" id="g-recaptcha-token-id" name="g-recaptcha-token" value="" />
+<script type="text/javascript">
+	grecaptcha.ready(function() {
+		grecaptcha.execute('<?php echo $siteKey; ?>', {action: '<?php echo $path; ?>'})
+		.then(function(token) {
+			document.getElementById('g-recaptcha-token-id').value = token;
+		});
+	});
+</script>
+<?php endif; ?>

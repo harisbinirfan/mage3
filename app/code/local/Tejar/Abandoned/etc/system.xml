@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<config>
+    <sections>
+        <catalog>
+            <groups>
+                <adjcartalert translate="label comment" module="adjcartalert">
+                    <fields>
+                        <bcc>
+                            <label>BCC Email</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </bcc>
+						<allow_auto_login translate="label">
+                            <label>Abandoned Cart Allow Auto Login</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </allow_auto_login>
+                    </fields>
+                </adjcartalert>
+            </groups>
+        </catalog>
+    </sections>
+</config>

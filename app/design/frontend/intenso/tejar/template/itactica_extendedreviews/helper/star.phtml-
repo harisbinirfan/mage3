@@ -1,0 +1,27 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    Itactica
+ * @package     Itactica_ExtendedReviews
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+
+?>
+<?php /* if ($this->getReviewRating()):?>
+<div class="rating-box">
+    <div class="rating" style="width:<?php echo $this->getReviewRating() ?>%" itemprop="aggregateRating" itemscope="itemscope" itemtype="http://schema.org/AggregateRating">
+		<meta itemprop="ratingValue" content="<?php echo $this->getRatingSummary()/20 ?>"/>
+		<meta itemprop="reviewCount" content="<?php echo $this->getReviewsCount(); ?>" />
+    </div>
+</div>
+<?php endif; */ ?>
+<?php if ($this->getReviewRating()):?>
+<div class="rating-box" itemprop="reviewRating" itemtype="https://schema.org/Rating" itemscope="itemscope">
+    <div class="rating" style="width:<?php echo $this->getReviewRating() ?>%">
+		<meta content="<?php echo $this->getReviewRating() ?>" itemprop="ratingValue">
+        <meta content="100" itemprop="bestRating">
+    </div>
+</div>
+<?php endif;?>

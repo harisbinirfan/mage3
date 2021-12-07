@@ -1,0 +1,57 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<!--======================================= ZEE CODE ==========================================-->
+<!--========================== Display Bread Crumbs - Collection Pages =====================-->
+<?php if($this->getRequest()->getModuleName()=="deals" || $this->getRequest()->getModuleName()=="best-seller" || $this->getRequest()->getModuleName()=="most-viewed" || $this->getRequest()->getModuleName()=="new-arrival" || $this->getRequest()->getModuleName()=="featured"){?>
+	<div class="breadcrumbs-wrapper">
+		<div class="breadcrumbs" itemscope itemtype="https://schema.org/BreadcrumbList">
+			<ul>
+				<li class="home" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+					<a itemtype="https://schema.org/Thing" itemprop="item" href="<?php echo $this->getBaseUrl();?>" title="Go to Home Page">
+						<span itemprop="name">Home</span>
+						<meta itemprop="position" content="1" />
+					</a>
+					<span>&gt;</span>					  
+				</li>
+				<li><strong><?php echo ucwords (str_replace('-',' ',$this->getRequest()->getModuleName())); ?></strong></li>
+			</ul>
+		</div> 
+	</div> 
+<?php } ?>
+<!--==================================== ZEE CODE ==============================-->
+<?php 
+$productCrumb = "";
+if($crumbs && is_array($crumbs)): ?>
+<div class="breadcrumbs-wrapper">
+    <div class="breadcrumbs" itemscope itemtype="https://schema.org/BreadcrumbList">
+        <ul>
+			<?php $i=1; ?>
+            <?php foreach($crumbs as $_crumbName=>$_crumbInfo): ?>
+				<?php if($_crumbName !== 'product'): ?>
+               <li class="<?php echo $_crumbName ?>" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                
+                      <a itemtype="https://schema.org/Thing" itemprop="item" href="<?php echo $_crumbInfo['link'] ?>" title="<?php echo $this->escapeHtml($_crumbInfo['title']) ?>">
+							<span itemprop="name"><?php echo $this->escapeHtml($_crumbInfo['label']); ?></span>
+							<meta itemprop="position" content="<?php echo $i; ?>" />
+					  </a>
+					  <?php echo $_crumbInfo['last']==NULL ? "<span>></span>":"";?>
+					  
+					
+                </li>
+				<?php else:?>
+						<?php $productCrumb =  "<span>></span>".$this->escapeHtml($_crumbInfo['label']) ?>
+				<?php endif; ?>
+            <?php $i++; endforeach; ?>
+			<li> <strong><?php echo $productCrumb ?></strong></li>
+        </ul>
+    </div>
+</div>
+<?php endif; ?>

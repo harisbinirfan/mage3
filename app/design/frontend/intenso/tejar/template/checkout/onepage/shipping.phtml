@@ -1,0 +1,452 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php $themeHelper = Mage::helper('itactica_intenso'); ?>
+<?php $store = Mage::app()->getStore();?>
+<form action="" id="co-shipping-form">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="">
+                <ul class="form-list">
+                <?php if ($this->customerHasAddresses()): ?>
+                   <li class="row">
+						<div class="col-sm-12">							
+						   <p><?php echo $this->__('Select a shipping address from your address book or enter a new address.') ?></p>
+						   <div class="input-field input-wrapper select-wrapper chosen-wrapper">
+								<label class="required chosen-label"><?php echo $this->__('Select a shipping address.') ?></label>
+							   <div class="chozen-sp-1">
+								   <?php echo $this->getAddressesHtmlSelect('shipping') ?>
+							   </div>
+						   </div>
+					   </div>
+                   </li>
+                <?php endif ?>
+                    <li id="shipping-new-address-form"<?php if ($this->customerHasAddresses()): ?> style="display:none;"<?php endif ?> class="fields">
+                        <input type="hidden" name="shipping[address_id]" value="<?php echo $this->getAddress()->getId() ?>" id="shipping:address_id" />
+                        <ul class="row">
+                            <li class="col-sm-12"><div class="row"><?php echo $this->getLayout()->createBlock('customer/widget_name')->setObject($this->getAddress())->setFieldIdFormat('shipping:%s')->setFieldNameFormat('shipping[%s]')->setFieldParams('onchange="shipping.setSameAsBilling(false)"')->toHtml() ?></div></li>
+							
+							<!--============================ ZEE COMPANY ===============================-->
+								<?php if ($themeHelper->companyField()): ?>
+								<li class="col-sm-6">
+									<div class="input-field input-wrapper">
+										<label for="shipping:company" class="label-floating"><?php echo $this->__('Company') ?></label>
+										<div class="input-box">
+											<input type="text" id="shipping:company" name="shipping[company]" placeholder="<?php echo $this->__('Company') ?>" value="<?php echo $this->escapeHtml($this->getAddress()->getCompany()) ?>" title="<?php echo $this->__('Company') ?>" class="input-text input-floating <?php echo $this->helper('customer/address')->getAttributeValidationClass('company') ?>" onchange="shipping.setSameAsBilling(false);" />
+										</div>
+									</div>
+								</li>
+								<?php endif;?>
+							<!--============================ ZEE COMPANY ===============================-->
+							
+							<!--============================ ZEE STREET ===============================-->
+							<!------ ADDRESS ------>
+							<?php $_streetValidationClass = $this->helper('customer/address')->getAttributeValidationClass('street'); ?>
+                            <li class="col-sm-12">
+								<div class="input-field input-wrapper">
+									<label for="shipping:street1" class="required label-floating"><em>*</em><?php echo $this->__('Address') ?></label>
+									<div class="input-box">
+										<input type="text" title="<?php echo $this->__('Street Address') ?>" name="shipping[street][]" placeholder="<?php echo $this->__('Street Address') ?>" id="shipping:street1" value="<?php echo $this->escapeHtml($this->getAddress()->getStreet(1)) ?>" class="input-text input-floating <?php echo $_streetValidationClass ?>" onchange="shipping.setSameAsBilling(false);" />
+									</div>
+								</div>
+                            </li>
+							
+							<!------ ADDRESS 2 ------>
+							<?php $_streetValidationClass = trim(str_replace('required-entry', '', $_streetValidationClass)); ?>
+							<?php for ($_i = 2, $_n = $this->helper('customer/address')->getStreetLines(); $_i <= $_n; $_i++): ?>
+							<li class="col-sm-12">
+								<div class="input-field input-wrapper">
+									<label for="shipping:street1" class="required label-floating"><em>*</em><?php echo $this->__('Street Address %s', $_i) ?></label>
+									<div class="input-box">
+										<input type="text" title="<?php echo $this->__('Street Address %s', $_i) ?>" name="shipping[street][]" placeholder="<?php echo $this->__('Street Address %s', $_i) ?>" id="shipping:street<?php echo $_i ?>" value="<?php echo $this->escapeHtml($this->getAddress()->getStreet($_i)) ?>" class="input-text input-floating <?php echo $_streetValidationClass ?>" onchange="shipping.setSameAsBilling(false);" />
+									</div>
+								</div>
+							</li>
+							<?php endfor; ?>
+							<!--============================ ZEE STREET ===============================-->
+							
+							<!--============================ ZEE VAR NUMBER ===============================-->
+							<!------ VAT NUMBER ------>
+                            <?php if ($this->helper('customer/address')->isVatAttributeVisible()) : ?>
+                            <li class="col-sm-6">
+								<div class="input-field input-wrapper">
+									<label for="billing:vat_id" class="label-floating"><?php echo $this->__('VAT Number'); ?></label>
+									<div class="input-box">
+										<input type="number" id="shipping:vat_id" name="shipping[vat_id]" placeholder="<?php echo $this->__('VAT Number'); ?>" value="<?php echo $this->escapeHtml($this->getAddress()->getVatId()); ?>" title="<?php echo $this->__('VAT Number'); ?>" class="input-text input-floating <?php echo $this->helper('customer/address')->getAttributeValidationClass('vat_id') ?>" />
+									</div>
+								</div>
+                            </li>
+                            <?php endif; ?>
+							<!--============================ ZEE VAR NUMBER ===============================-->
+							
+							<!--============================ ZEE CITY ===============================-->
+							<!------ CITY ------>
+                            <li class="col-sm-6">
+                                <div class="input-field input-wrapper">
+                                    <label for="shipping:city" class="required label-floating"><em>*</em><?php echo $this->__('City') ?></label>
+                                    <div class="input-box">
+                                        <input type="text" title="<?php echo $this->__('City') ?>" name="shipping[city]" placeholder="<?php echo $this->__('City') ?>" value="<?php echo $this->escapeHtml($this->getAddress()->getCity()) ?>" class="input-text input-floating <?php echo $this->helper('customer/address')->getAttributeValidationClass('city') ?>" id="shipping:city" onchange="shipping.setSameAsBilling(false);" />
+                                    </div>
+                                </div>
+							</li>
+							<!--============================ ZEE CITY ===============================-->
+							
+							<!--============================ ZEE STATE PROVINCE ===============================-->
+							<!------ STATE / PROVINCE ------>
+                            <li class="col-sm-6 input-field state-province-field input-wrapper select-wrapper chosen-wrapper">
+								<label for="shipping:region" class="required chosen-label"><em>*</em><?php echo $this->__('State/Province') ?></label>
+								<div class="input-box">
+									<select id="shipping:region_id" name="shipping[region_id]" title="<?php echo $this->__('State/Province') ?>" class="validate-select" style="display:none;">
+										<option value=""><?php echo $this->__('Please select region, state or province') ?></option>
+									</select>
+									<script type="text/javascript">
+									//<![CDATA[
+										$('shipping:region_id').setAttribute('defaultValue',  "<?php echo $this->getAddress()->getRegionId() ?>");
+									//]]>
+									</script>
+									<input type="text" id="shipping:region" name="shipping[region]" value="<?php echo $this->escapeHtml($this->getAddress()->getRegion()) ?>" placeholder="<?php echo $this->__('State/Province') ?>" title="<?php echo $this->__('State/Province') ?>" class="input-text input-floating <?php echo $this->helper('customer/address')->getAttributeValidationClass('region') ?>" style="display:none;" />
+								</div>
+                            </li>
+							<style>
+							.state-province-field.input-field label{
+									left: 31px;
+							}
+							</style>
+							<!--============================ ZEE STATE PROVINCE ===============================-->
+							
+							<!--============================ ZEE ZIP/POSTAL CODE ===============================-->
+							<!------ ZIP / POSTAL CODE ------>
+							<?php if ($themeHelper->zipCodeField()): ?>
+							  <?php if ($themeHelper->displayOptionalPostalCode() == 0): ?>
+				<!--============================ ZEE CODE ===============================--->
+							<select style="display:none;" id="optional_zipcode_shipping">
+							<?php $optionalZipcodeList = array();?>
+							<?php foreach(Mage::helper('directory')->getCountriesWithOptionalZip() as $optionalZip){?>
+							<?php array_push($optionalZipcodeList, strtolower($optionalZip));?>
+							<option value="<?php echo $optionalZip?>"><?php echo $optionalZip;?></option>
+							<?php }?>
+							</select>
+				<!--============================ ZEE CODE ===============================--->
+							<li <?php if(in_array(Mage::app()->getStore()->getCode(), $optionalZipcodeList) || in_array(strtolower(Mage::app()->getWebsite()->getConfig('general/country/default')), $optionalZipcodeList)){?> style="display:none;" <?php }?> class="col-sm-6 zip-postal-code">
+						<?php else: ?>
+							<li class="col-sm-6 zip-postal-code">
+						<?php endif;?>
+                                <div class="input-field input-wrapper">
+                                    <label for="shipping:postcode" class="required label-floating"><em>*</em><?php echo $this->__('Zip/Postal Code') ?></label>
+                                    <div class="input-box">
+									<input type="hidden" id="shipping:postcodeClone" />
+                                        <input type="text" title="<?php echo $this->__('Zip/Postal Code') ?>" placeholder="<?php echo $this->__('Zip/Postal Code') ?>" name="shipping[postcode]" id="shipping:postcode" value="<?php echo $this->escapeHtml($this->getAddress()->getPostcode()) ?>" class="input-text input-floating validate-zip-international <?php echo $this->helper('customer/address')->getAttributeValidationClass('postcode') ?>" onchange="shipping.setSameAsBilling(false);" />
+                                    </div>
+                                </div>
+							</li>
+						  <?php endif;?>
+						  <!--============================ ZEE ZIP/POSTAL CODE ===============================-->
+							  
+							<!--============================ ZEE COUNTRY ===============================-->
+							<!------ COUNTRY ------>
+                            <li class="col-sm-6 country-field">
+                                <div class="input-field input-wrapper select-wrapper chosen-wrapper">
+                                    <label for="shipping:country_id" class="required chosen-label"><em>*</em><?php echo $this->__('Country') ?></label>
+                                    <div class="input-box">
+                                        <?php // echo $this->getCountryHtmlSelect('shipping') ?>
+										<!---------------------------------------------------- ZEE CODE ------------------------------------------------------->
+											<!----- To resolve Populating Country List issue --->
+											<?php
+												$defaultAddress = $this->getAddress()->getCountryId();
+												$allowedCountries = explode(',', Mage::getStoreConfig('general/country/allow', Mage::app()->getStore()));
+												$defaultCountry =  Mage::getStoreConfig('general/country/default', Mage::app()->getStore());
+												if($defaultAddress){
+													$defaultCountry = $defaultAddress;
+												}
+											?>
+											<select name="shipping[country_id]" id="shipping:country_id" class="validate-select" title="Country" onchange="if(window.shipping)shipping.setSameAsBilling(false);">
+												<option></option>
+												<?php foreach($allowedCountries as $countryCode){ ?>
+													<option <?php if($defaultCountry && $defaultCountry==$countryCode){ echo "selected"; }?> value="<?php echo $countryCode; ?>"><?php echo Mage::app()->getLocale()->getCountryTranslation($countryCode); ?></option>
+												<?php }?>
+											</select>
+											<!---------------------------------------------------- ZEE CODE ------------------------------------------------------->
+                                    </div>
+                                </div>
+                            </li>
+							<!--============================ ZEE COUNTRY ===============================-->
+							
+							<!--================================= ZEE CODE Mobile ===================================-->
+							<!------ TELEPHONE ------>
+                            <li class="col-sm-6">
+                                <div class="input-field input-wrapper">
+                                    <label for="shipping:telephone" class="required label-floating"><em>*</em><?php echo $this->__('Telephone') ?></label>
+                                    <div class="input-box">
+                                        <input type="text" name="shipping[telephone]" value="<?php echo $this->escapeHtml($this->getAddress()->getTelephone()) ?>" placeholder="<?php echo $this->__('Telephone') ?>" title="<?php echo $this->__('Telephone') ?>" class="input-text input-floating <?php echo $this->helper('customer/address')->getAttributeValidationClass('telephone') ?>" id="shipping:telephone" onchange="shipping.setSameAsBilling(false);" />
+                                    </div>
+                                </div>
+                              
+                            </li>
+							<!--================================= ZEE CODE Mobile ===================================-->
+							
+							<!--============================ ZEE FAX ===============================-->
+						<!-------- FAX --------->
+						<?php if ($themeHelper->faxField()): ?>
+						<li class="col-sm-6">
+                            <div class="input-field input-wrapper">
+                                <label for="billing:fax" class="label-floating"><?php echo $this->__('Fax') ?></label>
+                                <div class="input-box">
+                                    <input type="text" name="billing[fax]" placeholder="<?php echo $this->__('Fax') ?>" value="<?php echo $this->escapeHtml($this->getAddress()->getFax()) ?>" title="<?php echo $this->__('Fax') ?>" class="input-text input-floating <?php echo $this->helper('customer/address')->getAttributeValidationClass('fax') ?>" id="billing:fax" />
+                                </div>
+                            </div>
+						</li>
+						<?php endif; ?>
+						<!--============================ ZEE FAX ===============================-->
+						
+                        <?php if ($this->isCustomerLoggedIn() && $this->customerHasAddresses()):?>
+                            <li class="col-sm-12">
+                                <input type="checkbox" name="shipping[save_in_address_book]" value="1" title="<?php echo $this->__('Save in address book') ?>" id="shipping:save_in_address_book" onchange="shipping.setSameAsBilling(false);"<?php if ($this->getAddress()->getSaveInAddressBook()):?> checked="checked"<?php endif;?> class="checkbox" /><label for="shipping:save_in_address_book"><?php echo $this->__('Save in address book') ?></label></li>
+                        <?php else:?>
+                            <li class="no-display"><input type="hidden" name="shipping[save_in_address_book]" value="1" /></li>
+                        <?php endif;?>
+                        </ul>
+                    </li>
+                    <li class="control">
+                        <input type="checkbox" name="shipping[same_as_billing]" id="shipping:same_as_billing" value="1"<?php if($this->getAddress()->getSameAsBilling()): ?> checked="checked"<?php endif; ?> title="<?php echo $this->__('Use Billing Address') ?>" onclick="shipping.setSameAsBilling(this.checked); jQuery('body').trigger('new:ajaxform'); updateShippingRegion();" class="checkbox" /><label for="shipping:same_as_billing"><?php echo $this->__('Use Billing Address') ?></label>
+                    </li>
+                </ul>
+                <div class="buttons-set" id="shipping-buttons-container">
+                    <p class="required"><?php echo $this->__('* Required Fields') ?></p>
+                    <button type="button" class="btn btn-medium" title="<?php echo $this->__('Continue') ?>"  onclick="shipping.save()" ><span><span><?php echo $this->__('Continue') ?></span><span id="shipping-please-wait" class="please-wait" style="display:none;">
+                        <span class="spinner"></span>
+                    </span>
+					</span>
+					</button>
+                    <p class="back-link"><a class="arrow-left" href="#" onclick="checkout.back(); <?php if(Mage::helper('itactica_intenso')->formFieldsType() == 'mdformfields'): ?>updateBillingRegion();<?php endif; ?> return false;"><?php echo $this->__('Back') ?></a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+	  <?php echo $this->getBlockHtml('formkey') ?>
+</form>
+<script>
+    var styleRegion,
+        intervalInit = false;
+    var shipping = new Shipping('co-shipping-form', '<?php echo $this->getUrl('checkout/onepage/getAddress') ?>address/', '<?php echo $this->getUrl('checkout/onepage/saveShipping') ?>',
+        '<?php echo $this->getUrl('checkout/onepage/shippingMethod') ?>');
+    var shippingForm = new VarienForm('co-shipping-form');
+    shippingForm.extraChildParams = ' onchange="shipping.setSameAsBilling(false);"';
+    $('shipping-address-select') && shipping.newAddress(!$('shipping-address-select').value);
+    var shippingRegionUpdater = new RegionUpdater('shipping:country_id', 'shipping:region', 'shipping:region_id', <?php echo $this->helper('directory')->getRegionJson() ?>, undefined, 'shipping:postcode');
+
+    jQuery('#shipping\\:country_id').on('change keyup', function(event) {
+        shippingRegionUpdater.update();
+    });
+
+    <?php if(Mage::helper('itactica_intenso')->formFieldsType() == 'mdformfields'): ?>
+    function updateBillingRegion() {
+        billingRegionUpdater.update();
+    }
+    // style shipping region input
+    function styleRegionInterval() {
+        if (!intervalInit) {
+            styleRegion = setInterval(styleRegionInput, 500);
+            intervalInit = true;
+        }
+    }
+    function styleRegionInput() {
+        if($('checkout-step-shipping').visible() || $('checkout-step-shipping_method').visible()) {
+            clearInterval(styleRegion);
+            intervalInit = false;
+            shippingRegionUpdater.update();
+        }
+    }
+	if(jQuery('.state-province-field').hasClass('.select-list')){
+		 jQuery("label[for*='shipping:region']").removeClass("chosen-label");
+		 jQuery("label[for*='shipping:region']").addClass("label-floating");
+	}
+	else{
+		 jQuery("label[for*='shipping:region']").addClass("chosen-label");
+		 jQuery("label[for*='shipping:region']").removeClass("label-floating");
+	}
+    jQuery(function() {
+        if (canUseChosen()) {
+            // fix RegionUpdater for chosen.js
+			
+            jQuery('#shipping\\:region_id').on('change keyup', function(event) {
+                jQuery('#shipping\\:region').val(jQuery(this).children("option").filter(":selected").text());
+            });
+				
+	<?php if ($themeHelper->displayOptionalPostalCode() == 0): ?>
+
+	jQuery(document).ready(function(){
+		//--- Hide list of countries with 'Optional Zipcode' toggle Post Code ... 
+		jQuery('#optional_zipcode_shipping_chosen').hide();
+		var arr = [];	
+			jQuery('#optional_zipcode_shipping').children().each(function(){
+				arr.push(jQuery(this).val());
+			});
+			if(jQuery.inArray(jQuery('#shipping\\:country_id').val(),arr)!==-1){
+				jQuery('#shipping\\:postcode').parent().parent().parent().hide();
+			}else{
+				jQuery('#shipping\\:postcode').parent().parent().parent().show();
+			}
+		jQuery('#shipping\\:country_id').on('change keyup', function(event) {
+			if(jQuery.inArray(jQuery(this).val(),arr)!==-1){
+				jQuery('#shipping\\:postcode').parent().parent().parent().hide();
+			}else{
+				jQuery('#shipping\\:postcode').parent().parent().parent().show();
+			}
+			//console.log(jQuery.type(arr));
+		});
+	});
+	
+	<?php endif; ?>
+            shippingRegionUpdater.update = shippingRegionUpdater.update.wrap(function(parentMethod){
+                // parent "update" method call
+                parentMethod();
+				
+				;(function ($, window, document, undefined) {
+					'use strict';
+					$(function () {
+						$('.input-field').floatLabels();
+					});
+				}(jQuery, this, this.document));
+                 
+                // after "update" method fires
+                shippingRegionUpdater.regionSelectEl.hide();
+                regionChosen = jQuery('#shipping_region_id_chosen');
+                if(shippingRegionUpdater.regionTextEl.visible()) {
+                    regionChosen.hide();
+                    regionChosen.parent('.input-box-select').removeClass('input-box-select');
+                    regionChosen.parent().parent('.select-list').removeClass('select-list');
+					jQuery('label[for="shipping\\:region"]').removeClass('chosen-label');
+					jQuery('label[for="shipping\\:region"]').addClass('label-floating');
+                } else {
+                    regionChosen.show();
+                    regionChosen.parent().addClass('input-box-select');
+                    regionChosen.parent().parent().addClass('select-list');
+                    jQuery('#shipping\\:region_id').trigger("chosen:updated");
+					jQuery('label[for="shipping\\:region"]').removeClass('label-floating');
+					jQuery('label[for="shipping\\:region"]').addClass('chosen-label');
+                }
+            });
+
+        } else {
+            shippingRegionUpdater.update = shippingRegionUpdater.update.wrap(function(parentMethod){
+                // parent "update" method call
+                parentMethod();
+				
+				;(function ($, window, document, undefined) {
+					'use strict';
+					$(function () {
+						$('.input-field').floatLabels();
+					});
+				}(jQuery, this, this.document));
+                 
+                // after "update" method fires
+                if(shippingRegionUpdater.regionTextEl.visible()) {
+                    jQuery('.state-province-field').removeClass('select-list');
+                    jQuery('.state-province-field > .input-box').removeClass('input-box-select');
+					jQuery('label[for="shipping\\:region"]').removeClass('chosen-label');
+					jQuery('label[for="shipping\\:region"]').addClass('label-floating');
+                } else {
+                    jQuery('.state-province-field').addClass('select-list');
+                    jQuery('.state-province-field > .input-box').addClass('input-box-select');
+					jQuery('label[for="shipping\\:region"]').removeClass('label-floating');
+					jQuery('label[for="shipping\\:region"]').addClass('chosen-label');
+                }
+            });
+        }
+
+        function canUseChosen() {
+            if (window.navigator.appName === "Microsoft Internet Explorer") {
+                return document.documentMode >= 8;
+            }
+            if (/iP(od|hone)/i.test(window.navigator.userAgent)) {
+                return false;
+            }
+            if (/Android/i.test(window.navigator.userAgent)) {
+                if (/Mobile/i.test(window.navigator.userAgent)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    });
+	<?php else : ?>
+
+
+	if(jQuery('.state-province-field').hasClass('.select-list')){
+		 jQuery("label[for*='shipping:region']").removeClass("chosen-label");
+		 jQuery("label[for*='shipping:region']").addClass("label-floating");
+	}
+	else{
+		 jQuery("label[for*='shipping:region']").addClass("chosen-label");
+		 jQuery("label[for*='shipping:region']").removeClass("label-floating");
+	}
+    jQuery(function() {
+            // fix RegionUpdater for chosen.js
+			
+            jQuery('#shipping\\:region_id').on('change keyup', function(event) {
+                jQuery('#shipping\\:region').val(jQuery(this).children("option").filter(":selected").text());
+            });
+				
+			<?php if ($themeHelper->displayOptionalPostalCode() == 0): ?>
+
+			jQuery(document).ready(function(){
+				//--- Hide list of countries with 'Optional Zipcode' toggle Post Code ... 
+				jQuery('#optional_zipcode_shipping_chosen').hide();
+				var arr = [];	
+					jQuery('#optional_zipcode_shipping').children().each(function(){
+						arr.push(jQuery(this).val());
+					});
+					if(jQuery.inArray(jQuery('#shipping\\:country_id').val(),arr)!==-1){
+						jQuery('#shipping\\:postcode').parent().parent().parent().hide();
+					}else{
+						jQuery('#shipping\\:postcode').parent().parent().parent().show();
+					}
+				jQuery('#shipping\\:country_id').on('change keyup', function(event) {
+					if(jQuery.inArray(jQuery(this).val(),arr)!==-1){
+						jQuery('#shipping\\:postcode').parent().parent().parent().hide();
+					}else{
+						jQuery('#shipping\\:postcode').parent().parent().parent().show();
+					}
+					//console.log(jQuery.type(arr));
+				});
+			});
+			
+			<?php endif; ?>
+            
+         
+            shippingRegionUpdater.update = shippingRegionUpdater.update.wrap(function(parentMethod){
+                // parent "update" method call
+                parentMethod();
+				
+				;(function ($, window, document, undefined) {
+					'use strict';
+					$(function () {
+						$('.input-field').floatLabels();
+					});
+				}(jQuery, this, this.document));
+				
+				
+                // after "update" method fires
+                if(shippingRegionUpdater.regionTextEl.visible()) {
+                    jQuery('.state-province-field').removeClass('select-list');
+                    jQuery('.state-province-field > .input-box').removeClass('input-box-select');
+					jQuery('label[for="shipping\\:region"]').removeClass('chosen-label');
+					jQuery('label[for="shipping\\:region"]').addClass('label-floating');
+                } else {
+                    jQuery('.state-province-field').addClass('select-list');
+                    jQuery('.state-province-field > .input-box').addClass('input-box-select');
+					jQuery('label[for="shipping\\:region"]').removeClass('label-floating');
+					jQuery('label[for="shipping\\:region"]').addClass('chosen-label');
+                }
+            });
+          });
+    <?php endif; ?>
+	
+</script>

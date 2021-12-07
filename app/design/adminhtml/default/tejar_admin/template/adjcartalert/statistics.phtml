@@ -1,0 +1,16 @@
+<div class="statistic">
+    <?php list($countCartsMonth,$sumCartsMonth,$countCartsYear,$sumCartsYear,$recoveryMonth,$recoveryYear) = $this->showStatistics();?>
+    <div class="columns_statistic">Lifetime Statistics</div>
+    <div class="columns_statistic">Monthly Statistics</div>
+    <hr/>
+    <div class="columns_statistic other_font">
+        <?php echo $countCartsYear?> <span class="text_color">carts restored</span> <br>
+        <?php echo $sumCartsYear?> <span class="text_color">revenue</span> <br>
+        <?php echo $recoveryYear?>% <span class="text_color">recovery rate</span>
+    </div>
+    <div class="columns_statistic other_font">
+        <?php echo $countCartsMonth?> <span class="text_color">carts restored</span> <br>
+        <?php echo $sumCartsMonth?> <span class="text_color">revenue</span> <br>
+        <?php echo $recoveryMonth?>% <span class="text_color">recovery rate</span>
+    </div>
+</div>

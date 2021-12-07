@@ -1,0 +1,119 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014-2016 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+
+/**
+ * Product media data template
+ *
+ * @see Mage_Catalog_Block_Product_View_Media
+ */
+?>
+<?php
+	$store = Mage::app()->getStore();
+	$code  = $store->getCode();
+    $_product = $this->getProduct();
+    $_helper = $this->helper('catalog/output');
+    $_galleryImages = $this->getGalleryImages();
+    $width = 500;
+    list($maxHeight,$resizeAsSquare,$baseImageSize) = $this->helper('itactica_intenso/data')->getGalleryImagesHeight($_galleryImages, $_product, $width);
+	$_placeholderImage = Mage::getStoreConfig("catalog/placeholder/image_placeholder" , $code);
+	if(!$_placeholderImage){
+		$_placeholderImage = Mage::helper('catalog/image')->getPlaceholder();
+	}
+	$_placeholder = basename($_placeholderImage);
+	$_isNewLabel = Mage::getStoreConfig('intenso/product_label/new_label', Mage::app()->getStore());
+?>
+
+<div class="col-xs-4 product-img-box small-hide" aria-live="polite" aria-busy="false">
+    <figure>
+		<div class="product-label-placeholder" data-productid="<?php echo $_product->getId(); ?>" data-labelurl="<?php echo Mage::getBaseUrl(); ?>itactica-productlabel" data-source="product"></div>
+		<?php
+			if($_isNewLabel){
+				$now = date("Y-m-d");
+				$newsFrom= substr($_product->getData('news_from_date'),0,10);
+				$newsTo=  substr($_product->getData('news_to_date'),0,10);
+				if ($newsTo != '' || $newsFrom != ''){
+					if (($newsTo != '' && $newsFrom != '' && $now>=$newsFrom && $now<=$newsTo) || ($newsTo == '' && $now >=$newsFrom) || ($newsFrom == '' && $now<=$newsTo))
+					{
+			?>
+					<div class="intenso-product-label-wrapper position-top-left " style="margin: 6px;"><span class="intenso-product-label" style=" background-image: url(<?php echo $this->getSkinUrl('images/discount.svg'); ?>);color: #fff;padding: 15px 5px;font-size: 12px;width: 40px;height: 40px;font-weight: 600;">New</span></div>
+			<?php
+
+					}
+				}
+			}
+		?>
+        <a class="lightbox product-image" id="gallery-image" href="<?php echo $this->helper('catalog/image')->init($_product, 'image'); ?>">
+            <?php
+                $_img = '<img src="'.$this->helper('catalog/image')->init($_product, 'image')->resize($width).'" alt="'.$this->escapeHtml($this->getImageLabel()).'" width="' . $width . '" height="' . $width . '" >';
+                echo $_helper->productAttribute($_product, $_img, 'image');
+            ?>
+						<div class="image-overlay"></div>
+        </a>
+    </figure>
+    <?php if (count($_galleryImages) > 0): ?>
+    <?php if ($this->helper('itactica_intenso')->showGalleryImagesAsSlider()): ?>
+	<div class="gallery-images">
+    <section class="image-featured__slider image-featured__section">
+    <?php endif; ?>
+        <div class="more-views clearfix">
+        <?php $placeholder = 1; $i=1; foreach ($_galleryImages as $_image): ?>
+            <?php  if(basename($this->helper('catalog/image')->init($this->getProduct(), 'image', $_image->getFile())) != $_placeholder): ?>
+				<?php if ($this->isGalleryImageVisible($_image)): ?>
+				<div <?php if ($_image->getFile() == $_product->getImage()): ?> class="item selected"<?php else: ?> class="item"<?php endif;  ?>>
+					<?php if(isset($resizeAsSquare[$i])): ?>
+						<a class="lightbox" role="button" href="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'image', $_image->getFile()); ?>" title="<?php echo $this->escapeHtml($_image->getLabel()) ?>" data-url-medium="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'image', $_image->getFile())->resize($width); ?>">
+							<img src="<?php echo $this->getSkinUrl('images/clear.png'); ?>" data-lazy="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'thumbnail', $_image->getFile())->resize(100); ?>" alt="<?php echo $this->escapeHtml($_image->getLabel()) ?>" width="68" height="68">
+							<span class="a11y"><?php echo $this->__('Display Gallery Item %d', $i) ?></span>
+						</a>
+					<?php else : ?>
+						<a class="lightbox" role="button" href="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'image', $_image->getFile()); ?>" title="<?php echo $this->escapeHtml($_image->getLabel()) ?>" data-url-medium="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'image', $_image->getFile())->resize($width); ?>">
+							<img src="<?php echo $this->getSkinUrl('images/clear.png'); ?>" data-lazy="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'thumbnail', $_image->getFile())->resize(100); ?>" alt="<?php echo $this->escapeHtml($_image->getLabel()) ?>" width="68" height="68">
+							<span class="a11y"><?php echo $this->__('Display Gallery Item %d', $i) ?></span>
+						</a>
+					<?php endif; ?>
+				</div>
+				<?php endif; ?>
+				<?php else: ?>
+					<?php if($placeholder == 1): ?>
+						<?php if ($this->isGalleryImageVisible($_image)): ?>
+							<div <?php if ($_image->getFile() == $_product->getImage()): ?> class="item selected"<?php else: ?> class="item"<?php endif; ?>>
+								<?php if(isset($resizeAsSquare[$i])): ?>
+									<a class="lightbox" role="button" href="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'image', $_image->getFile()); ?>" title="<?php echo $this->escapeHtml($_image->getLabel()) ?>" data-url-medium="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'image', $_image->getFile())->resize($width); ?>">
+										<img src="<?php echo $this->getSkinUrl('images/clear.png'); ?>" data-lazy="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'thumbnail', $_image->getFile())->resize(100); ?>" alt="<?php echo $this->escapeHtml($_image->getLabel()) ?>" width="68" height="68">
+										<span class="a11y"><?php echo $this->__('Display Gallery Item %d', $i) ?></span>
+									</a>
+								<?php else : ?>
+									<a class="lightbox" role="button" href="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'image', $_image->getFile()); ?>" title="<?php echo $this->escapeHtml($_image->getLabel()) ?>" data-url-medium="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'image', $_image->getFile())->resize($width); ?>">
+										<img src="<?php echo $this->getSkinUrl('images/clear.png'); ?>" data-lazy="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'thumbnail', $_image->getFile())->resize(100); ?>" alt="<?php echo $this->escapeHtml($_image->getLabel()) ?>" width="68" height="68">
+										<span class="a11y"><?php echo $this->__('Display Gallery Item %d', $i) ?></span>
+									</a>
+								<?php endif; ?>
+							</div>
+							<?php endif; ?>
+					<?php endif; ?>
+				<?php $placeholder++; ?>
+				<?php endif;  ?>
+        <?php $i++; endforeach; ?>
+        </div>
+    <?php if ($this->helper('itactica_intenso')->showGalleryImagesAsSlider()): ?>
+    </section>
+	</div>
+    <?php endif; ?>
+    <?php endif; ?>
+</div>
+<input type="hidden" id="clearImage" class="clear-image" value="<?php echo $this->getSkinUrl('images/clear.png'); ?>"/>
+<input type="hidden" id="placeholderName" value="<?php echo Mage::getModel('catalog/product')->getImageUrl(500 , 404); ?>" />
+<script type="text/javascript">
+	document.addEventListener("DOMContentLoaded", function(){
+		var slick = $j(".more-views");
+		slick.slick({lazyLoad:"ondemand",dots: true,slidesToShow:5,slidesToScroll:5,speed: 300,appendArrows:!1,adaptiveHeight: true});
+	});
+</script>
+<?php echo $this->getChildHtml('after'); ?>

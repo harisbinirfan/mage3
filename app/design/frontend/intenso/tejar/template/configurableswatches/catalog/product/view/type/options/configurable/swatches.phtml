@@ -1,0 +1,153 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php
+$_product    = $this->getProduct();
+$_attribute = $this->getAttributeObj();
+$_jsonConfig = $this->getJsonConfig();
+$_config = json_decode($_jsonConfig);
+
+$_swatchInnerWidth = $this->getSwatchInnerWidth();
+$_swatchInnerHeight = $this->getSwatchInnerHeight();
+$_swatchOuterWidth = $this->getSwatchOuterWidth();
+$_swatchOuterHeight = $this->getSwatchOuterHeight();
+
+$_attr = $_attribute->getProductAttribute();
+$_attrCode = $_attr->getAttributeCode();
+$_id = $_attribute->getAttributeId();
+
+$_swatchArray = $_config->attributes->$_id;
+$moduleName = Mage::app()->getRequest()->getModuleName();
+$attrId = "attribute".$_attribute->getAttributeId();
+$_totalSwatchesCount =  count($_product->getTypeInstance(true)->getConfigurableAttributesAsArray($_product));
+?>
+<dt class="swatch-attr">
+    <label id="<?php echo $_attrCode ?>_label" class="required">
+        <em>*</em><?php echo $_attribute->getLabel() ?>:
+        <span id="select_label_<?php echo $_attrCode ?>" class="select-label"></span>
+    </label>
+</dt>
+<dd class="clearfix swatch-attr<?php if ($_attribute->decoratedIsLast) echo ' last'; ?>">
+    <div class="input-box">
+        <select name="super_attribute[<?php echo $_attribute->getAttributeId() ?>]" id="<?php echo $attrId;?>" class="required-entry super-attribute-select no-display swatch-select">
+            <option><?php echo $this->__('Choose an Option...') ?></option>
+        </select>
+        <ul id="<?php echo "configurable_swatch_".$_attrCode; ?>" class=" configurable-swatch-list clearfix">
+            <?php foreach ($_swatchArray->options as $_option): ?>
+                <?php
+//========================================= ZEE CODE=====================================//
+				//check instock availability...
+				$inStockAvialabilityCheck = 0;
+        /*
+				$attrCount = count((array)$_option->inStock);
+				$myArry = get_object_vars($_option->inStock->$_id);
+				$inStockAvialability = get_object_vars($myArry[$_option->id]);
+        */
+				$_bigWideSwatch = "";
+				//$inStockAvialability = $inStockAvialability['custom_stock'] !==null ?$inStockAvialability['custom_stock']: $inStockAvialability['out_of_stock'];
+				//echo "<pre>";var_dump($inStockAvialability);
+				//foreach($_option->inStock as $op){
+
+					//echo $inStockAvialabilityCheckID;
+				//}
+//================================================ ZEE CODE=====================================//
+
+                $_optionCode = Mage::helper('configurableswatches')->getHyphenatedString($_option->label);
+                $_swatchUrl = Mage::helper('configurableswatches/productimg')->getSwatchUrl($_product, $_option->label, $_swatchInnerWidth, $_swatchInnerHeight, $_swatchType);
+                $_hasImage = !empty($_swatchUrl);
+                $_liClass = '';
+                $_aClass = 'swatch-link swatch-link-' . $_attribute->getAttributeId();
+                if ($_hasImage) {
+                    $_liClass .= $_swatchType == 'media' ? ' is-media' : '';
+                    $_aClass .= ' has-image';
+                } elseif (strlen($_option->label) > 3) {
+                    $_liClass .= ' wide-swatch';
+                }
+				// 3SD CODE Bigger Swatch HANDLING STYLE ADD THIS CLASS big-wide-swatch
+				if (strlen($_option->label) > 80 && !$_hasImage) {
+					$_bigWideSwatch .= ' big-wide-swatch';
+				}
+				else{
+					$_bigWideSwatch .= '';
+				}
+				// 3SD CODE Bigger Swatch HANDLING STYLE ADD THIS CLASS big-wide-swatch
+
+//============================================= ZEE CODE=============================================//
+				//echo "<pre>";var_dump($inStockAvialability);
+
+				//die;
+
+        /* $stockClass= "";
+				if(!is_null($inStockAvialability) && $_totalSwatchesCount==1){ //echo "<pre>";var_dump($inStockAvialability);echo "</pre>";
+					if(getType($inStockAvialability)=="object"){
+
+						foreach( $inStockAvialability as $ff){
+							//echo $ff;
+							if(!$ff==false && $ff == "No Longer Available" || $ff=="Discontinued"){
+								$stockClass= "custom_stock not-available";
+							}else{
+								$stockClass= "";
+								break;
+							}
+						}
+					}else{
+						if(!$inStockAvialability==false && isset($inStockAvialability['out_of_stock']) || $inStockAvialability == "No Longer Available" || $inStockAvialability=="Discontinued"){
+								$stockClass= "custom_stock not-available stock-class";
+							}else{
+								$stockClass= "";
+								//break;
+							}
+					}
+
+				}else{
+						//$stockClass= "custom_stock not-available";
+					} */
+
+          $isOutOfStock = "";
+                $stockClass = "";
+                if($_totalSwatchesCount == 1){
+                  if(isset($_option->stock->outOfStock) && isset($_option->products)){
+                    foreach($_option->products as $productId){
+                      $isOutOfStock = $_option->stock->outOfStock->$productId;
+                    }
+                  }
+
+                  if($isOutOfStock) $stockClass = "stock-class";
+                }
+
+//============================================= ZEE CODE=============================================//
+?>
+                <li class="<?php echo $stockClass;?> option-<?php echo $_optionCode; ?><?php echo $_liClass; ?><?php echo $_bigWideSwatch; ?>" id="option<?php echo $_option->id; ?>">
+                    <a href="javascript:void(0)" id="swatch<?php echo $_option->id; ?>" class="<?php echo $_aClass ?>" title="<?php echo $_option->label; ?>">
+                <span class="swatch-label" style="line-height: <?php echo $_swatchInnerHeight ?>px;">
+                <?php if ($_hasImage): ?>
+                    <img src="<?php echo $this->getSkinUrl('images/clear.png'); ?>" data-src="<?php echo $_swatchUrl; ?>" alt="<?php echo $_option->label; ?>" width="<?php echo $_swatchInnerWidth ?>" height="<?php echo $_swatchInnerHeight ?>" class="lazyload" />
+                <?php else: ?>
+                    <?php echo $_option->label; ?>
+                <?php endif; ?>
+                 </span>
+                        <span class="x">X</span>
+                    </a>
+                </li>
+
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</dd>
+<script type="text/javascript">
+	lazyLoad();
+	if(document.querySelector('.maxlist-more')){
+		document.querySelector('.maxlist-more a').addEventListener('click' , lazyLoad);
+		var configurableWrapper = Array.prototype.slice.call(document.querySelectorAll(".configurable-swatch-list"),0);
+		configurableWrapper.forEach(function(configurable) {
+			configurable.addEventListener('scroll' , lazyLoad);
+		});
+	}
+</script>

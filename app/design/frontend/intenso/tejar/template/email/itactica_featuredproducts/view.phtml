@@ -1,0 +1,70 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    Itactica
+ * @package     Itactica_FeaturedProducts
+ * @copyright   Copyright (c) 2014-2017 Intenso (https://www.getintenso.com)
+ * @license     http://getintenso.com/license
+ */
+
+?>
+<!--{{block type="itactica_featuredproducts/view" identifier="newsletters" template="itactica_featuredproducts/view.phtml"}}-->
+<?php $_productCollection=$this->getProductCollection(0,false,true); ?>
+<?php $_slider = $this->getCurrentSlider(); ?>
+<?php $categories = $this->getCategories(); ?>
+<?php $_intensoHelper = $this->helper('itactica_intenso'); ?>
+<?php $_productsCount = 0 ; ?>
+<?php
+$_productsCountarray = array("","first", "second", "third", "frouth");
+$_columnCountarray = array("","1column","2column","3column","4column");
+$q = 3;
+$_columnCount = 3;
+?>
+<?php if ($_slider) :?>
+    <h2 class="subtitle products"><?php echo $_slider->getTitle(); ?></h2>
+        <?php foreach ($categories as $id => $category): ?>
+			<table class="products-grid">
+                <?php $productCollectionByCategory = $this->getProductCollection($id); ?>
+                <?php foreach ($productCollectionByCategory as $product): ?>
+				<?php $_product = $product; ?>
+				  <?php $_productsCount++ ; ?>
+					<?php $q++; ?>
+						<?php if ($i++%$_columnCount==0): ?>
+						<tr>
+							<td class="<?php echo $_columnCountarray[$_columnCount]; ?><?php if($q > count($productCollectionByCategory)):?> last-row <?php endif ?>">
+						<?php endif ?>
+							<div style="display:inline-block;max-width:25%;min-width:175px;vertical-align:top;width:100%;padding-top:10px;padding-bottom:10px" class="<?php echo $_productsCountarray[$_productsCount]; ?>-column mobile-wrapper">
+								<div class="product-wrapper">
+									<table width="100%" cellpadding="0" align="center" cellspacing="0" border="0">
+										<tr>
+											<td>
+											<a href="<?php  echo $_product->getProductUrl() ?>" title="<?php echo $this->escapeHtml($_product->getName()) ?>" class="product-image">
+												<?php  $_imgSize = 150; ?>
+                        <img src="<?php  echo $this->helper('catalog/image')->init($_product, 'thumbnail')->resize(150); ?>" width="<?php echo $_imgSize; ?>" alt="<?php  echo $this->stripTags($this->getImageLabel($_product, 'thumbnail'), null, true) ?>" />
+											</a>
+											</td>
+										</tr>
+										<tr>
+											<td class="item-detail">
+												<?php $_productName = strlen(trim($this->escapeHtml($_product->getName())))>=50 ?substr($this->escapeHtml($_product->getName()), 0,45)."...":$this->escapeHtml($_product->getName()); ?>
+												<h3 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->escapeHtml($_product->getName()) ?>"><?php echo $_productName; ?></a></h3>
+												<?php  // echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+												<?php echo $this->getPriceHtml($_product, true, '-new') ?>
+											</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						<?php if ($i%$_columnCount==0 || $i==count($_products)): ?>
+						<?php $_productsCount = 0 ; ?>
+							</td>
+						</tr>
+
+						<?php endif ?>
+                <?php endforeach; ?>
+            </table>
+        <?php endforeach; ?>
+
+
+<?php endif;?>

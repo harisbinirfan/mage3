@@ -1,0 +1,23 @@
+<?php
+/**
+ * Tejar is not affiliated with or in any way responsible for this code.
+ *
+ * Commercial support is available directly from the [extension author](http://www.techytalk.info/contact/).
+ *
+ * @category Marko-M
+ * @package SocialConnect
+ * @author Marko Martinović <marko@techytalk.info>
+ * @copyright Copyright (c) Marko Martinović (http://www.techytalk.info)
+ * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ */
+?>
+<div class="clearer">
+    <div class="tejar-socialconnect-facebook">
+        <div class="tejar-socialconnect-facebook-inner">
+			<button type="button" id="facebook-connect-button" class="facbook-login-btn icons-facebook-1" onclick="popwin('<?php echo $this->escapeUrl($this->_getButtonUrl());?>')">
+					<?php echo $this->_getButtonText(); ?>            
+			</button>
+        </div>
+        <div class="tejar-socialconnect-facebook-right"></div>
+    </div>
+</div>

@@ -1,0 +1,16 @@
+<?php
+$_helper = Mage::helper('aitinstall');
+/* @var $_helper Tejar_Aitinstall_Helper_Data */
+if ($_helper->isDoubleInstallerVersion()) { ?>
+<div class="notification-global">
+    <?php if ($_helper->isThereAnyLicenses()) {
+        echo $_helper->__('<strong>Do not delete</strong> the old Tejar Modules Manager (app/code/local/Tejar/Aitsys) unless you convert licenses purschased
+                          prior to August 6th, 2013. You may <a href="%s" target="_blank">request Tejar support team</a> to convert your licenses and remove
+                          the old Tejar Modules Manager. More info available at <a href="%s" target="_blank">this guide</a>. If you delete the old Tejar Modules
+                          Manager without converting licenses your Magento will crash.', $_helper->getSupportLink() , $_helper->getInfoLink());
+    } else {
+        echo $_helper->__('You have both the new and old versions of the Tejar Module Manager.
+                           You may <a href="%s" target="_blank">request Tejar support team</a> to remove the old Tejar Modules Manager for you.', $_helper->getSupportLink());
+    } ?>
+</div>
+<?php } ?>

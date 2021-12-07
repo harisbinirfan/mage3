@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Intenso Premium Theme
+ * 
+ * @category    Itactica
+ * @package     tejar_ajax
+ * @copyright   Copyright (c) 2014-2015 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+-->
+<layout>
+	
+	<!-- <catalog_product_view translate="label"> -->
+		<!-- <reference name="product.info"> -->
+			<!-- <remove name="catalog.product.related"/> -->
+			<!-- <block type="catalog/product_list_related" name="catalog.product.related.wrapper" as="related_products" template="tejar_ajax/product/list/related/wrapper.phtml" /> -->
+		<!-- </reference> -->
+	<!-- </catalog_product_view> -->
+	
+	<tejar_ajax_product_view>
+		<reference name="head">
+			<action method="addJs"><script>varien/product.js</script></action>
+            <action method="addJs"><script>varien/product_options.js</script></action>
+            <action method="addJs"><script>varien/configurable.js</script></action>
+            <action method="addItem"><type>js_css</type><name>calendar/calendar-win2k-1.css</name><params/><!--<if/><condition>can_load_calendar_js</condition>--></action>
+            <action method="addItem"><type>js</type><name>calendar/calendar.js</name><!--<params/><if/><condition>can_load_calendar_js</condition>--></action>
+            <action method="addItem"><type>js</type><name>calendar/calendar-setup.js</name><!--<params/><if/><condition>can_load_calendar_js</condition>--></action>
+		</reference>
+		<reference name="content">
+			<block type="catalog/product_view_attributes" name="product.attributes" as="additional" template="catalog/product/view/attributes.phtml">
+				<action method="addToParentGroup"><group>detailed_info</group></action>
+			</block>
+			<block type="catalog/product_view_description" name="product.description" as="description" template="catalog/product/view/description.phtml">
+				<action method="addToParentGroup"><group>detailed_info</group></action>
+			</block>
+			<block type="tejar_ajax/product_view" name="product.info" as="product.info" template="tejar_ajax/product/view.phtml">	
+				<block type="catalog/product_list_related" name="catalog.product.related" as="related_products" template="tejar_ajax/product/list/related.phtml"/>
+				<block type="mageworx_alsobought/list" name="catalog.product.alsobought" as="alsobought_products" before="-" template="tejar_ajax/product/list/related.phtml"/>
+                <block type="catalog/product_list_upsell" name="product.info.upsell" as="upsell_products" template="tejar_ajax/product/list/upsell.phtml">
+					<action method="setItemLimit"><type>upsell</type><limit>15</limit></action>
+				</block>
+				<block type="catalog/product_list_crosssell" name="product.info.crosssell" as="crosssell_products" template="tejar_ajax/product/list/crosssell.phtml">
+					<action method="setItemLimit"><type>upsell</type><limit>15</limit></action>
+				</block>
+                <block type="catalog/product_view" name="product.info.options.wrapper" as="product_options_wrapper" template="tejar_ajax/product/view/options/wrapper.phtml" translate="label">
+                    <label>Info Column Options Wrapper</label>
+                    <block type="core/template" name="options_js" template="tejar_ajax/product/view/options/js.phtml"/>
+                    <block type="catalog/product_view_options" name="product.info.options" as="product_options" template="catalog/product/view/options.phtml">
+                        <action method="addOptionRenderer"><type>text</type><block>catalog/product_view_options_type_text</block><template>catalog/product/view/options/type/text.phtml</template></action>
+                        <action method="addOptionRenderer"><type>file</type><block>catalog/product_view_options_type_file</block><template>catalog/product/view/options/type/file.phtml</template></action>
+                        <action method="addOptionRenderer"><type>select</type><block>catalog/product_view_options_type_select</block><template>catalog/product/view/options/type/select.phtml</template></action>
+                        <action method="addOptionRenderer"><type>date</type><block>catalog/product_view_options_type_date</block><template>catalog/product/view/options/type/date.phtml</template></action>
+					</block>
+					<block type="core/html_calendar" name="html_calendar" as="html_calendar" template="tejar_ajax/page/js/calendar.phtml"/>
+				</block>
+                <block type="core/template_facade" name="product.info.container1" as="container1">
+                    <action method="setDataByKey"><key>alias_in_layout</key><value>container1</value></action>
+                    <action method="setDataByKeyFromRegistry"><key>options_container</key><key_in_registry>product</key_in_registry></action>
+                    <action method="append"><block>product.info.options.wrapper</block></action>
+                </block>
+                <block type="core/template_facade" name="product.info.container2" as="container2">
+                    <action method="setDataByKey"><key>alias_in_layout</key><value>container2</value></action>
+                    <action method="setDataByKeyFromRegistry"><key>options_container</key><key_in_registry>product</key_in_registry></action>
+                    <action method="append"><block>product.info.options.wrapper</block></action>
+                    <action method="append"><block>product.info.options.wrapper.bottom</block></action>
+                </block>
+                <action method="unsetCallChild"><child>container1</child><call>ifEquals</call><if>0</if><key>alias_in_layout</key><key>options_container</key></action>
+                <action method="unsetCallChild"><child>container2</child><call>ifEquals</call><if>0</if><key>alias_in_layout</key><key>options_container</key></action>
+				<block type="checkout/cart_item_configure" name="checkout.cart.item.configure.block"></block>
+            </block>
+		</reference>
+    </tejar_ajax_product_view>
+	
+	
+	 <PRODUCT_TYPE_configurable translate="label" module="catalog">
+		<reference name="product.info.options.wrapper">
+            <block ifconfig="intenso/product_page/swatch_ajax" type="catalog/product_view_type_configurable" name="product.info.options.configurable" as="options_configurable" before="-" template="tejar_ajax/product/view/type/options/configurable.phtml"/>
+        </reference>
+    </PRODUCT_TYPE_configurable>
+	
+	<tejar_ajax_cart_configure translate="label">
+		<label>Configure Cart Item</label>
+        <update handle="tejar_ajax_product_view"/>
+        <reference name="product.info">
+            <block type="checkout/cart_item_configure" name="checkout.cart.item.configure.block"></block>
+        </reference>
+    </tejar_ajax_cart_configure>
+	
+	
+	
+</layout>

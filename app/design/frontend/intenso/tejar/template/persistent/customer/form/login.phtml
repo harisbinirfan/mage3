@@ -1,0 +1,71 @@
+<?php
+   /**
+    * Intenso Premium Theme
+    *
+    * @category    design
+    * @package     intenso_default
+    * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+    * @license     http://getintenso.com/license
+    */
+   ?>
+<?php
+   /**
+    * Customer login form template
+    *
+    * @see app/design/frontend/base/default/template/customer/form/login.phtml
+    */
+   /** @var $this Mage_Customer_Block_Form_Login */
+   ?>
+<div class="account-login">
+   <form action="<?php echo $this->getPostActionUrl() ?>" method="post" id="login-form">
+      <?php echo $this->getBlockHtml('formkey'); ?>
+	  <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+      <h1 class="account-title center"><?php echo $this->__('Sign in to your account') ?></h1>
+         <ul class="form-list">
+            <li class="row">
+               <div class="col-xs-12">
+                  <div class="input-field input-wrapper">
+                     <label for="email" class="required label-floating"><?php echo $this->__('Email') ?></label>
+                     <input type="email" name="login[username]" value="<?php echo $this->escapeHtml($this->getUsername()) ?>" id="email" placeholder="<?php echo Mage::helper('core')->quoteEscape($this->__('Email')) ?>" class="input-text required-entry validate-email input-floating" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Email Address')) ?>" />
+                  </div>
+               </div>
+            </li>
+            
+            <li class="row">
+               <div class="col-xs-12">
+                  <div class="input-field input-wrapper">
+                     <label for="pass" class="required label-floating"><?php echo $this->__('Password') ?></label>
+                     <input type="password" name="login[password]" placeholder="<?php echo Mage::helper('core')->quoteEscape($this->__('Password')) ?>" class="input-text required-entry validate-password input-floating" id="pass" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Password')) ?>" />	
+					 <a href="<?php echo $this->getForgotPasswordUrl() ?>" class="forget_link"><?php echo $this->__('forgot?') ?></a>
+                  </div>
+               </div>
+            </li>
+			
+            <?php echo $this->getChildHtml('form.additional.info'); ?>
+            <?php echo $this->getChildHtml('persistent.remember.me'); ?>
+         </ul>
+		  <?php echo $this->getChildHtml('persistent.remember.me.tooltip'); ?>
+         <footer class="bottom_box on_the_sides">
+            <button type="submit" class="btn btn-big" title="<?php echo $this->__('Sign in') ?>" name="send" id="send2"><span><span><?php echo $this->__('Sign in') ?></span></span></button>
+         </footer>
+		 <?php echo $this->getChildHtml('tejar_socialconnect_login');?>
+		<div class="login_bottom">
+            <div class="heading-divider">
+               <h5><?php echo $this->__("Don't have an account?") ?></h5>
+            </div>
+            <button type="button" title="<?php echo $this->__('Create a new account') ?>" class="btn btn-big secondary" onclick="window.location='<?php echo Mage::helper('persistent')->getCreateAccountUrl($this->getCreateAccountUrl()) ?>';"><span><span><?php echo $this->__('Create a new account') ?></span></span></button>
+         </div>
+		
+		<?php if (Mage::helper('checkout')->isContextCheckout()): ?>
+      <input name="context" type="hidden" value="checkout" />
+      <?php endif; ?>
+   </form>
+   <script type="text/javascript">
+      //<![CDATA[
+          var dataForm = new VarienForm('login-form', true);
+      //]]>
+	  
+		
+   </script>
+
+</div>

@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    Mage
+ * @package     Mage_Reports
+ * @copyright   Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+-->
+<config>
+    <menu>
+        <report translate="title" module="reports">
+            <children>
+				<products translate="title" module="reports">
+					<children>
+						<created translate="title" module="reports">
+							<title>Created</title>
+							<action>adminhtml/report_product/created</action>
+						</created>
+					</children>
+				</products>
+                <salesroot translate="title" module="reports">
+					<children>
+						<product translate="title" module="reports">
+							<title>Product Status</title>
+							<action>adminhtml/report_sales/product</action>
+						</product>
+					</children>
+				</salesroot>
+			</children>
+        </report>
+        <catalog translate="title" module="catalog">
+			<children>
+				<categories_grid translate="title" module="catalog">
+                    <title>Categories</title>
+                    <action>adminhtml/catalog_categories/</action>
+                    <sort_order>10</sort_order>
+                </categories_grid>
+			</children>
+        </catalog>
+    </menu>
+	<acl>
+        <resources>
+            <admin>
+                <children>
+                    <report translate="title" module="reports">
+						<children>
+                            <products translate="title">
+                                <title>Products</title>
+                                <children>
+                                    <created translate="title">
+                                        <title>Created</title>
+                                    </created>
+                                </children>
+                            </products>
+                        </children>
+					</report>
+                    <catalog translate="title" module="catalog">
+						<children>
+						   <categories_grid translate="title">
+                                <title>Categories</title>
+                            </categories_grid>
+                        </children>
+					</catalog>
+				</children>
+            </admin>
+        </resources>
+    </acl>
+</config>

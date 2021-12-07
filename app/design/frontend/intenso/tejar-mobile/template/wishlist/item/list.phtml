@@ -1,0 +1,42 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php
+    $columns = $this->getColumns();
+?>
+
+
+        <?php if (count($this->getItems())): ?>
+            <?php foreach ($this->getItems() as $item): ?>
+			<table class="table_type_1 theme_table wishlist_table" id="wishlist-table_<?php echo $item->getId();?>">
+				<tbody id="item_<?php echo $item->getId();?>">
+                    <?php foreach ($columns as $column): ?>
+                        <tr><?php $column->setItem($item); echo $column->toHtml($item);?></tr>
+                    <?php endforeach; ?>
+				</tbody>
+			</table>
+            <?php endforeach ?>
+        <?php else: ?>
+            <tr><td colspan="<?php echo count($columns);?>" class="wishlist-empty"><?php echo $this->__('This Wishlist has no Items');?></td><tr>
+        <?php endif; ?>
+    
+
+<?php foreach ($columns as $column): ?>
+    <?php echo $column->getAdditionalHtml();?>
+<?php endforeach; ?>
+<script type="text/javascript">
+//<![CDATA[
+    decorateTable('wishlist-table');
+
+<?php foreach ($columns as $column): ?>
+    <?php echo $column->getJs();?>
+<?php endforeach; ?>
+//]]>
+</script>

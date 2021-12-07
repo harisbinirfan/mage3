@@ -1,0 +1,222 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php
+/**
+ * Multishipping checkout shipping template
+ *
+ * @see Mage_Checkout_Block_Multishipping_Shipping
+ * @var $this Mage_Checkout_Block_Multishipping_Shipping
+ */
+?>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="page-title">
+            <h1><?php echo $this->__('Select Shipping Method') ?></h1>
+        </div>
+		<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+
+	<form action="<?php echo $this->getPostActionUrl() ?>" method="post" id="shipping_method_form">
+			
+                <?php foreach ($this->getAddresses() as $_index => $_address): ?>
+					<div class="address_heading">
+						<h5><?php echo $this->__('Address %s of %s', ($_index+1), $this->getAddressCount()) ?></h5>
+					</div>
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="box">
+								<div class="box-title">
+									<div class="btn-title">
+										<div class="title-left">
+									<h5><?php echo $this->__('Shipping To') ?></h5>
+									</div>
+									<div class="title-right">
+									<h5><a class="icon-edit" href="<?php echo $this->getAddressEditUrl($_address) ?>" title="<?php echo $this->__('Change') ?>"><span class="hide"><?php echo $this->__('Change') ?></span></a></h5>
+									</div>
+									</div>
+								</div>
+								<div class="box-content">
+									<address><?php echo $_address->format('html') ?></address>
+								</div>
+							</div>
+						
+							<div class="box">
+								<div class="box-title">
+									<h5><?php echo $this->__('Shipping Method') ?></h5>
+								</div>
+								<div class="box-content">
+									<?php if (!($_shippingRateGroups = $this->getShippingRates($_address))): ?>
+										<p><?php echo $this->__('Sorry, no quotes are available for this order at this time.') ?></p>
+									<?php else: ?>
+									<dl class="sp-methods">
+										<?php $_sole = count($_shippingRateGroups) == 1; foreach ($_shippingRateGroups as $code => $_rates): ?>
+											<dt></dt>
+											<dd class="methods-box">
+												<ul>
+												<?php $_sole = $_sole && count($_rates) == 1; foreach ($_rates as $_rate): ?>
+													<li class="<?php if ($_rate->getErrorMessage()) echo ' error-msg' ?> free_shipping ">
+													   <?php if ($_rate->getErrorMessage()): ?>
+															<?php echo $this->escapeHtml($_rate->getCarrierTitle()) ?>: <?php echo $this->escapeHtml($_rate->getErrorMessage()) ?>
+													   <?php else: ?>
+															<?php if ($_sole) : ?>
+															<input type="radio" name="shipping_method[<?php echo $_address->getId() ?>]" value="<?php echo $this->escapeHtml($_rate->getCode()) ?>" id="s_method_<?php echo $_address->getId() ?>_<?php echo $_rate->getCode() ?>" checked="checked"/>
+															<?php else: ?>
+															<input type="radio" name="shipping_method[<?php echo $_address->getId() ?>]" value="<?php echo $_rate->getCode() ?>" id="s_method_<?php echo $_address->getId() ?>_<?php echo $_rate->getCode() ?>"<?php if($_rate->getCode()===$this->getAddressShippingMethod($_address)) echo ' checked="checked"' ?> class="with-gap" />
+															<?php endif; ?>
+															<label for="s_method_<?php echo $_address->getId() ?>_<?php echo $_rate->getCode() ?>"><?php echo $this->escapeHtml($this->getCarrierName($code)) ?> - <span><?php echo $this->escapeHtml($_rate->getMethodTitle()) ?>
+															<?php $_excl = $this->getShippingPrice($_address, $_rate->getPrice(), $this->helper('tax')->displayShippingPriceIncludingTax()); ?>
+															<?php $_incl = $this->getShippingPrice($_address, $_rate->getPrice(), true); ?>
+															<?php echo $_excl; ?>
+															<?php if ($this->helper('tax')->displayShippingBothPrices() && $_incl != $_excl): ?>
+																(<?php echo $this->__('Incl. Tax'); ?> <?php echo $_incl; ?>)
+															<?php endif; ?>
+															</span>
+															<?php $store = Mage::app()->getStore();?>
+															<?php $storeCode = $store->getCode();?>	
+															<?php if($_rate->getCode() == 'tejar_customcheckout_tejar_customcheckout'): ?>
+															
+															<?php else : ?>
+															<?php if($storeCode == 'default'): ?>
+																<ul class="p-icon-list">
+																	<li><span class="p-icon icon-dhl icon-dhl-dims"></span></li>
+																	<li><span class="p-icon icon-fedex icon-fedex-dims"></span></li>
+																	<li><span class="p-icon icon-ups icon-ups-dims"></span></li>
+																</ul>
+															<?php elseif($storeCode == 'ae'): ?>
+																<ul class="p-icon-list">
+																	<li><span class="p-icon icon-aramax icon-aramax-dims"></span></li>
+																</ul>
+															<?php elseif($storeCode == 'pk'): ?>
+																<ul class="p-icon-list">
+																	<li><span class="p-icon icon-tcs icon-tcs-dims"></span></li>
+																	<li><span class="p-icon icon-leopards-courier icon-leopards-courier-dims"></span></li>
+																	<li><span class="p-icon icon-ups icon-ups-dims"></span></li>
+																</ul>
+															<?php else : ?>
+																<ul class="p-icon-list">
+																	<li><span class="p-icon icon-dhl icon-dhl-dims"></span></li>
+																	<li><span class="p-icon icon-aramax icon-aramax-dims"></span></li>
+																	<li><span class="p-icon icon-fedex icon-fedex-dims"></span></li>		
+																	<li><span class="p-icon icon-leopards-courier icon-leopards-courier-dims"></span></li>
+																	<li><span class="p-icon icon-tcs icon-tcs-dims"></span></li>
+																	<li><span class="p-icon icon-ups icon-ups-dims"></span></li>
+
+																</ul>
+															<?php endif;?>
+															<?php endif;?>
+															</label>
+													   <?php endif ?>
+													</li>
+												<?php endforeach; ?>
+												</ul>
+											</dd>
+										<?php endforeach; ?>
+									</dl>
+									<?php endif; ?>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6 table-wrapper">
+							<?php echo $this->helper('giftmessage/message')->getInline('multishipping_adress_checkbox', $_address); ?>
+							<div class="box order-review-box" id="checkout-review-table-wrapper">
+								<div class="box-title">
+									<div class="btn-title">
+										<div class="title-left">
+											<h5><?php echo $this->__('Items') ?></h5>
+										</div>
+										<div class="title-right">
+											<h5><a class="icon-edit" href="<?php echo $this->getItemsEditUrl($_address) ?>" title="<?php echo $this->__('Edit Items') ?>"><span class="hide"><?php echo $this->__('Edit Items') ?></span></a></h5>
+										</div>
+									</div>
+								</div>
+								<div class="box-content">
+									<table class="table_type_2" id="shipping-table-<?php echo $_address->getId() ?>">
+										
+											<?php foreach ($this->getAddressItems($_address) as $_item):
+											$configItem = Mage::getModel('catalog/product')->loadByAttribute('sku', $_item->getSku());
+											/*--------------------------------------------------------*/
+										/* 3SD CODE ASSOCIATE PRODUCT NAME */
+										if($_item->getSku() == ''){
+											$configItemId = Mage::getModel('catalog/product')->load($_item->getId()) ;
+										}
+										else
+										{
+										$configItemId = Mage::getModel('catalog/product')->loadByAttribute('sku', $_item->getSku());
+										}
+										/*--------------------------------------------------------*/
+										$product = Mage::getModel('catalog/product')->setStoreId(Mage::app()->getStore()->getId())->load($_item->getProductId());
+										//--- Get Product Brand...
+										$productBrand  = $product->getAttributeText('manufacturer');
+										//$productModel = Mage::getModel('catalog/product')->load($item->getProduct()->getId())->getModel();
+										//--- Taking Model by using loadByAttribute as currently unable to get it from $product object..
+										$productModel  = $configItem->getModel();
+										//echo var_dump($configItem->getData('model'));
+	
+											//--- Create Brand URL...
+										  $brandUrl=Mage::getUrl(); 
+										  $brandName = strtolower($product->getAttributeText('manufacturer'));
+										  $brandName = str_replace(' ', '-', $brandName);
+										  
+										  //--- Fix for replacing space and '&' from brand name.
+										  $brandName = str_replace(' ', '-', $brandName);
+										  $brandName = str_replace('-&-', '-', $brandName);
+											?>
+											<tbody>
+											<tr>
+												<td class="review-image">
+													<a href="<?php echo $product->getProductUrl() ?>" title="<?php echo $this->escapeHtml($configItemId->getName()); ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($configItem, 'small_image')->resize(150); ?>" width="150" height="150" class="media-object img-responsive" alt="<?php echo $this->getImageLabel($configItem, 'small_image'); ?>"/></a>
+												</td>
+												<td class="">
+													<h2 class="product-name"><a href="<?php echo $product->getProductUrl(); ?>" class=""><span><?php echo $this->escapeHtml($configItemId->getName()); ?></span></a></h2>
+													<div class="cart-brand-model mbottom-0 mtop-0">
+														<p>By: <a href="<?php echo $brandUrl;?><?php echo strtolower($brandName);?>"><?php echo $productBrand;?></a></p>
+														<p>Model: <span><?php echo $productModel;?></span></p>
+													</div>
+													<?php // echo $this->getItemHtml($_item->getQuoteItem()) ?>
+													<!--============================== ZEE CODE ===========================-->
+													<!--======================== GET CUSTOM STOCK STATUS ==================-->		
+															<?php 
+															$customStockProduct = Mage::getModel('catalog/product')->load($configItem->getId());
+															$customStock = $customStockProduct->getAttributeText('custom_stock_availability');?>
+															<p class="cart-in-stock mbottom-0 mtop-0"><?php echo $customStock?$customStock:"In Stock";?></p>
+													<!--=============================== ZEE CODE ============================-->
+													<p class="mbottom-0 mtop-0">
+													<span class="cart-price">
+													<?php echo Mage::helper("core")->currency($_item->getPrice()) ?>
+													</span>
+													</p>
+													<p class="mbottom-0 mtop-0">
+													Qty: <?php echo $_item->getQty() ?>
+													</p>
+													
+													
+												</td>
+											</tr>
+											</tbody>
+											<?php endforeach; ?>
+										
+									</table>
+								</div>
+							</div>
+							<script type="text/javascript">decorateTable('shipping-table-<?php echo $_address->getId() ?>')</script>
+							<?php echo $this->helper('giftmessage/message')->getInline('multishipping_adress', $_address); ?>
+						</div>
+					</div>
+					<?php endforeach; ?>
+					<?php echo $this->getChildHtml('checkout_billing_items') ?>
+				
+					<div class="buttons-set">
+						<p class="back-link"><a class="arrow-left" href="<?php echo $this->getBackUrl() ?>"><?php echo $this->__('Back to Select Addresses') ?></a></p>
+                        <button data-action="checkout-continue-billing" type="submit" title="<?php echo $this->__('Continue to Billing Information') ?>" class="waves-effect waves-light btn"><span><span><?php echo $this->__('Continue to Billing Information') ?></span></span></button>
+                    </div>
+					 <?php echo $this->getBlockHtml('formkey') ?>
+			</form>
+	</div>
+</div>

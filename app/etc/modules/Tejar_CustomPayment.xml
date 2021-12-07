@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config>  
+    <modules>  
+        <Tejar_CustomPayment>  
+            <active>true</active>  
+            <codePool>local</codePool>
+			<depends>
+                
+				<Mage_Payment />
+            </depends>
+			
+        </Tejar_CustomPayment>  
+    </modules>  
+</config> 

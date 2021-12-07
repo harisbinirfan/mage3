@@ -1,0 +1,406 @@
+<?php
+/* ObservPricing Helper
+ *
+ * @category   Tejar
+ * @package    Tejar_ObservPricing
+ * @class      Tejar_Observpricing_Helper_Data
+ * @author     Zeeshan <zeeshan.zeeshan123@gmail.com>
+ * @copyright  Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+class Tejar_Observpricing_Helper_Data extends Mage_Core_Helper_Abstract
+{
+	/*
+	*@name        getRandomSKU
+	*@description This function returns a random hash containing 10 alpha numeric Characters..
+	*@parameters  None
+	*@returns     String
+	*/
+	public function getRandomSKU(){
+		$characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+		$string = '';
+		for($i = 0; $i <= 9; $i++) {
+			$string .= strtoupper($characters[mt_rand(0, strlen($characters) - 1)]);
+		}
+		if($string[0]=="0"){
+			return $this->getRandomSKU();
+		}else{
+			return $string;
+		}
+	}
+   /*
+	*@name        round_up
+	*@parameters  $value, $places
+	*@description to obtain EXCEL like ROUND UP functionality...
+	*@returns     Number
+	*/
+	public function round_up($value, $places){
+		$mult = pow(10, abs($places));
+		return $places < 0 ? ceil($value / $mult) * $mult :ceil($value * $mult) / $mult;
+	}
+
+	/*
+		*@name        getMetaTitle
+		*@parameters  $countryCode, $productTitle
+		*@description to obtain Meta Title of a given product
+		*@returns     String
+		*/
+		public function getMetaTitle($store, $productTitle){
+
+			$storeId = $store->getId();
+			$countryCode = Mage::getStoreConfig('general/country/default', $storeId);
+			$country = Mage::getModel('directory/country')->loadByCode($countryCode);
+			$countryName = $country->getName();
+
+			$meta_title = Mage::getStoreConfig('design/product_meta/meta_title', $storeId);
+
+			if($meta_title){
+				$metaTitle = sprintf($meta_title , $productTitle , $countryName);
+				return $metaTitle;
+			}
+
+			return;
+		}
+
+		/*
+		*@name        getMetaDescription
+		*@parameters  $countryCode, $productDescription
+		*@description to obtain Meta Description of a given product
+		*@returns     String
+		*/
+		public function getMetaDescription($store, $productTitle){
+
+			$storeId = $store->getId();
+			$countryCode = Mage::getStoreConfig('general/country/default', $storeId);
+			$country = Mage::getModel('directory/country')->loadByCode($countryCode);
+			$countryName = $country->getName();
+
+			$meta_description = Mage::getStoreConfig('design/product_meta/meta_description', $storeId);
+			if($meta_description){
+				$metaDescription = sprintf($meta_description , $productTitle , $countryName);
+				return $metaDescription;
+			}
+
+			return;
+
+		}
+
+
+
+	/*
+	*@name        getFinalCost
+	*@parameters  $product, $usd_rate
+	*@description To obtain Final cost of a product ...
+	*@returns     Number float..
+	*/
+	public function getFinalCost($product, $usd_rate, $currentPrice , $storeId, $storeCurrencyCode, $specialFormula){
+
+		//--- Get currency rates for USD Currency
+		$store_rate = 0;
+		$allowedCurrencies = Mage::getModel('directory/currency')->getConfigAllowCurrencies();
+		$currencyRates = Mage::getModel('directory/currency')->getCurrencyRates(Mage::app()->getStore()->getBaseCurrency(), array_values($allowedCurrencies));
+
+		$productWeight = $product->getWeight()!=""?$product->getWeight():0;
+		$productSource = $product->getSourcing()!=""?$product->getAttributeText('sourcing'):"";
+
+		$sources = @unserialize(Mage::getStoreConfig('tejarobservpricing/sourcing/sourcing',$storeId));
+		$exchangeRate = $currencyRates[$storeCurrencyCode];
+		if(!$exchangeRate || $exchangeRate==null || $exchangeRate==""){
+			$exchangeRate=1;
+		}
+
+		//--- Get Dimweight: if Available else weightToAdd would be the product weight.
+		$dimWeight = $product->getDimWeight();
+		$result = array();
+		$ProductPrice = $usd_rate;
+		$ExchangeRate = $exchangeRate;
+		$DimensionalWeight = $dimWeight;
+		$ActualWeight = $productWeight;
+		$FixedLocalShipping = Mage::getStoreConfig('carriers/flatrate/price',$storeId);
+		$MinimumOrderAmount = (int)Mage::getStoreConfig('carriers/freeshipping/free_shipping_subtotal',$storeId);
+
+		$Markup = 1;
+		$KGtoLB = 2.20462;
+		$InternationalShipping = 0;
+		$ShippingBoxWeight = 0;
+		$LocalShipping = 0;
+		$Clearance = 0;
+		$Handling = 0;
+		$TransactionFee = 0;
+		$ForeignTransactionFee = 1;
+		$TransactionPercentage = 1;
+		$defaultPrice = true;
+
+
+		$optionText = "Standard";
+		$isAttributeExist = $product->getResource()->getAttribute('sourcing');
+		$ExchangeRateRow = "";
+
+		try{
+			if($sources){
+				foreach($sources as $source){
+
+					if ($isAttributeExist && $isAttributeExist->usesSource()) {
+						$optionText = $isAttributeExist->getSource()->getOptionText($source['source']);
+					}
+
+					if(($productSource ==  $optionText) && ($optionText!="" && $productSource!="") && $source['value'] != ""){
+
+
+						$ExchangeRateRow = $source['currency'];
+						$ExchangeRate = $this->getCustomCurrency($source['currency'], $storeCurrencyCode, $exchangeRate, $allowedCurrencies);
+						if($source['special_value'] && $specialFormula == true){
+							$result = eval($source['special_value']);
+						} else {
+							$result = eval($source['value']);
+						}
+
+
+
+
+					} elseif($productSource == "" && ($optionText == "Standard" && $source['value'] != "")) {
+
+						$ExchangeRateRow = $source['currency'];
+						$ExchangeRate = $this->getCustomCurrency($source['currency'], $storeCurrencyCode, $exchangeRate, $allowedCurrencies);
+						if($source['special_value'] && $specialFormula == true){
+							$result = eval($source['special_value']);
+						} else {
+							$result = eval($source['value']);
+						}
+
+
+
+					} elseif(($productSource == "" &&  $source['value'] == "")
+						|| ($productSource !=  $optionText && $source['value'] == "")
+						|| ($productSource ==  $optionText && $source['value'] == "")){
+						$result[0] = $ProductPrice * $ExchangeRate;
+						$result[1] = $ProductPrice;
+					}
+
+				}
+			}
+
+			if($result[0] == ""){
+				$result[0] = $ProductPrice * $ExchangeRate;
+				$result[1] = $ProductPrice;
+			}
+
+			if($result[1] == $currentPrice && ($currentPrice != null && $result[1] != null) && $defaultPrice == false){
+				$result[3] = 1;
+				Mage::getSingleton('catalog/product_action')->updateAttributes(array($product->getId()),array('reset'=> '1'),$storeId);
+			} else if($result[1] == $currentPrice && ($currentPrice == null && $result[1] == null) && $defaultPrice == false){
+				$result[3] = 0;
+			} else {
+				$result[3] = 0;
+				Mage::getSingleton('catalog/product_action')->updateAttributes(array($product->getId()),array('reset'=> ''),$storeId);
+			}
+
+			if($ExchangeRateRow==""){
+				$ExchangeRateRow = Mage::app()->getStore()->getBaseCurrency()->getCurrencyCode();
+			}
+
+		} catch(Exception $e) {
+			 'Message: ' . $e->getMessage();
+		}
+
+
+		return $result;
+
+	}
+
+	/*
+	*@name        getFinalCost
+	*@parameters  $product, $usd_rate
+	*@description To obtain Final cost of a product ...
+	*@returns     Number float..
+	*/
+	public function getBulkFinalCost($product, $usd_rate, $currentPrice , $storeId, $storeCurrencyCode, $specialFormula){
+
+		//--- Get currency rates for USD Currency
+		$store_rate = 0;
+		$allowedCurrencies = Mage::getModel('directory/currency')->getConfigAllowCurrencies();
+		$currencyRates = Mage::getModel('directory/currency')->getCurrencyRates(Mage::app()->getStore()->getBaseCurrency(), array_values($allowedCurrencies));
+
+		$productWeight = $product->getWeight()!=""?$product->getWeight():0;
+		$productSource = $product->getSourcing()!=""?$product->getAttributeText('sourcing'):"";
+
+		$sources = @unserialize(Mage::getStoreConfig('tejarobservpricing/sourcing/sourcing',$storeId));
+		$exchangeRate = $currencyRates[$storeCurrencyCode];
+		if(!$exchangeRate || $exchangeRate==null || $exchangeRate==""){
+			$exchangeRate=1;
+		}
+
+		//--- Get Dimweight: if Available else weightToAdd would be the product weight.
+		$dimWeight = $product->getDimWeight();
+		$result = array();
+		$ProductPrice = $usd_rate;
+		$ExchangeRate = $exchangeRate;
+		$DimensionalWeight = $dimWeight;
+		$ActualWeight = $productWeight;
+		$FixedLocalShipping = Mage::getStoreConfig('carriers/flatrate/price',$storeId);
+		$MinimumOrderAmount = (int)Mage::getStoreConfig('carriers/freeshipping/free_shipping_subtotal',$storeId);
+
+		$Markup = 1;
+		$KGtoLB = 2.20462;
+		$InternationalShipping = 0;
+		$ShippingBoxWeight = 0;
+		$LocalShipping = 0;
+		$Clearance = 0;
+		$Handling = 0;
+		$TransactionFee = 0;
+		$ForeignTransactionFee = 1;
+		$TransactionPercentage = 1;
+		$defaultPrice = true;
+
+
+		$optionText = "Standard";
+		$isAttributeExist = $product->getResource()->getAttribute('sourcing');
+		$ExchangeRateRow = "";
+
+		try{
+			if($sources){
+				foreach($sources as $source){
+
+					if ($isAttributeExist && $isAttributeExist->usesSource()) {
+						$optionText = $isAttributeExist->getSource()->getOptionText($source['source']);
+					}
+
+					if(($productSource ==  $optionText) && ($optionText!="" && $productSource!="") && $source['value'] != ""){
+
+
+						$ExchangeRateRow = $source['currency'];
+						$ExchangeRate = $this->getCustomCurrency($source['currency'], $storeCurrencyCode, $exchangeRate, $allowedCurrencies);
+						if($source['special_value'] && $specialFormula == true){
+							$result = eval($source['special_value']);
+						} else {
+							$result = eval($source['value']);
+						}
+
+
+
+
+					} elseif($productSource == "" && ($optionText == "Standard" && $source['value'] != "")) {
+
+						$ExchangeRateRow = $source['currency'];
+						$ExchangeRate = $this->getCustomCurrency($source['currency'], $storeCurrencyCode, $exchangeRate, $allowedCurrencies);
+						if($source['special_value'] && $specialFormula == true){
+							$result = eval($source['special_value']);
+						} else {
+							$result = eval($source['value']);
+						}
+
+
+
+					} elseif(($productSource == "" &&  $source['value'] == "")
+						|| ($productSource !=  $optionText && $source['value'] == "")
+						|| ($productSource ==  $optionText && $source['value'] == "")){
+						$result[0] = $ProductPrice * $ExchangeRate;
+						$result[1] = $ProductPrice;
+					}
+
+				}
+			}
+
+			if($result[0] == ""){
+				$result[0] = $ProductPrice * $ExchangeRate;
+				$result[1] = $ProductPrice;
+			}
+
+			if($result[1] == $currentPrice && ($currentPrice != null && $result[1] != null) && $defaultPrice == false){
+				$result[3] = 1;
+				// Mage::getSingleton('catalog/product_action')->updateAttributes(array($product->getId()),array('reset'=> '1'),$storeId);
+			} else if($result[1] == $currentPrice && ($currentPrice == null && $result[1] == null) && $defaultPrice == false){
+				$result[3] = 0;
+			} else {
+				$result[3] = 0;
+				// Mage::getSingleton('catalog/product_action')->updateAttributes(array($product->getId()),array('reset'=> ''),$storeId);
+			}
+
+			if($ExchangeRateRow==""){
+				$ExchangeRateRow = Mage::app()->getStore()->getBaseCurrency()->getCurrencyCode();
+			}
+
+		} catch(Exception $e) {
+			 'Message: ' . $e->getMessage();
+		}
+
+
+		return $result;
+
+	}
+
+	public function getSource(){
+
+	}
+
+
+
+	public function getCustomCurrency($sourceCurrency, $storeCurrencyCode, $exchangeRate, $allowedCurrencies){
+
+			if($sourceCurrency){
+				$currencyRates = Mage::getModel('directory/currency')->getCurrencyRates($sourceCurrency, array_values($allowedCurrencies));
+				$ExchangeRate = $currencyRates[$storeCurrencyCode];
+				if($currencyRates != ""){
+					$customCurrencyRates = @unserialize(Mage::getStoreConfig('tejarobservpricing/currency/rates',$storeId));
+					foreach($customCurrencyRates as $rate){
+						if($rate['currency'] == $sourceCurrency){
+							 $ExchangeRate = $rate[$storeCurrencyCode];
+						}
+					}
+				}
+			} else {
+				 $ExchangeRate = $exchangeRate;
+			}
+			return $ExchangeRate;
+	}
+
+
+
+	/*
+	*@name        getFinalCostQuickView
+	*@parameters  $product, $usd_rate
+	*@description To obtain Final cost of a product ...
+	*@returns     Number float..
+	*/
+	public function getFinalCostQuickView($product, $usd_rate){
+
+		//--- GET Default Custom Cost, Custom Shipping Cost & Dimensional Cost Values..
+		$defaultCost = Mage::getResourceModel('eav/entity_attribute_collection')
+		->setCodeFilter('custom_cost')
+		->getFirstItem()->getDefaultValue();
+
+		//--- Check if Custom Cost, Shipping Cost & Dimensional Cost was already set else take default cost..
+		$cost = $product->getData('custom_cost')!=""?$product->getData('custom_cost'):$defaultCost;
+
+		//--- Get weight of this product
+		$weight = $product->getWeight()!=""?$product->getWeight():0;
+
+		//--- Generate Product Final Price including custom, dimensional, shipping cost etc..
+		$finalCost = $usd_rate * $cost;
+
+		return $finalCost;
+	}
+
+	/*
+	*@name        getCost
+	*@parameters  $productBrand
+	*@description To obtain brand specific cost...
+	*@returns     Number float..
+	*/
+	public function getCost($productBrand, $storeCurrencyCode){
+
+		switch(strtolower($productBrand)){
+			case '4moms':
+				if($storeCurrencyCode == "AED"){
+					$conversionRate = 1.4;
+				}elseif($storeCurrencyCode == "PKR"){
+					$conversionRate = 1.25;
+				}
+			break;
+			default:
+				$conversionRate = 1.25;
+		}
+		return $conversionRate;
+	}
+
+}

@@ -1,0 +1,141 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+
+<?php 	$_intensoHelper = $this->helper('itactica_intenso'); ?>
+<?php 	$_helper = $this->helper('catalog/output'); ?>
+<?php	$_productCollection = $this->getItems();
+		$store = Mage::app()->getStore();
+		$code  = $store->getCode();
+?>
+<?php if($this->getItems()->getSize()): ?>
+<div class="owl-bg-related section-content">
+	<div class="container">
+		<div class="owl-middle-outer-narrow">
+			<h4 class="owl-title"><span class="content"><?php echo $this->__('Related Products') ?></span></h4>
+			<div id="<?php echo $this->__('related-products') ?>__product" class="owl-top-narrow">
+				<div class="filter-products">
+					<div class="products-slider owl-carousel" >
+					<?php foreach($this->getItems() as $_product): ?>
+						<?php
+							/*--------------------------------------------------- 3SD CODE ------------------------------------------*/
+							$product = $_helper->getCustomProduct($_product);
+							$productUrl = $_helper->getCustomProductUrl();
+							/*--------------------------------------------------- 3SD CODE ------------------------------------------*/
+							//--- Get Custom Stock Status if Avialable............
+							$customStock = $_helper->getCustomInStockStatus();
+							$customStockStatusText = $customStock['stockStatusText'];
+							$customInStockStatus = $customStock['inStockStatus'];
+							/*---------------------------------------------------- 3SD CODE -------------------------------------------*/
+							/* CONTINUE -  Check if Custom In Stock Status is FALSE and if 'Display Out of Stock Products' Option
+								 * in Admin/Config Catalog Inventory is set to 'YES' Or 'NO'
+								 */
+								$displayOutOfStockConfigValue = Mage::getStoreConfig('cataloginventory/options/show_out_of_stock');
+								if(!$customInStockStatus && !$displayOutOfStockConfigValue)continue;
+							/*---------------------------------------- ZEE CODE ----------------------------------*/
+						?>
+						<div class="item owl-item">
+							<div class="item-content">
+								 <div class="item-images<?php if ($_intensoHelper->isFlushed()): ?> flush<?php endif; ?>">
+									<?php $width = 430; ?>
+									<?php $_height = Mage::getStoreConfig('intenso/catalog/catalog_product_height', Mage::app()->getStore()); ?>
+									<?php $height = $_intensoHelper->getImageHeight($_product, $width, $_height); ?>
+									<?php $_width = 215; $_height = 202; ?>
+									<a class="product-image" href="<?php echo $_product->getProductUrl(); ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" <?php echo Mage::helper('itactica_intenso')->getPictureStyle() ; ?>>
+									   <?php if ($isLazyLoading = Mage::getStoreConfig('intenso/catalog/lazy_loading') && $_intensoHelper->isKeepAspectRatio() == false): ?>
+										  <img
+											id="product-collection-image-<?php echo $_product->getId(); ?>"
+											class="item-image"
+											alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>"
+											src="<?php echo $this->getSkinUrl('images/clear.png'); ?>"
+											data-sizes="50vw"
+											data-lazy="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize($_width , $_height); ?>"
+											data-srcset="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize($_width,$_height); ?> 1200w,
+											<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize($width,$height); ?> 1400w"
+											width="<?php echo $width; ?>" height="<?php echo $height; ?>">
+										<?php else: ?>
+										<img id="product-collection-image-<?php echo $_product->getId(); ?>"
+											class="item-image"
+											alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>"
+											src="<?php echo $this->getSkinUrl('images/clear.png'); ?>"
+											sizes="50vw"
+											src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize($_width , $_height); ?>"
+											srcset="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize($_width,$_height); ?> 1200w,
+											<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize($width,$height); ?> 1400w"
+											width="<?php echo $width; ?>" height="<?php echo $height; ?>">
+										<?php endif; ?>
+										<?php echo $_intensoHelper->getSliderAlternativeImgUrl($_product, $width, $height , $isLazyLoading); ?>
+									</a>
+									 <?php if($_compareUrl=$this->getAddToCompareUrl($_product)): ?>
+											<?php if(Mage::getStoreConfig('intenso/catalog/catalog_show_add_to_compare', Mage::app()->getStore())): ?>
+											<a id="compare-id-<?php echo $_product->getId(); ?>" href="<?php if(Mage::getStoreConfig("ajaxcart/addtolinks/enablecategory", $code)):?>javascript:void(0)<?php else: ?><?php echo $_compareUrl ?><?php endif; ?>" <?php if(Mage::getStoreConfig("ajaxcart/addtolinks/enablecategory", $code)):?>onclick="ajaxCompare(this,'<?php echo $_compareUrl ?>','<?php echo $_product->getId()?>');"<?php endif; ?> class="link-compare" title="<?php echo $this->__('Add to Compare') ?>"><?php echo $this->__('Add to Compare') ?></a>
+
+											<?php endif; ?>
+										<?php endif; ?>
+									<div class="product-label-placeholder" data-productid="<?php echo $_product->getId(); ?>" data-labelurl="<?php echo Mage::getBaseUrl(); ?>itactica-productlabel" data-source="category"></div>
+									<?php /* if (Mage::helper('itactica_quickview')->isEnabled()): ?>
+									<a href="<?php echo $this->getUrl('itactica_quickview/product/view/id/' . $_product->getId()) ?>" title="<?php echo $this->htmlEscape($_product->getName()) ?>" class="quickview-button button"><?php echo $this->__('Quick View') ?></a>
+									<?php endif; */ ?>
+									<?php if ($this->helper('wishlist')->isAllow() && Mage::getStoreConfig('intenso/catalog/catalog_show_add_to_wishlist', Mage::app()->getStore())) : ?>
+									<a id="wish-id-<?php echo $_product->getId(); ?>" href="<?php if(Mage::getStoreConfig("ajaxcart/addtolinks/enablecategory", $code)):?>javascript:void(0)<?php else: ?><?php echo $this->helper('wishlist')->getAddUrl($_product) ?><?php endif; ?>" <?php if(Mage::getStoreConfig("ajaxcart/addtolinks/enablecategory", $code)):?>onclick="ajaxWishlist(this,'<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>','<?php echo $_product->getId()?>');"<?php endif;?>  title="<?php echo $this->__('Add to Wishlist') ?>" class="link-wishlist-custom icons-heart-empty"></a>
+									<?php endif; ?>
+								</div>
+								<div class="item-info">
+								   <h6 class="item-title">
+										<?php $_productName = $_helper->productAttribute($_product, $_product->getName(), 'name'); ?>
+										<?php if(Mage::getStoreConfig('intenso/catalog/product_name_length', $store) == 4): ?>
+											<a href="<?php echo $productUrl; ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>"><span class="block truncate-name" id="full-name-<?php echo $_product->getId(); ?>"><?php echo $_productName ?></span></a>
+										<?php else : ?>
+											<a href="<?php echo $productUrl; ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>" class="truncate"><span><?php echo $_productName ?></span></a>
+										<?php endif; ?>
+									</h6>
+									<?php if($_product->getAttributeText('manufacturer')):?>
+										 <p class="brand-list">By:  <span class="by"><?php echo $_product->getAttributeText('manufacturer')?> </span></p>
+									<?php endif;?>
+									<?php if($_product->getRatingSummary() && Mage::getStoreConfig('intenso/catalog/catalog_show_products_rating', Mage::app()->getStore())): ?>
+										<?php echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+									<?php endif; ?>
+									<?php if(Mage::getStoreConfig('intenso/catalog/catalog_show_price_tag', Mage::app()->getStore())): ?>
+									<?php if($_product->isSaleable() &&  $customInStockStatus == true ): ?>
+										<?php echo $this->getPriceHtml($_product, true) ?>
+									<?php endif; ?>
+									<?php endif; ?>
+										<?php if ($_product->getStockItem()->getIsInStock() && $customInStockStatus): ?>
+										<p class="availability in-stock"><span class="hide">Availability:</span><span class="singal-truncate"><?php echo $customStockStatusText!=""?$customStockStatusText:"In Stock"?></span></p>
+									<?php else :?>
+										<p class="availability out-of-stock"><span class="hide">Availability:</span><span class="singal-truncate"><?php echo  $customStockStatusText!=""?$customStockStatusText:"Out of Stock"?></span></p>
+									<?php endif; ?>
+								</div>
+							</div>
+						</div>
+						<?php endforeach ?>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function(){
+    var compareProducts = Array(0,<?php echo $_helper->getCompareId(); ?>);for (i = 0; i < compareProducts.length; i++) {if ($('compare-id-'+compareProducts[i]) != undefined) $('compare-id-'+compareProducts[i]).addClassName('compared');}
+    var wishlistProducts = Array(0,<?php  echo $_helper->getWhishlistId(); ?>);for (i = 0; i < wishlistProducts.length; i++) {if ($('wishlist-id-'+wishlistProducts[i]) != undefined)$('wishlist-id-'+wishlistProducts[i]).addClassName('active');}
+	var wishlistThumbProducts = Array(0,<?php  echo $_helper->getWhishlistId(); ?>);for (i = 0; i < wishlistThumbProducts.length; i++) {if ($('wish-id-'+wishlistThumbProducts[i]) != undefined)$('wish-id-'+wishlistThumbProducts[i]).addClassName('active');}
+	altLazyLoad("img.alt-lazyload");
+	var relatedProduct = $j("#<?php echo $this->__('related-products') ?>__product .filter-products .products-slider");
+	relatedProduct.on('init breakpoint', function(event, slick, currentSlide){
+		$j("[id*=full-name-]")&&$j("[id*=full-name-]").each(function(){$j(this).trunk8({lines:2})});
+
+	});
+	relatedProduct.slick({lazyLoad:"ondemand",prevArrow:'<button class="slick-prev" aria-label="Previous" type="button"><span aria-label="Previous">\u2039</span></button>',nextArrow:'<button class="slick-next" aria-label="Next" type="button"><span aria-label="Next">\u203a</span></button>',speed:1E3,slidesToShow:2,slidesToScroll:2,speed: 300,
+		responsive:[{breakpoint:10240.9,settings:{slidesToShow:10,slidesToScroll:5}},{breakpoint:1920.9,settings:{slidesToShow:9,slidesToScroll:5}},{breakpoint:1680.9,settings:{slidesToShow:8,slidesToScroll:5}},{breakpoint:1440.9,settings:{slidesToShow:7,slidesToScroll:5}},{breakpoint:1280.9,settings:{slidesToShow:6,slidesToScroll:3}},{breakpoint:1024.9,settings:{slidesToShow:5,slidesToScroll:5}},{breakpoint:992.9,settings:{slidesToShow:4,slidesToScroll:4}},{breakpoint:768.9,settings:{slidesToShow:3,slidesToScroll:3}},{breakpoint:480.9,settings:{slidesToShow:2,slidesToScroll:2}}]
+	});
+});
+</script>
+<?php endif ?>

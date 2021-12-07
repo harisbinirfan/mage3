@@ -1,0 +1,619 @@
+<?php
+   /**
+    * Intenso Premium Theme
+    *
+    * @category    design
+    * @package     intenso_default
+    * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+    * @license     http://getintenso.com/license
+    */
+   ?>
+<?php
+   /**
+    * Customer login form template
+    *
+    * @see app/design/frontend/base/default/template/customer/form/login.phtml
+    */
+   /** @var $this Mage_Customer_Block_Form_Login */
+   ?>
+
+<!--=========================================== ZEE CODE ===========================================-->
+<div id="myModal" class="guest-popup reveal-modal small-customer-popup" data-reveal aria-hidden="true" role="dialog">
+<?php //--- Initialize Admin checks values..
+$guest_checkout          = Mage::getStoreConfig('checkout/options/guest_checkout');
+$customer_must_be_logged = Mage::getStoreConfig('checkout/options/customer_must_be_logged');
+
+//--- Get button text (if checkout button was clicked)....
+if($guest_checkout==="0" && $customer_must_be_logged==="0"){
+	$checkoutButtonText = 'Register at Checkout';
+	$checkoutButtonUrl  = $this->helper('onestepcheckout')->getCheckoutUrl()."?register";
+}elseif($guest_checkout==="0" && $customer_must_be_logged==="1"){
+	$checkoutButtonText = 'Register & Checkout';
+	$checkoutButtonUrl  =  '';
+	
+}else{
+	$checkoutButtonText = 'Checkout as Guest';
+	$checkoutButtonUrl  = $this->helper('onestepcheckout')->getCheckoutUrl();
+}
+
+?>
+
+   <ul class="messages" style="display:none">
+      <li class="error-msg">
+         <ul>
+            <li>
+               <span id="login-error-msg"></span>
+            </li>
+         </ul>
+      </li>
+   </ul>
+	<div class="account-login">
+		<form method="post" name="login-form" id="login-form">
+			<div class="login-form-first-box">
+				 <?php echo $this->getBlockHtml('formkey'); ?>
+				 <!-- =========================== ZEE CODE ===================================-->
+				 <!-- This value will be updated uplon clicking the Modal Links (Signup & Buy Now), To Determine the 'Redirection Page After Login' -->
+				 <input type="hidden" value="signup" id="redirectFlag" name="redirectFlag" />
+				 <!-- =========================== ZEE CODE ===================================-->
+				 <a class="close-reveal-modal" id="resetButton" aria-label="Close">CLOSE</a>
+				 <h3 class="account-title center"><?php echo $this->__('Sign in to your account') ?></h3>
+				 <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+				 <ul class="form-list">
+					<li class="row">
+					   <div class="col-xs-12">
+						  <div class="input-field input-wrapper">
+							 <label for="email" class="required label-floating"><?php echo $this->__('Email') ?></label>
+							 <input type="email" name="login[username]" placeholder="<?php echo $this->__('Email') ?>" value="<?php echo $this->escapeHtml($this->getUsername()) ?>" id="email" class="input-text required-entry validate-email input-floating" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Email Address')) ?>" />
+						  </div>
+					   </div>
+					</li>
+					
+					<li class="row">
+					   <div class="col-xs-12">
+						  <div class="input-field input-wrapper">
+							 <label for="pass" class="required label-floating"><?php echo $this->__('Password') ?></label>
+							 <input type="password" name="login[password]" placeholder="<?php echo Mage::helper('core')->quoteEscape($this->__('Password')) ?>" class="input-text required-entry validate-password input-floating" id="pass" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Password')) ?>" />	
+							 <a id="social-forgot-pass-link"  href="javascript:void(0);" class="forget_link"><?php echo $this->__('forgot?') ?></a>
+						  </div>
+					   </div>
+					</li>
+					<?php echo $this->getChildHtml('form.additional.info'); ?>
+					<?php echo $this->getChildHtml('persistent.remember.me'); ?>
+				 </ul>
+				 <?php echo $this->getChildHtml('persistent.remember.me.tooltip'); ?>
+				 <button type="button" onclick='socialAjaxLogin()' class="btn btn-big" title="<?php echo $this->__('Sign in') ?>" name="send" id="send2" ><span><span><?php echo $this->__('Sign in') ?></span></span></button>	  
+			
+				 <?php if (Mage::helper('checkout')->isContextCheckout()): ?>
+				 <input name="context" type="hidden" value="checkout" />
+				 <?php endif; ?>
+				<?php echo $this->getChildHtml('tejar_socialconnect_login');?>
+				<div class="login_bottom" id="create-acount-action">
+					<div class="heading-divider">
+					   <h5><?php echo $this->__("Don't have an account?") ?></h5>
+					</div>
+					<button id="create-acount-button" onclick="createAcountButtonAction()" type="button" title="<?php echo $this->__('Create an new Account') ?>" class="btn btn-big secondary"><span><span><?php echo $this->__('Create an Account') ?></span></span></button>
+				</div>
+			</div>
+			<div class="login-form-second-box">
+					<div class="login_bottom">
+						<div class="heading-divider">
+							 <h5><?php echo $this->__("New Customer") ?></h5>
+						</div>
+						<h3 class="account-title center"><?php echo $this->__('New Customer') ?></h3>
+						<div class="login-form-second-box-inner">
+							<button style="" <?php if($checkoutButtonUrl==""){?> onclick="createAcountButtonAction()"<?php } else { ?> onclick="window.location='<?php echo $checkoutButtonUrl;?>'" <?php } ?>  id="guest-checkout-button" type="button" title="<?php echo $this->__($checkoutButtonText) ?>" class="btn btn-big secondary checkout-as-guest"><span><span id="checkoutButtonText"><?php echo $this->__($checkoutButtonText) ?></span></span></button>
+						</div>
+					</div>
+				<a class="close-reveal-modal" aria-label="Close">CLOSE</a>
+			</div>
+		</form>
+	  
+      <?php echo $this->getChildHtml('forgotPassword');?>
+      <?php echo $this->getChildHtml('customer_form_register');?>
+		
+      <?php if( Mage::registry('current_product')){
+				echo $this->getChildHtml('sendfriend.send');
+			}
+		?>
+	 
+      
+	</div>
+<input type="hidden" id="guest_checkout" value="<?php echo Mage::getStoreConfig('checkout/options/guest_checkout');?>"/>
+<input type="hidden" id="customer_must_be_logged" value="<?php echo Mage::getStoreConfig('checkout/options/customer_must_be_logged');?>"/>
+<input id="isLoggedIn" type="hidden" value="<?php echo Mage::getSingleton('customer/session')->isLoggedIn()?1:0;?>" />
+</div>
+
+
+<script type="text/javascript">
+	//--- Show Register and hide Login on Create Account Action 
+	function createAcountButtonAction(guest_checkout, customer_must_be_logged){
+		//console.log(allowedGuest+' '+requireCustomerCheckoutLogin);
+		if((guest_checkout=="1" || (guest_checkout=="0" && customer_must_be_logged=="1")) && jQuery('#redirectFlag').val()=='buyNow'){
+			window.location = "<?php echo Mage::getBaseUrl()?>onestepcheckout/index/?register";
+			return;
+		}
+		
+		jQuery('.account-create :input[type=text], .account-create :input[type=password]').each(function(){
+			jQuery(this).val('');
+		});
+		jQuery('#myModal .messages').hide();
+		jQuery('#login-form').hide();
+		jQuery('.account-forgotpassword').hide();
+		jQuery('.account-create').show();
+		jQuery('.tejar-socialconnect-login').show();
+		jQuery('#myModal.guest-popup').addClass('guest-forget-popup');
+    }
+	
+	
+	  function getSocialButtonUrl(socialMediaId){
+	$j.ajax({
+			url: "<?php echo $this->getUrl('socialconnect/account/loginSocialButtonUrl') ?>",
+			type: "POST",
+			dataType:"json",
+			data: jQuery('#login-form').serialize(),
+			success: function(data) {
+				console.log(data);
+				jQuery('.tejar-socialconnect-login-lower-google').html(data.response);
+				jQuery('.tejar-socialconnect-login-lower-facebook').html(data.response);
+				
+			}
+		});
+	}
+   /*
+   * This function makes Ajax Resuest for Login/Sign in Action from Popup
+   *@name socialAjaxLogin
+   *@params none
+   *@return Json Response Array
+   */
+   function socialAjaxLogin(){
+	   //--- Trim email whitespaces.....
+	   jQuery('#email').val(jQuery.trim(jQuery('#email').val()));
+	   
+		var validator = new Validation('login-form');
+		if(validator.validate()){
+			$j.ajax({
+				url: "<?php echo $this->getUrl('socialconnect/account/loginAjax') ?>",
+				type: "POST",
+				dataType:"json",
+				data: jQuery('#login-form').serialize(),
+				success: function(data) {
+					if(data.responseType!="error"){
+						if(jQuery('#redirectFlag').val()=='buyNow'){
+							window.location = "<?php echo Mage::getBaseUrl()?>checkout/onepage";
+						}else{
+							
+							if(data.redirectUrl==false){
+								window.location.reload();
+							}else{
+								window.location = "<?php echo Mage::getBaseUrl()?>customer/account";
+							}
+						}
+					}else{
+						jQuery('#myModal .messages').show();
+						jQuery('#login-error-msg').html(data.response);
+					}
+				}
+			});
+		}
+   }
+  
+   /*
+   * This function makes Ajax Resuest for Register/Create Account Action from Popup
+   *@name socialAjaxRegister
+   *@params none
+   *@return Json Response Array
+   */
+	function socialAjaxRegister(){
+		//console.log('sssss');
+		var validator = new Validation('social-register-form');
+		
+		if(validator.validate()){
+			//--- Trim Form Data to Avoid whitespaces..
+
+			// jQuery('#social-register-form *').filter(':input').each(function(){
+				// if(jQuery(this).attr('id')=="firstname" || jQuery(this).attr('id')=="lastname" || jQuery(this).attr('id')=="email"){
+					// this.value=jQuery(this).val().trim();
+				// }
+			// });
+			
+			trimFormValues('social-register-form');
+			$j.ajax({
+				url: "<?php echo $this->getUrl('socialconnect/account/loginAjaxRegister') ?>", 
+				type: "POST",
+				dataType:"json",
+				data: jQuery('#social-register-form').serialize(),
+				success: function(data) {
+					//console.log(data.response);
+					if(!data.response){
+						if(jQuery('#redirectFlag').val()=='buyNow'){
+							//window.location = "checkout/onepage";
+						}else{
+							///window.location.reload();
+						}
+					}else{
+						if(data.responseType=="success"){
+							jQuery('.error-msg').css('background-color', '#269300');
+						}
+						jQuery('#myModal .messages').show();
+						jQuery('#login-error-msg').html(data.response);
+					}
+				}
+			});
+		}
+		
+   }
+   
+   /*
+   * This function makes Ajax Resuest for forgot Password Action from Popup
+   *@name socialAjaxForgotPass
+   *@params none
+   *@return Json Response Array
+   */
+   function socialAjaxForgotPass(){
+   	var validator = new Validation('social-forgot-pass');
+	
+   	if(validator.validate()){
+   		$j.ajax({
+   			url: "<?php echo $this->getUrl('socialconnect/account/loginForgotPassPost') ?>",
+   			type: "POST",
+			dataType: "json",
+   			data: jQuery('#social-forgot-pass').serialize(),
+   			success: function(data) {
+   				console.log(data);
+   				if(!data.response){
+   					if(jQuery('#redirectFlag').val()=='buyNow'){
+   						//window.location = "checkout/onepage";
+   					}else{
+   						///window.location.reload();
+   					}
+   				}else{
+					if(data.responseType=="success"){
+						jQuery('.error-msg').css('background-color', '#269300');
+					}
+   					jQuery('#myModal .messages').show();
+   					jQuery('#login-error-msg').html(data.response);
+   				}
+   			}
+   		});
+   	}
+   }
+   //---- 'Buy Now' Action after successfull Login (FB OR GOOGLE)...
+    function postLoginBuyNow(){
+   	 
+   	$j.ajax({
+   			url: "<?php echo $this->getUrl('checkout/cart/add') ?>",
+   			method:'post',
+   			type: "POST",
+   			data: jQuery('#product_addtocart_form').serialize(),
+   			success: function(data) {
+   				console.log(data);
+   				if(!data.response){
+   					if(jQuery('#redirectFlag').val()=='buyNow'){
+   						//window.location = "checkout/onepage";
+   					}else{
+   						///window.location.reload();
+   					}
+   				}else{
+   					jQuery('#myModal .messages').show();
+   					jQuery('#login-error-msg').html(data.response);
+   				}
+   			}
+   		});
+    }
+   //]]>
+   
+   /*
+   * This function makes Ajax Resuest for Login/Sign in Action from Popup
+   *@name socialSendFriendAjax
+   *@params none
+   *@return Json Response Array
+   */
+   function socialSendFriendAjax(){
+   	var validator = new Validation('product_sendtofriend_form');
+	
+		if(validator.validate()){
+			//alert('fff');
+			$j.ajax({
+				url: "<?php echo $this->getUrl('socialconnect/sendmail') ?>",
+				type: "POST",
+				dataType:"json",
+				data: jQuery('#product_sendtofriend_form').serialize(),
+				error: function(data){
+					console.log(data);
+				},
+				success: function(data) {
+					console.log(data);
+					if(!data.response){
+						/*if(jQuery('#redirectFlag').val()=='buyNow'){
+							window.location = "checkout/onepage";
+						}else{
+							console.log(data);
+							window.location.reload();
+						}*/
+					}else{
+						jQuery('#myModal .messages').show();
+						jQuery('#login-error-msg').html(data.response);
+						if(data.responseType=="success"){
+							jQuery('.error-msg').css('background-color', '#269300');
+							setTimeout(function(){
+								jQuery('#myModal').foundation('reveal', 'close');
+								reset_form();
+								// jQuery('.fields.additional-row').remove();
+								// jQuery('form').find(" [id*=recipients_name], [id*=recipients_email], #sender_message").val("");
+							},2000);
+						}
+					}
+				}
+			});
+		}
+   }
+   
+      
+   /*
+    * This funcitons opens the given link in a popup window (Using for Social Media Connect)
+    *@name popwin
+    *@param url (string)
+   */
+   function popwin(url){
+   		var top = screen.height/4;
+   		var left = screen.width/4;
+   		var thePopCode = window.open(url,'','height=500, width=600, top='+top+', left='+left+', directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no');
+   
+   		if (window.focus) 
+   		{
+   			thePopCode.focus();
+   		}
+   	}
+	
+	
+	function reset_form(){
+		
+		if(jQuery('form').is('#product_sendtofriend_form')){
+			remove_recipient_all();	
+			if(jQuery('#isLoggedIn').val()=="1"){
+				jQuery('#product_sendtofriend_form')[0].reset();
+				jQuery('#product_sendtofriend_form').find(" [id*=recipients_name], [id*=recipients_email], #sender_message").val("");
+				jQuery('#product_sendtofriend_form').find(" [id*=recipients_name], [id*=recipients_email], #sender_message").closest(".input-field").removeClass('js-is-filled');
+			} else {
+				jQuery('#product_sendtofriend_form')[0].reset();
+				jQuery('#product_sendtofriend_form').find(" [id*=recipients_name], [id*=recipients_email], #sender_message , #sender_email , #sender_name").val("");
+				jQuery('#product_sendtofriend_form').find(" [id*=recipients_name], [id*=recipients_email], #sender_message , #sender_email , #sender_name").closest(".input-field").removeClass('js-is-filled');
+			}
+		}
+		// jQuery('#login-form , #social-forgot-pass , #social-register-form')[0].reset();
+		jQuery('#login-form , #social-forgot-pass , #social-register-form').find("input[type=text], input[type=email], input[type=password] , textarea").val("");
+		jQuery('#login-form , #social-forgot-pass , #social-register-form').find("input[type=text], input[type=email], input[type=password] , textarea").closest(".input-field").removeClass('js-is-filled');
+		
+	}
+	
+document.addEventListener("DOMContentLoaded", function(){
+	
+	var dataForm = new VarienForm('login-form', true);
+	
+	var guest_checkout          = '<?php echo $guest_checkout;?>';
+	var customer_must_be_logged = '<?php echo $customer_must_be_logged;?>';
+
+
+	jQuery(document).on('closed', '#myModal', function () {
+	  var modal = jQuery(this);
+	  reset_form();
+	});
+	
+
+	
+	
+   jQuery('#account-forgotpassword').hide();
+   jQuery('#account-create').hide();
+   jQuery('#login-form').show();
+   jQuery('#myModal.guest-popup').removeClass('guest-forget-popup');
+   
+   //--- Show Login and hide Forgot Pass on Forgot Pass 'Back to login' Action 
+   jQuery('#forgot-arrow-left').on('click', function(){
+	   jQuery('#myModal.guest-popup').removeClass('guest-forget-popup');
+	    jQuery('#myModal .messages').hide();
+		jQuery('#login-form').show();
+		jQuery('.account-forgotpassword').hide();
+		jQuery('.tejar-socialconnect-login').show();
+   });
+   
+   //--- Show Login and hide Forgot Pass on Forgot Pass 'Back to login' Action 
+	jQuery('#register-arrow-left').on('click', function(){
+		jQuery('#myModal .messages').hide();
+		jQuery('#login-form').show();
+		jQuery('.account-create').hide();
+		jQuery('.tejar-socialconnect-login').show();
+		jQuery('#myModal.guest-popup').removeClass('guest-forget-popup');
+    });
+   
+   
+	
+   //--- Show forgot pass form and empty exisiting text (if any..)
+    jQuery('#social-forgot-pass-link').on('click',function(){
+		jQuery('#myModal.guest-popup').addClass('guest-forget-popup');
+		jQuery('#social-forgot-pass #email_address').val('');
+		jQuery('#login-form').hide();
+		jQuery('.account-forgotpassword').show();
+		jQuery('.tejar-socialconnect-login').hide();
+		jQuery('#myModal .messages').hide();
+    });
+   
+   //--- Upon Clicking Both Facebook & Google buttons, Register Flag value in SESSION via AJAX Call to determine the Redirect URL Onepage OR Current Page (After Login Success)
+    jQuery('#google-connect-button').on('click', function(){
+		$j.ajax({
+   			url: "<?php echo $this->getUrl('socialconnect/account/loginFlagPost') ?>",
+   			type: "POST",
+   			data: jQuery('#login-form').serialize(),
+   			success: function(data) {
+   				// console.log(data);
+   			}
+   		});
+    });
+   
+    jQuery('#facebook-connect-button').on('click', function(){
+		$j.ajax({
+   			url: "<?php echo $this->getUrl('socialconnect/account/loginFlagPost') ?>",
+   			type: "POST",
+   			data: jQuery('#login-form').serialize(),
+   			success: function(data) {
+   				// console.log(data);
+   			}
+   		});
+    });
+	
+	
+ 
+
+	
+	jQuery(document).ready(function(){
+		jQuery('[data-toggle="tooltip"]').tooltip();
+		jQuery('#redirectFlag').val('buyNow');
+		
+		//--- Login/Register Popup Initialization ....
+		jQuery('#signin').on('click', function(){
+			jQuery('#create-acount-action').show();
+			jQuery('#myModal').removeClass('guest-popup');
+			jQuery('#redirectFlag').val('signup');
+			//getSocialButtonUrl();
+			//--- Reset any validations for Forgot Password Form
+			var forgotPasswordForm = new VarienForm('social-forgot-pass');
+			forgotPasswordForm.validator.reset();
+			
+			//--- Reset any validations for Sign in/Login Form
+			var userLoginForm = new VarienForm('login-form');
+			userLoginForm.validator.reset();
+			
+			//--- Reset any validations for Signup/Register Form
+			var userRegisterForm = new VarienForm('social-register-form');
+			userRegisterForm.validator.reset();
+			
+			//--- intitialize Popup with Login Form (hide other forms)
+			jQuery('#account-forgotpassword').hide();
+			jQuery('#account-create').hide();
+			jQuery('#login-form').show();
+			jQuery('.tejar-socialconnect-login').show();
+			jQuery('#send-friend').hide();
+			
+			//--- Hide Messages and Guest checkout button as it is Signup link not BuyNow.
+			jQuery('#myModal .messages').hide();
+			jQuery('#guest-checkout-button').hide();
+		});
+		
+		//--- BUY NOW: Login/Register Popup Initialization ....
+		jQuery('#buy-now').on('click', function(){
+			jQuery('#myModal.guest-popup').removeClass('guest-forget-popup');
+			jQuery('#guest-checkout-button').show();
+			jQuery('#myModal').addClass('guest-popup');
+			jQuery('#create-acount-action').hide();
+			//console.log('HELLO--->');
+			//--- Reset any validations for Forgot Password Form
+			var forgotPasswordForm = new VarienForm('social-forgot-pass');
+			forgotPasswordForm.validator.reset();
+			
+			//--- Reset any validations for Sign in/Login Form
+			var userLoginForm = new VarienForm('login-form');
+			userLoginForm.validator.reset();
+			
+			//--- Reset any validations for Signup/Register Form
+			var userRegisterForm = new VarienForm('social-register-form');
+			userRegisterForm.validator.reset();
+			
+			//--- intitialize Popup with Login Form (hide other forms)
+			jQuery('#account-forgotpassword').hide();
+			jQuery('#account-create').hide();
+			jQuery('#login-form').show();
+			jQuery('.tejar-socialconnect-login').show();
+			jQuery('#send-friend').hide();	
+		});
+		
+		//--- Display Send Friend Template
+		jQuery('#sendFriendlink').on('click', function(){
+			jQuery('#myModal .messages').hide();
+			//--- intitialize Popup with Send to a Friend Email Form (hide other forms)
+			jQuery('#account-forgotpassword').hide();
+			jQuery('#account-create').hide();
+			jQuery('#login-form').hide();
+			jQuery('#send-friend').show();
+			jQuery('.tejar-socialconnect-login').hide();
+			
+			//--- Reset any validations for Send to a Friend Email Form
+			var sendtoFriendEmailForm = new VarienForm('product_sendtofriend_form');
+			sendtoFriendEmailForm.validator.reset();
+			
+			//--- Clear all previously filled values in Send to a Friend Email From...
+			jQuery('#myModal').removeClass('guest-popup');
+			//--- 3SD CODE Comments 
+			
+			setTimeout(function(){
+				jQuery('#product_sendtofriend_form :input[type=text], #product_sendtofriend_form :input[type=email], #product_sendtofriend_form textarea').each(function(){
+					
+						//--- IF user is not guest, clear except sender info...
+						if(jQuery('#isLoggedIn').val()=="1"){
+							if(jQuery(this).attr('id')!=="sender_name" && jQuery(this).attr('id')!=="sender_email" && jQuery(this).attr('id')!=="sender_message"){
+								//console.log(jQuery(this).attr('id'));
+								jQuery(this).val('');
+							}
+						}else{
+							jQuery(this).val('');
+						}
+					//jQuery('#product_sendtofriend_form [id*=recipients_name]','#product_sendtofriend_form [id*=recipients_email]','#product_sendtofriend_form #sender_message').val('');
+				});
+			},200);
+			
+			
+		});
+		
+		//--- Set redirection flag on minicart Checkout link....
+		
+		jQuery('#proceed_checkout_guest').on('click',function(){
+			jQuery('#myModal.guest-popup').removeClass('guest-forget-popup');
+			jQuery('#myModal').addClass('guest-popup');
+			jQuery('#create-acount-action').hide();
+			jQuery('#redirectFlag').val('buyNow');
+			//--- Reset any validations for Forgot Password Form
+			var forgotPasswordForm = new VarienForm('social-forgot-pass');
+			forgotPasswordForm.validator.reset();
+			
+			//--- Reset any validations for Sign in/Login Form
+			var userLoginForm = new VarienForm('login-form');
+			userLoginForm.validator.reset();
+			
+			//--- Reset any validations for Signup/Register Form
+			var userRegisterForm = new VarienForm('social-register-form');
+			userRegisterForm.validator.reset();
+			
+			//--- intitialize Popup with Login Form (hide other forms)
+			jQuery('#account-forgotpassword').hide();
+			jQuery('#account-create').hide();
+			jQuery('#login-form').show();
+			jQuery('#send-friend').hide();
+			jQuery('.tejar-socialconnect-login').show();
+			//--- Hide Messages and Guest checkout button as it is Signup link not BuyNow.
+			jQuery('#myModal .messages').hide();
+			//jQuery('#guest-checkout-button').hide();
+			jQuery('#guest-checkout-button').show();
+		});
+		
+		
+		//--- Trigger Login Form Submit Event upon pressing ENTER Key..
+		jQuery('#login-form input').bind('keyup', function (e) {
+			e.stopImmediatePropagation()
+			e.preventDefault();
+			if (e.which == 13) {
+				jQuery('#myModal').focus();
+				return jQuery('#send2').trigger('click');
+			}
+		});
+	});
+});
+/*
+*@name   trimFormValues
+*@params form
+*@return none (trims whitespaces from form values)
+*/
+function trimFormValues(formObj){
+	jQuery('#'+formObj+' *').filter(':input').each(function(){
+		this.value=jQuery(this).val().trim();
+	});
+}
+</script>
+<!--============================================ ZEE CODE ============================================-->

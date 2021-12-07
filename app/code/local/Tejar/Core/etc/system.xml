@@ -1,0 +1,225 @@
+
+<config>
+	<sections>
+	<general translate="label" module="core">
+            <groups>
+                <locale translate="label">
+                    <fields>
+                        <calendar_api translate="label">
+                            <label>Google Calendar API</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </calendar_api>
+					</fields>
+                </locale>
+		  </groups>
+        </general>
+		<design>
+			<groups>
+				<errors translate="label">
+					<label>Errors Meta Information</label>
+						<frontend_type>text</frontend_type>
+						<sort_order>1000</sort_order>
+						<show_in_default>1</show_in_default>
+						<show_in_website>1</show_in_website>
+						<show_in_store>1</show_in_store>
+							<fields>
+								<title_404 translate="label">
+									<label>404 Meta Title</label>
+									<frontend_type>text</frontend_type>
+									<sort_order>10</sort_order>
+									<show_in_default>1</show_in_default>
+									<show_in_website>1</show_in_website>
+									<show_in_store>1</show_in_store>
+								</title_404>
+								<title_503 translate="label">
+									<label>503 Meta Title</label>
+									<frontend_type>text</frontend_type>
+									<sort_order>30</sort_order>
+									<show_in_default>1</show_in_default>
+									<show_in_website>1</show_in_website>
+									<show_in_store>1</show_in_store>
+								</title_503>
+								<description_404 translate="label">
+									<label>404 Meta Description</label>
+									<frontend_type>textarea</frontend_type>
+									<sort_order>20</sort_order>
+									<show_in_default>1</show_in_default>
+									<show_in_website>1</show_in_website>
+									<show_in_store>1</show_in_store>
+								</description_404>
+								<description_503 translate="label">
+									<label>503 Meta Description</label>
+									<frontend_type>textarea</frontend_type>
+									<sort_order>40</sort_order>
+									<show_in_default>1</show_in_default>
+									<show_in_website>1</show_in_website>
+									<show_in_store>1</show_in_store>
+								</description_503>
+							</fields>
+					</errors>
+					<product_meta translate="label">
+						<label>Products &amp; Categories Meta Information</label>
+						<frontend_type>text</frontend_type>
+						<sort_order>900</sort_order>
+						<show_in_default>1</show_in_default>
+						<show_in_website>1</show_in_website>
+						<show_in_store>1</show_in_store>
+						<fields>
+							<product_meta_header translate="label">
+								<label>Products Meta Information</label>
+								<frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+								<sort_order>1</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</product_meta_header>
+							<meta_enable translate="label">
+								<label>Meta Enabled</label>
+								<frontend_type>select</frontend_type>
+								<source_model>adminhtml/system_config_source_yesno</source_model>
+								<sort_order>5</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</meta_enable>
+							<h1_title translate="label">
+								<label>H1</label>
+								<depends>
+									<meta_enable>1</meta_enable>
+								</depends>
+								<frontend_type>text</frontend_type>
+								<sort_order>7</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</h1_title>
+							<meta_title translate="label">
+								<label>Meta Title</label>
+								<depends>
+									<meta_enable>1</meta_enable>
+								</depends>
+								<frontend_type>text</frontend_type>
+								<sort_order>10</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</meta_title>
+							<meta_description translate="label comment">
+								<label>Meta Description</label>
+								<comment>Maximum 255 chars</comment>
+								<depends>
+									<meta_enable>1</meta_enable>
+								</depends>
+								<frontend_type>textarea</frontend_type>
+								<sort_order>30</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</meta_description>
+							<category_meta_header translate="label">
+								<label>Categories Meta Information</label>
+								<frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+								<sort_order>35</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</category_meta_header>
+							<category_meta_enable translate="label">
+								<label>Meta Enabled</label>
+								<frontend_type>select</frontend_type>
+								<source_model>adminhtml/system_config_source_yesno</source_model>
+								<sort_order>40</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</category_meta_enable>
+							<category_h1_title translate="label">
+								<label>H1</label>
+								<depends>
+									<category_meta_enable>1</category_meta_enable>
+								</depends>
+								<frontend_type>text</frontend_type>
+								<sort_order>44</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</category_h1_title>
+							<category_meta_title translate="label">
+								<label>Meta Title</label>
+								<depends>
+									<category_meta_enable>1</category_meta_enable>
+								</depends>
+								<frontend_type>text</frontend_type>
+								<sort_order>45</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</category_meta_title>
+							<category_meta_description translate="label comment">
+								<label>Meta Description</label>
+								<comment>Maximum 255 chars</comment>
+								<depends>
+									<category_meta_enable>1</category_meta_enable>
+								</depends>
+								<frontend_type>textarea</frontend_type>
+								<sort_order>50</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</category_meta_description>
+						</fields>
+					</product_meta>
+				</groups>
+			</design>
+			<dev translate="label" module="core">
+				<groups>
+					<js translate="label">
+						<fields>
+							<minify_files translate="label">
+								<label>Minify JavaScript Files</label>
+								<frontend_type>select</frontend_type>
+								<source_model>adminhtml/system_config_source_yesno</source_model>
+								<sort_order>20</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</minify_files>
+							<minify_exclude translate="label">
+								<label>Exclude JavaScript Files from Minify</label>
+								<frontend_type>textarea</frontend_type>
+								<sort_order>30</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</minify_exclude>
+						</fields>
+					</js>
+					<css translate="label">
+						<fields>
+							<minify_files translate="label">
+								<label>Minify CSS Files</label>
+								<frontend_type>select</frontend_type>
+								<source_model>adminhtml/system_config_source_yesno</source_model>
+								<sort_order>20</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</minify_files>
+							<minify_exclude translate="label">
+								<label>Exclude CSS Files from Minify</label>
+								<frontend_type>textarea</frontend_type>
+								<sort_order>30</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</minify_exclude>
+						</fields>
+					</css>
+				</groups>
+			</dev>
+	</sections>
+</config>

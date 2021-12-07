@@ -1,0 +1,42 @@
+<?php
+/**
+ * Intenso Premium Theme
+ * 
+ * @category    Itactica
+ * @package     Itactica_ExtendedReviews
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<div class="row row-margin-5">
+<?php 
+$_helper = Mage::helper('catalog/category');
+$_categories = $_helper->getStoreCategories(); ?>
+<?php $_columnCount = 3 ; ?>
+<?php if (count($_categories) > 0): ?>
+		<?php $i=0; foreach($_categories as $_category):?>
+			<?php if ($i++%$_columnCount==0): ?>
+				<div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+			<?php endif ?>
+			
+			<div class="category_list_container">
+			<?php $_category = Mage::getModel('catalog/category')->load($_category->getId()); ?>
+				<div class="category_list_image">
+					<img src="<?php echo $this->helper('tejar_catalog/category_image')->init($_category, 'thumbnail',$_category->getThumbnail()); ?>" alt="<?php echo $_category->getName();?>"/>
+				</div>
+				<?php $_subcategories = $_category->getChildrenCategories(); ?>
+				<?php if (count($_subcategories) > 0): ?>
+				<h5><a href="<?php echo $_category->getUrl(); ?>"><?php echo $_category->getName(); ?></a></h5>
+				<ul class="subcategories_list">
+					<?php foreach($_subcategories as $_subcategory) :?>
+						<li><a href="<?php echo $_subcategory->getUrl(); ?>"><?php echo $_subcategory->getName(); ?></a></li>
+					<?php endforeach;?>	 
+				</ul>
+				<?php endif; ?>
+			</div>
+		 <?php if ($i%$_columnCount==0 || $i==count($_categories)): ?>
+			</div>
+        <?php endif ?>
+	<?php endforeach;?>
+<?php endif; ?>
+</div>

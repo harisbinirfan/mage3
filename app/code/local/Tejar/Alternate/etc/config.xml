@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<config>
+	<modules>
+		<Tejar_Alternate>
+			<version>1.0.0</version>
+		</Tejar_Alternate>
+	</modules>
+	<global>
+		<helpers>
+			<tejar_alternate>
+				<class>Tejar_Alternate_Helper</class>
+			</tejar_alternate>
+		</helpers>
+	</global>
+	<frontend>
+		<events>
+			<core_block_abstract_to_html_before>
+				<observers>
+					<tejar_alternate>
+						<type>singleton</type>
+						<class>Tejar_Alternate_Model_Observer</class>
+						<method>alternateLinks</method>
+					</tejar_alternate>
+				</observers>
+			</core_block_abstract_to_html_before>
+		</events>
+	</frontend>
+</config>

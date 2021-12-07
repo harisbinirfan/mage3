@@ -1,0 +1,109 @@
+<?php
+$store = Mage::app()->getStore();
+$code  = $store->getId();
+$blockName = $this->getData('name');
+$displayType = $this->getData('display_type');
+$productsCount = $this->getData('products_count');
+$block = $this->getLayout()->createBlock($displayType);
+$isAjax = $block->_isAjax();
+if(!$productsCount){$productsCount = $block->getProductsCount();}
+$collectionUrl = $this->getData('collection_url');
+$enable = $block->_isEnabled();
+?>
+<?php if($enable == 1): ?>
+	<?php if($block):?>
+		<div class="owl-section-content">
+			<div class="container">
+				<div class="owl-middle-outer-narrow">
+					<div class="title-block">
+						<h4 class="title-block-left"><?php echo $block->_getTitle(); ?></h4>
+						<?php if($collectionUrl): ?><span class="title-block-right"><a href="<?php echo $this->getUrl().$collectionUrl; ?>">View All</a><?php endif; ?></span>
+					</div>
+					<div id="featured_products_<?php echo $blockName; ?>" data-block="<?php echo $blockName; ?>" data-display="<?php echo $displayType; ?>" data-productcount="<?php echo $productsCount; ?>" data-collection="<?php echo $collectionUrl; ?>" class="owl-top-narrow">
+						<?php if($isAjax == 0): ?>
+							<?php echo $this->getLayout()->createBlock($displayType)->setProductsCount($productsCount)->setTemplate('filterproducts/list.phtml')->toHtml(); ?>
+							<script type="text/javascript">
+								document.addEventListener("DOMContentLoaded", function(){
+									var slick = $j("#featured_products_<?php echo $blockName; ?>  .filter-products .products-slider");
+									slick.on('init breakpoint', function(event, slick, currentSlide, nextSlide){
+										$j("[id*=full-name-]")&&$j("[id*=full-name-]").each(function(){$j(this).trunk8({lines:2})});
+										425>=document.documentElement.clientWidth?$j(".owl-carousel .configurable-swatch-list-wrapper > ul").hideMaxListItemsSwatch({max:2,moreText:"+ ([COUNT])"}):$j(".owl-carousel .configurable-swatch-list-wrapper > ul").hideMaxListItemsSwatch({max:3,moreText:"+ ([COUNT])"});
+									});
+									slick.slick({lazyLoad:"ondemand",infinite: false,prevArrow:'<button class="slick-prev" aria-label="Previous" type="button"><span aria-label="Previous">\u2039</span></button>',nextArrow:'<button class="slick-next" aria-label="Next" type="button"><span aria-label="Next">\u203a</span></button>',speed:1E3,slidesToShow:2,slidesToScroll:2,speed: 300,
+									responsive:[{breakpoint:10240.9,settings:{slidesToShow:10,slidesToScroll:10}},{breakpoint:1920.9,settings:{slidesToShow:9,slidesToScroll:9}},{breakpoint:1680.9,settings:{slidesToShow:8,slidesToScroll:8}},{breakpoint:1440.9,settings:{slidesToShow:7,slidesToScroll:7}},{breakpoint:1280.9,settings:{slidesToShow:6,slidesToScroll:6}},{breakpoint:1024.9,settings:{slidesToShow:5,slidesToScroll:5}},{breakpoint:992.9,settings:{slidesToShow:4,slidesToScroll:4}},{breakpoint:768.9,settings:{slidesToShow:3,slidesToScroll:3}},{breakpoint:480.9,settings:{
+																							slidesToShow:2,slidesToScroll:2
+																							}}]
+									});
+									$j(document).trigger('product-media-loaded');
+								});
+							</script>
+						<?php else : ?>
+							<div class="products-slider">
+								<?php $i = 0; ?>
+								<?php for($x = 0; $x <= 9; $x++): ?>
+									<div class="owl-item item">
+										<div class="ph-item">
+											<div class="ph-col-12">
+												<div class="item-images">
+													<div class="ph-picture-wrapper">
+														<div class="ph-picture"></div>
+													</div>
+												</div>
+												<div class="item-info">
+													<div class="ph-row">
+														<div class="ph-col-6 "></div>
+														<div class="ph-col-4 "></div>
+														<div class="ph-col-2 "></div>
+														<div class="ph-col-6 "></div>
+														<div class="ph-col-2 "></div>
+														<div class="ph-col-2 "></div>
+														<div class="ph-col-4"></div>
+														<div class="ph-col-8 empty"></div>
+														<div class="ph-col-8"></div>
+														<div class="ph-col-4 empty"></div>
+														<div class="ph-col-4"></div>
+														<div class="ph-col-8 empty"></div>
+													</div>
+													<?php if($i == 1 || $i == 4): ?>
+														<div class="configurable-swatch-list-wrapper"><ul class="configurable-swatch-list configurable-swatch-color clearfix"><li class="swatch-link"></li><li class="swatch-link"></li><li class="swatch-link"></li><li class="swatch-link"></li></ul></div>
+													<?php endif; ?>
+												</div>
+											</div>
+										</div>
+									</div>
+								<?php $i++; endfor; ?>
+							</div>
+							<script type="text/javascript">
+							/*document.addEventListener("DOMContentLoaded", function(){
+								new Ajax.Request("/filterproducts/index/productsSlider/form_key/<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>/",{
+									method:'get',
+									parameters:{'block_name':'<?php echo $blockName; ?>', 'display_type':'<?php echo $displayType; ?>', 'products_count':'<?php echo $productsCount; ?>'},
+									onSuccess: function(transport)    {
+										if(200 == transport.status) {
+											var json = transport.responseText.evalJSON(true);
+											$('featured_products_<?php echo $blockName; ?>').update(json);
+											var slick = $j("#featured_products_<?php echo $blockName; ?>  .filter-products .products-slider");
+											slick.on('init breakpoint', function(event, slick, currentSlide, nextSlide){
+												$j("[id*=full-name-]")&&$j("[id*=full-name-]").each(function(){$j(this).trunk8({lines:2})});
+												425>=document.documentElement.clientWidth?$j(".owl-carousel .configurable-swatch-list-wrapper > ul").hideMaxListItemsSwatch({max:2,moreText:"+ ([COUNT])"}):$j(".owl-carousel .configurable-swatch-list-wrapper > ul").hideMaxListItemsSwatch({max:3,moreText:"+ ([COUNT])"});
+											});
+											slick.slick({lazyLoad:"ondemand",infinite: false,prevArrow:'<button class="slick-prev" aria-label="Previous" type="button"><span aria-label="Previous">\u2039</span></button>',nextArrow:'<button class="slick-next" aria-label="Next" type="button"><span aria-label="Next">\u203a</span></button>',speed:1E3,slidesToShow:2,slidesToScroll:2,speed: 300,
+											responsive:[{breakpoint:10240.9,settings:{slidesToShow:10,slidesToScroll:10}},{breakpoint:1920.9,settings:{slidesToShow:9,slidesToScroll:9}},{breakpoint:1680.9,settings:{slidesToShow:8,slidesToScroll:8}},{breakpoint:1440.9,settings:{slidesToShow:7,slidesToScroll:7}},{breakpoint:1280.9,settings:{slidesToShow:6,slidesToScroll:6}},{breakpoint:1024.9,settings:{slidesToShow:5,slidesToScroll:5}},{breakpoint:992.9,settings:{slidesToShow:4,slidesToScroll:4}},{breakpoint:768.9,settings:{slidesToShow:3,slidesToScroll:3}},{breakpoint:480.9,settings:{
+                                                slidesToShow:2,slidesToScroll:2
+                                                }}]
+											});
+										}
+									},
+									onFailure: function(transport){
+										$j("#ajax-errors").show();
+									}
+								});
+							});*/
+							</script>
+						<?php endif; ?>
+					</div>
+				</div>
+			</div>
+		</div>
+	<?php endif;?>
+<?php endif;?>

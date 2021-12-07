@@ -1,0 +1,125 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php $_product = $this->getProduct(); ?>
+<?php $buttonTitle = $this->__('Update Cart'); ?>
+<?php if ($_product->isSaleable()): ?>
+
+    <div class="add-to-cart">
+        <?php if (!$_product->isGrouped()): ?>
+          
+			<div class="description_section_2 v_centered">
+				<span class="title">Quantity :</span>
+				<div class="qty min clearfix">
+					<button type="button" class="theme_button" id="minus" data-direction="minus">&#45;</button>
+					<input min="1" max="999" autocomplete="off" id="qty" type="number" pattern="[0-9]*" class="input-text qty validation-passed" name="qty" value="<?php echo $this->getProductDefaultQty() * 1 ?>">
+
+					<button type="button" class="theme_button" data-direction="plus" id="plus">&#43;</button>
+				</div>
+			</div>
+		
+					<!--===============ZEE CODE===========-->
+						<input  type="hidden" value="<?php echo $this->getProductDefaultQty() * 1 ?>"  id="qty_clone" />
+					<!--===============ZEE CODE===========-->
+    
+        <?php endif; ?>
+	
+		
+        <button style="width: 100%;" type="button" title="<?php echo $buttonTitle ?>" class="waves-effect waves-light btn btn-cart-pro" onclick="productAddToCartForm.submit(this)"><span><span><?php echo $buttonTitle ?></span></span></button>
+		
+        <?php echo $this->getChildHtml('', true, true) ?>
+
+<?php endif; ?>
+
+<script type="text/javascript">
+//=================== ZEE CODE ========================//
+	document.addEventListener("DOMContentLoaded", function(){	
+			//--- The file is being executed twice, hence unbind the click event on 'quick view button'
+			//--- to execute plus and minus once only....
+			
+			jQuery('#plus, #minus').bind().click(function(){
+				//console.log('d');
+				jQuery('#qty').val(jQuery('#qty_clone').val()); 
+					var jQuerythis = jQuery(this),
+						d = jQuerythis.data('direction'),
+						input = jQuerythis.siblings('input'),
+						c = +input.val();
+					if((c == 1 && d == "minus") || c=="" || c==null){ 
+						input.val(1);
+						return false;
+					}
+					input.val(d == "minus" ? --c : ++c);
+					jQuery('#qty_clone').val(jQuery('#qty').val()); 
+				});
+
+			jQuery(document).on("click touchstart",function(e) {
+				//console.log(e.which);
+				if( e.target.id != "qty" && e.target.id != "plus" && e.target.id != "minus"){
+					//Restore the quantity value if clicked anywhere on Body and Hide the Update button
+				//if(jQuery('#qty').val()==""){
+					jQuery('#qty').val(jQuery('#qty_clone').val()); 
+				}else{
+					// e.preventDefault();
+				} 
+			});
+				
+			jQuery('#qty').bind('copy paste', function (e) {
+				   e.preventDefault();
+				});
+				
+			//Taking care for iPhone Done Issue...	
+			jQuery('#qty').bind('blur', function(e){
+				//alert('HELLO');
+				jQuery('#qty').val(jQuery('#qty_clone').val()); 
+			});	
+			
+			jQuery('#qty').bind('keydown', function (event) {
+				
+				var kC = event.which;
+				//var kC = event.keyCode;
+				//--- if input was not integer...
+				if( !((kC >= 48 && kC <= 57 && kC!==190) || (kC >= 96 && kC <= 105) || kC == 8 || kC==16)) return false;
+				//--- if special character was entered while shift key is pressed..
+				
+				//--- Avoid Special Characters..
+				if(event.shiftKey == true ){
+						
+						event.preventDefault();
+					}
+				setTimeout(function(){
+					
+						if(jQuery('#qty').val().length && jQuery('#qty').val()>=1){
+							
+							jQuery('#qty_clone').val(jQuery('#qty').val()); 
+						}else if(kC===13){
+							jQuery('#qty').val(jQuery('#qty_clone').val()); 
+						}
+					
+				},700);
+			});		
+<!--==================================================== ZEE CODE ==========================================-->	
+	});		
+</script>

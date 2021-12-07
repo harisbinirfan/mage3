@@ -1,0 +1,62 @@
+<config>
+	<tabs>
+		<tejarobservpricing translate="label" module="tejarobservpricing">
+			<label>Sourcing</label>
+			<sort_order>200</sort_order>
+			<class>tejarobservpricing</class>
+		</tejarobservpricing>
+	</tabs>
+	<sections>
+		<tejarobservpricing translate="label" module="tejarobservpricing">
+		<label>Manage Sourcing</label>
+		<tab>tejarobservpricing</tab>
+		<frontend_type>text</frontend_type>
+		<sort_order>200</sort_order>
+		<show_in_default>1</show_in_default>
+		<show_in_website>1</show_in_website>
+		<show_in_store>1</show_in_store>
+			<groups>
+				<currency translate="label">
+					<label>Currency</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>110</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+					<fields>
+						<rates translate="label">
+                            <label>Manage Rates</label>
+                            <frontend_model>tejar_observpricing/adminhtml_system_config_form_field_array_currency</frontend_model>
+                            <backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </rates>
+					</fields>
+				</currency>
+				
+				<sourcing translate="label">
+					<label>Sourcing</label>
+					<comment><![CDATA[Default variable <strong>$ProductPrice, $ExchangeRate, $DimensionalWeight, $ActualWeight, $FixedLocalShipping, $MinimumOrderAmount </strong>]]></comment>
+					<frontend_type>text</frontend_type>
+					<sort_order>110</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+					<fields>
+						<sourcing translate="label">
+                            <label>Sourcing</label>
+                            <frontend_model>tejar_observpricing/adminhtml_system_config_form_field_array_menulinks</frontend_model>
+                            <backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sourcing>
+					</fields>
+				</sourcing>
+			</groups>
+		</tejarobservpricing>
+	</sections>
+</config>

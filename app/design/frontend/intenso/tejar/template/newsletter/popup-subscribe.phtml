@@ -1,0 +1,45 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014-2015 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php
+$currentUrl = Mage::helper('core/url')->getCurrentUrl();
+$url = Mage::getSingleton('core/url')->parseUrl($currentUrl);
+// $path = $url->getPath();
+$action = Mage::app()->getFrontController()->getAction();
+$path = $action->getFullActionName('');
+$siteKey =  Mage::helper('tejar_captcha')->getConfigNode('public_key');
+$captchaModel = Mage::helper('captcha')->getCaptcha("newsletter_captcha");
+?>
+<form action="<?php echo $this->getFormActionUrl() ?>" method="post" id="newsletter-validate-detail-popup" class="newsletter-subscribe-form no-margin">
+	<div class="input-field">
+		<?php if(Mage::helper('itactica_intenso')->formFieldsType() == 'mdformfields'): ?>
+			<label for="newsletter-popup"><?php echo $this->__('Enter your email') ?></label>
+		<?php endif; ?>
+		<input type="text" placeholder="<?php echo $this->__('Enter your email') ?>" class="input-text required-entry validate-value validate-email" title="<?php echo $this->__('Subscribe to our Newsletter') ?>" id="newsletter-popup" data-validation="email" name="email"<?php if(Mage::helper('itactica_intenso')->formFieldsType() != 'mdformfields'): ?><?php endif;?> >
+	</div>
+	<?php if(Mage::helper('tejar_captcha')->getConfigNode('recaptcha_enable') && $captchaModel->isRequired()): ?>
+	<input type="hidden" id="g-recaptcha-token-third-id" name="g-recaptcha-token" value="" />
+	<script type="text/javascript">
+		grecaptcha.ready(function() {
+			grecaptcha.execute('<?php echo $siteKey; ?>', {action: '<?php echo $path . "page"; ?>'})
+			.then(function(token) {
+				document.getElementById('g-recaptcha-token-third-id').value = token;
+			});
+		});
+	</script>
+	<?php endif; ?>
+	<button class="btn btn-big" title="Subscribe" type="submit"><?php echo $this->__('SUBSCRIBE') ?></button>
+</form>
+<script>
+var newsletterSubscriberFormDetailPopup;
+document.addEventListener("DOMContentLoaded", function() {
+     newsletterSubscriberFormDetailPopup = new VarienForm('newsletter-validate-detail-popup');
+});
+</script>

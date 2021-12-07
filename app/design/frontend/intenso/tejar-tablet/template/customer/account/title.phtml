@@ -1,0 +1,50 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php 
+$prefix = Mage::getStoreConfig('design/head/title_prefix');
+$title = $this->getLayout()->getBlock('head')->getTitle();
+$processedTitle = trim(substr($title, strlen($prefix)));
+?>
+<?php 
+$suffix = Mage::getStoreConfig('design/head/title_suffix');
+$processedTitle2 = substr($processedTitle, 0, strlen($suffix) * -1);
+?>
+<div class="account-title-content">
+<div class="row">
+    <div class="col-sm-6 col-xs-6">
+	<div class="page-title">
+					<?php $_links = $this->getLinks(); ?>
+                    <?php $_index = 1; ?>
+                    <?php $_count = count($_links); ?>
+					<?php $title = "";?>
+                    <?php foreach ($_links as $_link): ?>
+                        <?php $_last = ($_index++ >= $_count); ?>
+                        <?php if ($this->isActive($_link)): ?>
+                          <h1><?php echo $title = $_link->getLabel() ?></h1>
+						
+                        <?php endif; ?>
+						
+                    <?php endforeach; ?>
+					<!-- If no Title Found -->
+					<?php if($title==""){?> 
+					<h1><?php echo $processedTitle2;?></h1>
+					<?php } ?>
+					</div>
+    </div>
+    <div class="actions col-sm-6 col-xs-6 align_right">
+	
+        <div class="action-for-small-only ">
+            <a class="button left-off-canvas-toggle filter-toggle"><?php echo $this->__('Account menu'); ?></a>
+        </div>
+    </div>
+    
+</div>
+</div>

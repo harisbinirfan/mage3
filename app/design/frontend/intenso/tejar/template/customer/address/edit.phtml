@@ -1,0 +1,548 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php
+/**
+ * Edit customer address template
+ *
+ * @see Mage_Customer_Block_Address_Edit
+ */
+?>
+<?php  $defaultCountryCode = Mage::getStoreConfig('general/country/default', Mage::app()->getStore()); ?>
+<?php $themeHelper = Mage::helper('itactica_intenso'); ?>
+<?php $store = Mage::app()->getStore();?>
+<div class="checkout-multishipping">
+	<div class="row">
+		<div class="col-sm-6 col-sm-offset-3">
+	   <?php if($this->getTitle()): ?>
+	   <div class="page-title">
+		  <h1><?php echo $this->getTitle(); ?></h1>
+	   </div>
+	   <?php endif; ?>
+	   <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+	   <div class="account-form-box">
+	   <form action="<?php echo $this->getSaveUrl() ?>" method="post" id="form-validate">
+		  <div class="fieldset">
+			 <h5><?php echo $this->__('Contact Information') ?></h5>
+			 <?php echo $this->getBlockHtml('formkey')?>
+			 <input type="hidden" name="success_url" value="<?php echo $this->getSuccessUrl() ?>" />
+			 <input type="hidden" name="error_url" value="<?php echo $this->getErrorUrl() ?>" />
+			 <div class="row">
+				<ul class="form-list clearfix">
+				   <?php echo $this->getNameBlockHtml() ?>
+				   <!--============================ ZEE COMPANY ===============================-->
+				   <?php if ($themeHelper->companyField()): ?>
+				   <li class="col-sm-6">
+					  <div class="input-field input-wrapper">
+						 <label for="company" class="label-floating"><?php echo $this->__('Company') ?></label>
+						 <input type="text" name="company" id="company" placeholder="<?php echo $this->__('Company') ?>" title="<?php echo $this->__('Company') ?>" value="<?php echo $this->escapeHtml($this->getAddress()->getCompany()) ?>" class="input-text input-floating validate <?php echo $this->helper('customer/address')->getAttributeValidationClass('company') ?>" />
+					  </div>
+				   </li>
+				    <?php endif; ?>
+					<!--============================ ZEE COMPANY ===============================-->
+
+					<!--============================ ZEE MOBILE ===============================-->
+				   <li class="col-sm-6">
+					  <div class="input-field input-wrapper mobile-floating">
+						 <label for="telephone" class="required label-floating"><?php echo $this->__('Mobile No') ?></label>
+						 <input type="tel" id="telephone" name="telephone" placeholder="" onkeypress="return isTelephoneKey(event)" value="<?php echo $this->escapeHtml($this->getAddress()->getTelephone()) ?>" title="<?php echo $this->__('Telephone') ?>" class="input-text input-floating  validate-phone <?php echo $this->helper('customer/address')->getAttributeValidationClass('telephone') ?>" id="telephone" data-validation="required"/>
+					  </div>
+				   </li>
+				   <!--============================ ZEE MOBILE ===============================-->
+
+				   <!--============================ ZEE FAX ===============================-->
+				   <?php if ($themeHelper->faxField()): ?>
+				   <li class="col-sm-6">
+					  <div class="input-field input-wrapper">
+						 <label for="fax" class="label-floating"><?php echo $this->__('Fax') ?></label>
+						 <input type="tel" name="fax" placeholder="<?php echo $this->__('Fax') ?>" id="fax" title="<?php echo $this->__('Fax') ?>" value="<?php echo $this->escapeHtml($this->getAddress()->getFax()) ?>" class="input-text input-floating validate <?php echo $this->helper('customer/address')->getAttributeValidationClass('fax') ?>" />
+					  </div>
+				   </li>
+				   	<?php endif;?>
+					<!--============================ ZEE FAX ===============================-->
+
+
+				</ul>
+			 </div>
+		  </div>
+		  <div class="fieldset">
+			 <h5><?php echo $this->__('Address') ?></h5>
+			 <div class="row">
+				<ul class="form-list clearfix">
+
+					<!--============================ ZEE STREET ===============================-->
+				   <?php $_streetValidationClass = $this->helper('customer/address')->getAttributeValidationClass('street'); ?>
+				   <li class="col-sm-12">
+					  <div class="input-field input-wrapper">
+						 <label for="street_1" class="required label-floating"><?php echo $this->__('Address') ?></label>
+						 <input type="text" name="street[]" value="<?php echo $this->escapeHtml($this->getAddress()->getStreet(1)) ?>" placeholder="<?php echo $this->__('Street Address') ?>" title="<?php echo $this->__('Street Address') ?>" id="street_1" class="input-text input-floating validate <?php echo $_streetValidationClass ?>" data-validation="required"/>
+					  </div>
+				   </li>
+				   <?php $_streetValidationClass = trim(str_replace('required-entry', '', $_streetValidationClass)); ?>
+				   <?php for ($_i = 2, $_n = $this->helper('customer/address')->getStreetLines(); $_i <= $_n; $_i++): ?>
+				   <li class="col-sm-12">
+					  <div class="input-field input-wrapper">
+						 <label for="street_1" class="required label-floating"><?php echo $this->__('Address 2') ?></label>
+						 <input type="text" name="street[]" value="<?php echo $this->escapeHtml($this->getAddress()->getStreet($_i)) ?>" placeholder="<?php echo $this->__('Street Address %s', $_i) ?>" title="<?php echo $this->__('Street Address %s', $_i) ?>" id="street_<?php echo $_i ?>" class="input-text input-floating validate <?php echo $_streetValidationClass ?>" />
+					  </div>
+				   </li>
+				   <?php endfor; ?>
+				   <!--============================ ZEE STREET ===============================-->
+
+				   <!--============================ ZEE VAR NUMBER ===============================-->
+				   <?php if ($this->helper('customer/address')->isVatAttributeVisible()) : ?>
+				   <li class="col-sm-6">
+					  <div class="input-field input-wrapper">
+						 <label for="vat_id" class="label-floating"><?php echo $this->__('VAT Number') ?></label>
+						 <input type="number" name="vat_id" placeholder="<?php echo $this->__('VAT Number') ?>" value="<?php echo $this->escapeHtml($this->getAddress()->getVatId()) ?>" title="<?php echo $this->__('VAT Number') ?>" id="vat_id" class="input-text input-floating validate <?php echo $this->helper('customer/address')->getAttributeValidationClass('vat_id') ?>" />
+					  </div>
+				   </li>
+				   <?php endif; ?>
+				   <!--============================ ZEE VAR NUMBER ===============================-->
+
+					<!--============================ ZEE CITY ===============================-->
+				   <li class="col-sm-6">
+					  <div class="input-field input-wrapper">
+						 <label for="city" class="required label-floating"><?php echo $this->__('City') ?></label>
+						 <input type="text" placeholder="<?php echo $this->__('City') ?>" name="city" value="<?php echo $this->escapeHtml($this->getAddress()->getCity()) ?>"  title="<?php echo $this->__('City') ?>" class="input-text input-floating validate <?php echo $this->helper('customer/address')->getAttributeValidationClass('city') ?>" id="city" data-validation="required"/>
+					  </div>
+				   </li>
+				   <!--============================ ZEE CITY ===============================-->
+
+				   <!--============================ ZEE STATE PROVINCE ===============================-->
+					 <li class="col-sm-6 state-province-field input-field input-wrapper select-wrapper chosen-wrapper">
+						<label for="region_id" class="chosen-label required"><em>*</em><?php echo $this->__('State/Province') ?></label>
+						<div class="input-box">
+							<select id="region_id" name="region_id" title="<?php echo $this->__('State/Province') ?>" class="validate-select" style="display:none;">
+							   <option value=""><?php echo $this->__('Please select region, state or province') ?></option>
+							</select>
+							<script>
+								$('region_id').setAttribute('defaultValue',  "<?php echo $this->getAddress()->getRegionId() ?>");
+							</script>
+							<input type="text" id="region" name="region" placeholder="<?php echo $this->__('State/Province') ?>" value="<?php echo $this->escapeHtml($this->getAddress()->getRegion()) ?>"  title="<?php echo $this->__('State/Province') ?>" class="input-floating input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('region') ?>" />
+						</div>
+					 </li>
+				   <!--============================ ZEE STATE PROVINCE ===============================-->
+
+
+				   <!--============================ ZEE ZIP/POSTAL CODE ===============================-->
+					<?php  if ($themeHelper->zipCodeField()): ?>
+						<?php if ($themeHelper->displayOptionalPostalCode() == 0): ?>
+							<!--============================ ZEE CODE ===============================--->
+						<select style="display:none;" id="optional_zipcode">
+						<?php $optionalZipcodeList = array();?>
+						<?php foreach(Mage::helper('directory')->getCountriesWithOptionalZip() as $optionalZip){?>
+						<?php array_push($optionalZipcodeList, strtolower($optionalZip));?>
+						<option value="<?php echo $optionalZip?>"><?php echo $optionalZip;?></option>
+						<?php }?>
+						</select>
+							<!--============================ ZEE CODE ===============================--->
+						<li <?php if(in_array(Mage::app()->getStore()->getCode(), $optionalZipcodeList) || in_array(strtolower(Mage::app()->getWebsite()->getConfig('general/country/default')), $optionalZipcodeList)){?> style="display:none;" <?php }?> class="col-sm-6 zip-postal-code">
+					<?php else: ?>
+						<li class="col-sm-6 zip-postal-code">
+					<?php endif;?>
+					  <div class="input-field input-wrapper">
+						 <label for="zip" class="required label-floating"><?php echo $this->__('Zip/Postal Code') ?></label>
+						 <input type="text" name="postcode" placeholder="<?php echo $this->__('Zip/Postal Code') ?>" value="<?php echo $this->escapeHtml($this->getAddress()->getPostcode()) ?>" title="<?php echo $this->__('Zip/Postal Code') ?>" id="zip" class="input-text input-floating validate validate-zip-international <?php echo $this->helper('customer/address')->getAttributeValidationClass('postcode') ?>" />
+					  </div>
+				   </li>
+				   	<?php endif; ?>
+				 <!--============================ ZEE ZIP/POSTAL CODE ===============================-->
+
+				  <!--============================ ZEE COUNTRY ===============================-->
+					<li class="col-sm-6">
+					  <div class="input-field input-wrapper select-wrapper chosen-wrapper country-field">
+						 <label for="country" class="required chosen-label"><?php echo $this->__('Country') ?></label>
+						 <?php // echo $this->getCountryHtmlSelect() ?>
+						 <!---------------------------------------------------- ZEE CODE ------------------------------------------------------->
+						<!----- To resolve Populating Country List issue --->
+
+
+
+
+
+						<?php
+								$defaultAddress = $this->getAddress()->getCountryId();
+								$allowedCountries = explode(',', Mage::getStoreConfig('general/country/allow', Mage::app()->getStore()));
+								$defaultCountry =  Mage::getStoreConfig('general/country/default', Mage::app()->getStore());
+								if($defaultAddress){
+									$defaultCountry = $defaultAddress;
+								}
+
+
+						?>
+						<select name="country_id" id="country" class="validate-select" title="Country">
+							<option></option>
+							<?php foreach($allowedCountries as $countryCode){ ?>
+								<option <?php if($defaultCountry && $defaultCountry==$countryCode){ echo "selected"; }?> value="<?php echo $countryCode; ?>"><?php echo Mage::app()->getLocale()->getCountryTranslation($countryCode); ?></option>
+							<?php }?>
+						</select>
+						<!---------------------------------------------------- ZEE CODE ------------------------------------------------------->
+					  </div>
+				   </li>
+				<!--============================ ZEE COUNTRY ===============================-->
+
+					<li class="<?php if($this->canSetAsDefaultBilling() || $this->isDefaultBilling()) echo 'col-sm-12' ?>">
+					  <div class="<?php if($this->canSetAsDefaultShipping() || $this->isDefaultBilling()) echo 'input-field-2' ?>">
+						 <?php if($this->isDefaultBilling()): ?>
+						 <!--<strong><?php //echo $this->__('Default Billing Address') ?></strong>-->
+						 <input type="checkbox" disabled id="primary_billing" name="default_billing" value="1" title="<?php echo $this->__('Use as My Default Billing Address') ?>" class="filled-in" checked /><label for="primary_billing"><?php echo $this->__('Use as my default billing address') ?></label>
+						 <?php elseif($this->canSetAsDefaultBilling()): ?>
+						 <input type="checkbox" id="primary_billing" name="default_billing" value="1" title="<?php echo $this->__('Use as My Default Billing Address') ?>" class="filled-in" /><label for="primary_billing"><?php echo $this->__('Use as my default billing address') ?></label>
+						 <?php else: ?>
+						 <input type="hidden" name="default_billing" value="1" />
+						 <?php endif; ?>
+					  </div>
+				   </li>
+				   <li class="<?php if($this->canSetAsDefaultShipping() || $this->isDefaultShipping()) echo 'col-sm-12' ?>">
+					  <div class="<?php if($this->canSetAsDefaultShipping() || $this->isDefaultShipping()) echo 'input-field-2' ?>">
+						 <?php if($this->isDefaultShipping()): ?>
+						 <input type="checkbox" disabled id="primary_shipping" name="default_shipping" value="1" title="<?php echo $this->__('Use as My Default Shipping Address') ?>" class="filled-in" checked /><label for="primary_shipping"><?php echo $this->__('Use as my default shipping address') ?></label>
+						 <!-- <strong><?php //echo $this->__('Default Shipping Address') ?></strong>-->
+						 <?php elseif($this->canSetAsDefaultShipping()): ?>
+						 <input type="checkbox" id="primary_shipping" name="default_shipping" value="1" title="<?php echo $this->__('Use as My Default Shipping Address') ?>" class="filled-in" /><label for="primary_shipping"><?php echo $this->__('Use as my default shipping address') ?></label>
+						 <?php else: ?>
+						 <input type="hidden" name="default_shipping" value="1" />
+						 <?php endif; ?>
+					  </div>
+				   </li>
+				</ul>
+			 </div>
+		  </div>
+		  <div class="buttons-set">
+			 <button data-action="save-customer-address" type="button" onclick="trimFormValues('form-validate')" title="<?php echo $this->__('Save Address') ?>" class="btn"><span><span><?php echo $this->__('Save Address') ?></span></span></button>
+			 <p class="back-link"><a class="arrow-left" href="<?php echo $this->escapeUrl($this->getBackUrl()) ?>"><?php echo $this->__('Back') ?></a></p>
+		  </div>
+		  <!--<input type="hidden" id="address_telephone_original" name="telephone" />-->
+	   </form>
+	   </div>
+	</div>
+	</div>
+</div>
+<style>
+.state-province-field.input-field label{
+	    left: 31px;
+}
+</style>
+<?php  $defaultCountryCode = Mage::getStoreConfig('general/country/default', Mage::app()->getStore()); ?>
+<script>
+//===================================================== 3SD CODE TELEPHONE VALIDATION  ============================================//
+
+	var input = document.querySelector("#telephone"),
+	cellInput = window.intlTelInput(input, {
+	  geoIpLookup: function(callback) {
+		var countryCode = '<?php echo $defaultCountryCode; ?>';
+		  callback(countryCode);
+	  },
+	  initialCountry: "auto",
+	  nationalMode: false,
+	  placeholderNumberType: "MOBILE",
+	  preferredCountries: ['us', 'ae', 'pk'],
+	  utilsScript: "<?php echo $this->getSkinUrl('phone-validation/js/utils.js'); ?>"
+	});
+
+	cellInput.promise.then(function() {
+		cellInputValidation(input.placeholder);
+	});
+
+	input.addEventListener('countrychange', function(e) {
+		var advice = document.getElementById('advice-validate-phone-telephone');
+		if(input.placeholder && advice){
+			advice.innerText = 'Please enter a valid Mobile No eg.'+input.placeholder;
+		}
+
+		cellInputValidation(input.placeholder);
+	});
+
+
+	function cellInputValidation(inputPlaceholder){
+		Validation.add('validate-phone', 'Please enter a valid Mobile No eg.'+inputPlaceholder, function(v) {
+			return (!Validation.get('IsEmpty').test(v) && cellInput.isValidNumber() && (/[0-9-()+]{3,20}$/).test(input.value))
+		});
+	}
+
+	input.addEventListener('change', function(e) {
+		if(input.value){
+			var dialCode = cellInput.selectedCountryData.dialCode;
+			var str = input.value;
+			var re = new RegExp("^[+]" + dialCode,"i");
+			var result = re.test(str);
+			var zero = new RegExp("^0+","i");
+			zero = zero.test(str);
+			var rDialCode = new RegExp("^"+dialCode+"+","i");
+			rDialCode = rDialCode.test(str);
+			if(typeof dialCode !== "undefined" && result){
+				if(result) {
+					var pattern = new RegExp("^[+]" + dialCode + "0+","i");
+					var result = pattern.test(str);
+					if(result){
+						input.value = "+" + dialCode + str.replace(pattern, "");
+					}
+				} 
+			} else if(zero && !cellInput.isValidNumber()) {
+				input.value = "+" + dialCode + parseInt(str, 10);
+			} else if(rDialCode && !cellInput.isValidNumber()) {
+				input.value = "+" + str;
+			} else {
+				if(typeof window.intlTelInputUtils !== "undefined"){
+					if(window.intlTelInputUtils.isValidNumber(input.value, cellInput.selectedCountryData.iso2)){
+						input.value  = "+" + dialCode + input.value;
+					}
+				}
+			}
+		}
+	});
+
+	input.addEventListener('focus', function(e) {
+		if(!input.value){
+			input.value = "+" + cellInput.selectedCountryData.dialCode;
+		}
+	});
+
+	var isTelephoneKey = function(evt) {
+		 var charCode = (evt.which) ? evt.which : event.keyCode;
+		 if(!evt.key){
+		 }
+		 // console.log(evt);
+		 if(charCode == 43) return true;
+		 else if (charCode > 31 && (charCode < 48 || charCode > 57))
+			return false;
+		 return true;
+	}
+
+//===================================================== 3SD CODE END TELEPHONE VALIDATION ============================================//
+
+	var dataForm = new VarienForm('form-validate', true);
+    var addressRegionUpdater = new RegionUpdater('country', 'region', 'region_id', <?php echo $this->helper('directory')->getRegionJson() ?>, undefined, 'zip');
+
+    <?php if(Mage::helper('itactica_intenso')->formFieldsType() == 'mdformfields'): ?>
+    jQuery(function() {
+
+			<?php if ($themeHelper->displayOptionalPostalCode() == 0): ?>
+				//--- Hide list of countries with 'Optional Zipcode' toggle Post Code ...
+				jQuery('#optional_zipcode_chosen').hide();
+				var arr = [];
+					jQuery('#optional_zipcode').children().each(function(){
+						arr.push(jQuery(this).val());
+					});
+
+					if(jQuery.inArray(jQuery('#country').val(),arr)!==-1){
+						jQuery('#zip').parent().parent().hide();
+					}else{
+						jQuery('#zip').parent().parent().show();
+					}
+
+				jQuery('#country').on('change keyup', function(event) {
+
+					if(jQuery.inArray(jQuery(this).val(),arr)!==-1){
+						jQuery('#zip').parent().parent().hide();
+					}else{
+						jQuery('#zip').parent().parent().show();
+					}
+					//console.log(jQuery.type(arr));
+				});
+		<?php endif; ?>
+
+		if(jQuery('.state-province-field').hasClass('.select-list')){
+			 jQuery("label[for*='shipping:region']").removeClass("chosen-label");
+			 jQuery("label[for*='shipping:region']").addClass("label-floating");
+		}
+		else{
+			 jQuery("label[for*='shipping:region']").addClass("chosen-label");
+			 jQuery("label[for*='shipping:region']").removeClass("label-floating");
+		}
+
+        jQuery('#country').on('change keyup', function(event) {
+            addressRegionUpdater.update();
+        });
+        if (canUseChosen()) {
+            // fix RegionUpdater for chosen.js
+            Object.extend(Validation, {
+                isVisible : function(elm) {
+                    while(elm.tagName != 'BODY') {
+                        // validate region hidden select box
+                        if (elm.id == 'country' || elm.id == 'region_id') {
+							if ((elm.id == 'country' && !($('country_chosen').visible()))
+								|| (elm.id == 'region_id' && !($('region_id_chosen').visible()))) {
+                                return false;
+                            }
+                            return true;
+                        }
+                        if(!$(elm).visible()) return false;
+                        elm = elm.parentNode;
+                    }
+                    return true;
+                }
+            });
+
+
+
+            addressRegionUpdater.update = addressRegionUpdater.update.wrap(function(parentMethod){
+                // parent "update" method call
+                parentMethod();
+
+                // after "update" method fires
+                addressRegionUpdater.regionSelectEl.hide();
+                var regionChosen = jQuery('#region_id_chosen');
+                if(addressRegionUpdater.regionTextEl.visible()) {
+                    regionChosen.hide();
+                    regionChosen.parent('.input-box-select').removeClass('input-box-select');
+                    regionChosen.parent().parent('.select-list').removeClass('select-list');
+					jQuery('.state-province-field  label').removeClass('chosen-label');
+					jQuery('.state-province-field  label').addClass('label-floating');
+                } else {
+                    regionChosen.show();
+                    regionChosen.parent().addClass('input-box-select');
+                    regionChosen.parent().parent().addClass('select-list');
+                    jQuery('#region_id').trigger("chosen:updated");
+					jQuery('.state-province-field  label').removeClass('label-floating');
+					jQuery('.state-province-field  label').addClass('chosen-label');
+                }
+            });
+            jQuery('#region_id').on('change keyup', function(event) {
+                jQuery('#region').val(jQuery(this).children("option").filter(":selected").text());
+            });
+            addressRegionUpdater.update();
+
+        } else {
+            addressRegionUpdater.update = addressRegionUpdater.update.wrap(function(parentMethod){
+                // parent "update" method call
+                parentMethod();
+
+                // after "update" method fires
+                if(addressRegionUpdater.regionTextEl.visible()) {
+                    jQuery('.state-province-field').removeClass('select-list');
+                    jQuery('.state-province-field > .input-box').removeClass('input-box-select');
+					jQuery('.state-province-field  label').removeClass('chosen-label');
+					jQuery('.state-province-field  label').addClass('label-floating');
+                } else {
+                    jQuery('.state-province-field').addClass('select-list');
+                    jQuery('.state-province-field > .input-box').addClass('input-box-select');
+					jQuery('.state-province-field  label').removeClass('label-floating');
+					jQuery('.state-province-field  label').addClass('chosen-label');
+                }
+            });
+            addressRegionUpdater.update();
+        }
+
+        function canUseChosen() {
+            if (window.navigator.appName === "Microsoft Internet Explorer") {
+                return document.documentMode >= 8;
+            }
+            if (/iP(od|hone)/i.test(window.navigator.userAgent)) {
+                return false;
+            }
+            if (/Android/i.test(window.navigator.userAgent)) {
+                if (/Mobile/i.test(window.navigator.userAgent)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
+    });
+	<?php else: ?>
+	jQuery(function() {
+
+			<?php if ($themeHelper->displayOptionalPostalCode() == 0): ?>
+				//--- Hide list of countries with 'Optional Zipcode' toggle Post Code ...
+				jQuery('#optional_zipcode_chosen').hide();
+				var arr = [];
+					jQuery('#optional_zipcode').children().each(function(){
+						arr.push(jQuery(this).val());
+					});
+
+					if(jQuery.inArray(jQuery('#country').val(),arr)!==-1){
+						jQuery('#zip').parent().parent().hide();
+					}else{
+						jQuery('#zip').parent().parent().show();
+					}
+
+				jQuery('#country').on('change keyup', function(event) {
+
+					if(jQuery.inArray(jQuery(this).val(),arr)!==-1){
+						jQuery('#zip').parent().parent().hide();
+					}else{
+						jQuery('#zip').parent().parent().show();
+					}
+					//console.log(jQuery.type(arr));
+				});
+		<?php endif; ?>
+
+		if(jQuery('.state-province-field').hasClass('.select-list')){
+			 jQuery("label[for*='shipping:region']").removeClass("chosen-label");
+			 jQuery("label[for*='shipping:region']").addClass("label-floating");
+		}
+		else{
+			 jQuery("label[for*='shipping:region']").addClass("chosen-label");
+			 jQuery("label[for*='shipping:region']").removeClass("label-floating");
+		}
+
+			jQuery('#country').on('change keyup', function(event) {
+				addressRegionUpdater.update();
+			});
+
+            addressRegionUpdater.update = addressRegionUpdater.update.wrap(function(parentMethod){
+                // parent "update" method call
+                parentMethod();
+
+                // after "update" method fires
+                if(addressRegionUpdater.regionTextEl.visible()) {
+                    jQuery('.state-province-field').removeClass('select-list');
+                    jQuery('.state-province-field > .input-box').removeClass('input-box-select');
+					jQuery('.state-province-field  label').removeClass('chosen-label');
+					jQuery('.state-province-field  label').addClass('label-floating');
+                } else {
+                    jQuery('.state-province-field').addClass('select-list');
+                    jQuery('.state-province-field > .input-box').addClass('input-box-select');
+					jQuery('.state-province-field  label').removeClass('label-floating');
+					jQuery('.state-province-field  label').addClass('chosen-label');
+                }
+            });
+            addressRegionUpdater.update();
+
+
+    });
+    <?php endif; ?>
+	//==================================================== ZEE CODE ============================================//
+	/*
+	*@name   trimFormValues
+	*@params form
+	*@return none (trims whitespaces from form values)
+	*/
+	function trimFormValues(formObj){
+		/*jQuery('#'+formObj+' *').filter(':input').each(function(){
+			this.value=jQuery(this).val().trim();
+		});*/
+
+		//--- Validate address form before submitting...
+		var validator = new Validation(formObj);
+		if(validator.validate()){
+			//--- Trim telephone (Mob) for in between spaces..
+			var addressTelephone  = jQuery('#telephone').val().split(" ").join("");
+			jQuery('#telephone').val(addressTelephone);
+			setTimeout(function(){
+				jQuery('#'+formObj).submit();
+			},500);
+		}
+
+	}
+
+jQuery(document).ready(function(){
+	//--- Trigger Submit Event upon pressing ENTER Key..
+	jQuery(document).bind('keyup', function (e) {
+		if (e.which == 13) {
+			return trimFormValues('form-validate');
+		}
+	});
+});
+//==================================================== ZEE CODE ============================================//
+</script>

@@ -1,0 +1,652 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Intenso Premium Theme
+ *
+ * @category    Itactica
+ * @package     Itactica_Intenso
+ * @copyright   Copyright (c) 2014-2015 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+-->
+<config>
+    <sections>
+
+        <intenso_design translate="label" module="itactica_intenso">
+            <groups>
+			<!--/[] 3SD CODE Tejar Custom []\-->
+				<tejar_custom translate="label">
+                    <label>Custom CSS AND JS</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>130</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+						<head_script translate="label comment">
+								<label>Miscellaneous Scripts</label>
+								<comment>This will be included after body opening tag in page HTML.</comment>
+								<frontend_type>textarea</frontend_type>
+								<sort_order>4</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+						</head_script>
+						<head_css translate="label comment">
+							<label>Custom CSS</label>
+							<comment>Add CSS in head</comment>
+							<frontend_type>textarea</frontend_type>
+							<sort_order>6</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</head_css>
+                    </fields>
+             </tejar_custom>
+			 <!--/[] 3SD CODE Tejar Custom []\-->
+				<header translate="label">
+                    <fields>
+						 <mobile_sticky translate="label comment">
+                            <label>Mobile Sticky Enabled</label>
+                            <comment>Enabled , Disabled Mobile Sticky</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>39</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </mobile_sticky>
+						 <tablet_sticky translate="label comment">
+                            <label>Tablet Sticky Enabled</label>
+                            <comment>Enabled , Disabled Tablet Sticky</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </tablet_sticky>
+						 <home_category_dropdown translate="label comment">
+                            <label>Home Page Category Dropdown</label>
+                            <comment>Active , Deactive</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </home_category_dropdown>
+					</fields>
+				</header>
+                <page translate="label">
+                    <fields>
+						<!--/[] 3SD CODE Button Background-Image []\-->
+						 <primary_button_background_image_1 translate="label">
+                            <label>Primary Button Background Image 1</label>
+                            <frontend_model>itactica_intenso/adminhtml_system_config_form_field_colorpicker</frontend_model>
+                            <backend_model>itactica_intenso/system_config_backend_design_color_validate</backend_model>
+                            <sort_order>105</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </primary_button_background_image_1>
+						<primary_button_background_image_2 translate="label">
+                            <label>Primary Button Background Image 2</label>
+                            <frontend_model>itactica_intenso/adminhtml_system_config_form_field_colorpicker</frontend_model>
+                            <backend_model>itactica_intenso/system_config_backend_design_color_validate</backend_model>
+                            <sort_order>106</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </primary_button_background_image_2>
+						<primary_button_box_shadow translate="label">
+                            <label>Primary Button box shaodow</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>107</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </primary_button_box_shadow>
+						<!--/[] 3SD CODE Button Background-Image End []\-->
+                    </fields>
+                </page>
+				<footer translate="label">
+					<fields>
+						<footer_social_header translate="label">
+							<label>Social Footer</label>
+							<frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+							<sort_order>350</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</footer_social_header>
+						<social_background_color translate="label">
+                            <label>Background Color</label>
+                            <frontend_model>itactica_intenso/adminhtml_system_config_form_field_colorpicker</frontend_model>
+                            <backend_model>itactica_intenso/system_config_backend_design_color_validate</backend_model>
+                            <sort_order>360</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </social_background_color>
+						<social_icon_color translate="label">
+                            <label>Icon Color</label>
+                            <frontend_model>itactica_intenso/adminhtml_system_config_form_field_colorpicker</frontend_model>
+                            <backend_model>itactica_intenso/system_config_backend_design_color_validate</backend_model>
+                            <sort_order>370</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </social_icon_color>
+						<social_title_color translate="label">
+                            <label>Title Color</label>
+                            <frontend_model>itactica_intenso/adminhtml_system_config_form_field_colorpicker</frontend_model>
+                            <backend_model>itactica_intenso/system_config_backend_design_color_validate</backend_model>
+                            <sort_order>380</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </social_title_color>
+						<footer_contact_informaion translate="label">
+							<label>Contact Information Footer</label>
+							<frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+							<sort_order>390</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</footer_contact_informaion>
+						<contact_background_color translate="label">
+                            <label>Background Color</label>
+                            <frontend_model>itactica_intenso/adminhtml_system_config_form_field_colorpicker</frontend_model>
+                            <backend_model>itactica_intenso/system_config_backend_design_color_validate</backend_model>
+                            <sort_order>400</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </contact_background_color>
+						<contact_text_color translate="label">
+                            <label>Text Color</label>
+                            <frontend_model>itactica_intenso/adminhtml_system_config_form_field_colorpicker</frontend_model>
+                            <backend_model>itactica_intenso/system_config_backend_design_color_validate</backend_model>
+                            <sort_order>410</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </contact_text_color>
+						<contact_link_color translate="label">
+                            <label>Link Color</label>
+                            <frontend_model>itactica_intenso/adminhtml_system_config_form_field_colorpicker</frontend_model>
+                            <backend_model>itactica_intenso/system_config_backend_design_color_validate</backend_model>
+                            <sort_order>420</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </contact_link_color>
+						<contact_link_color_hover translate="label">
+                            <label>Link Color hover</label>
+                            <frontend_model>itactica_intenso/adminhtml_system_config_form_field_colorpicker</frontend_model>
+                            <backend_model>itactica_intenso/system_config_backend_design_color_validate</backend_model>
+                            <sort_order>430</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </contact_link_color_hover>
+						<contact_border_color translate="label">
+                            <label>border Color</label>
+                            <frontend_model>itactica_intenso/adminhtml_system_config_form_field_colorpicker</frontend_model>
+                            <backend_model>itactica_intenso/system_config_backend_design_color_validate</backend_model>
+                            <sort_order>440</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </contact_border_color>
+						<footer_customer_informaion translate="label">
+							<label>Customer Information Footer</label>
+							<frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+							<sort_order>450</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</footer_customer_informaion>
+						<customer_background_color translate="label">
+                            <label>Background Color</label>
+                            <frontend_model>itactica_intenso/adminhtml_system_config_form_field_colorpicker</frontend_model>
+                            <backend_model>itactica_intenso/system_config_backend_design_color_validate</backend_model>
+                            <sort_order>460</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </customer_background_color>
+						<customer_text_color translate="label">
+                            <label>Text Color</label>
+                            <frontend_model>itactica_intenso/adminhtml_system_config_form_field_colorpicker</frontend_model>
+                            <backend_model>itactica_intenso/system_config_backend_design_color_validate</backend_model>
+                            <sort_order>470</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </customer_text_color>
+						<customer_link_color translate="label">
+                            <label>Link Color</label>
+                            <frontend_model>itactica_intenso/adminhtml_system_config_form_field_colorpicker</frontend_model>
+                            <backend_model>itactica_intenso/system_config_backend_design_color_validate</backend_model>
+                            <sort_order>480</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </customer_link_color>
+						<customer_link_color_hover translate="label">
+                            <label>Link Color hover</label>
+                            <frontend_model>itactica_intenso/adminhtml_system_config_form_field_colorpicker</frontend_model>
+                            <backend_model>itactica_intenso/system_config_backend_design_color_validate</backend_model>
+                            <sort_order>490</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </customer_link_color_hover>
+						<customer_border_color translate="label">
+                            <label>Customer Border Color</label>
+                            <frontend_model>itactica_intenso/adminhtml_system_config_form_field_colorpicker</frontend_model>
+                            <backend_model>itactica_intenso/system_config_backend_design_color_validate</backend_model>
+                            <sort_order>495</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </customer_border_color>
+						<footer_divider_line translate="label">
+                            <label>footer Divider Line</label>
+                            <frontend_model>itactica_intenso/adminhtml_system_config_form_field_colorpicker</frontend_model>
+                            <backend_model>itactica_intenso/system_config_backend_design_color_validate</backend_model>
+                            <sort_order>500</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </footer_divider_line>
+					</fields>
+				</footer>
+            </groups>
+        </intenso_design>
+		<intenso translate="label" module="itactica_intenso">
+			<sort_order>15</sort_order>
+			<groups>
+				 <catalog translate="label">
+					<fields>
+						<catalog_show_add_to_cart_list translate="label comment">
+							<label>Show Add to Cart Button List</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>72</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</catalog_show_add_to_cart_list>
+					</fields>
+				</catalog>
+				<header trabslate="label">
+					<fields>
+						<header_topmenu_ajax translate="label">
+                            <label>topmenu on ajax</label>
+							<frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>24</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </header_topmenu_ajax>
+						<header_cms_home translate="label">
+                            <label>Home and CMS pages</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>119</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </header_cms_home>
+						<cms_logo_image translate="label comment">
+								<label>CMS Open Graph Image</label>
+								<frontend_type>image</frontend_type>
+								<backend_model>adminhtml/system_config_backend_image</backend_model>
+								<upload_dir config="system/filesystem/media" scope_info="1">logo</upload_dir>
+								<base_url type="media" scope_info="1">logo</base_url>
+								<sort_order>120</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+						</cms_logo_image>
+					</fields>
+				</header>
+				<product_page translate="label">
+					<fields>
+						 <product_show_buy_now translate="label comment">
+							<label>Show Buy Now Button</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>42</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</product_show_buy_now>
+						  <swatches_header translate="label">
+                            <label>Swatches</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </swatches_header>
+						<swatch_size translate="label comment">
+                            <label>Swatch Width - Height</label>
+                            <comment>Sets a minimum width in pixels for the swatch (e.g. 50) Enter zero (0) to display swatch in its original size</comment>
+                            <validate>required-entry validate-digits validate-digits-range digits-range-0-500</validate>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </swatch_size>
+						<swatch_display translate="label comment">
+                            <label>How many swatch to dispaly</label>
+                            <comment>How many swatch to display product page.</comment>
+                            <validate> validate-digits validate-digits-range digits-range-0-500</validate>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </swatch_display>
+            <product_name_attribute_limit translate="label comment">
+               							<label>Product Name Character Limit</label>
+               							<frontend_type>text</frontend_type>
+               							<sort_order>43</sort_order>
+               							<show_in_default>1</show_in_default>
+               						  </product_name_attribute_limit>
+                            <product_model_attribute_limit translate="label comment">
+                							<label>Product Model Character Limit</label>
+                							<frontend_type>text</frontend_type>
+                							<sort_order>44</sort_order>
+                							<show_in_default>1</show_in_default>
+                						</product_model_attribute_limit>
+						<product_socail_sharing translate="label comment">
+							<label>Product Social Sharing</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>100</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</product_socail_sharing>
+						<product_sharing_multiselect translate="label comment">
+                            <label>Select Product Social Share </label>
+                            <comment>Select number of lines for product social share.</comment>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>tejar_intensolocal/config_productsocialshare::productSocialMultiselect</source_model>
+                            <sort_order>125</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<validate>required-entry</validate>
+						</product_sharing_multiselect>
+						<swatch_ajax translate="label comment">
+							<label>Ajax Load Swatch</label>
+							<comment>If yes this option then all your swatch will load on ajax.</comment>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>66</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</swatch_ajax>
+					</fields>
+				</product_page>
+				 <quickview translate="label">
+                    <fields>
+                        <list_enable translate="label comment">
+                            <label>List Enable Quick View</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>17</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </list_enable>
+						<grid_enable translate="label comment">
+                            <label>Grid Enable Quick View</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </grid_enable>
+                    </fields>
+                </quickview>
+				<footer translate="label">
+                    <label>Footer</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>50</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <show_social translate="label comment">
+                            <label>Show Social Icons</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </show_social>
+						<sec_menu_links_2 translate="label">
+                            <label>Social Links</label>
+                            <frontend_model>itactica_intenso/adminhtml_system_config_form_field_array_menulinks</frontend_model>
+                            <backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sec_menu_links_2>
+						 <sec_menu_links_3 translate="label">
+                            <label>Secondary Menu Links 2</label>
+                            <frontend_model>itactica_intenso/adminhtml_system_config_form_field_array_menulinks</frontend_model>
+                            <backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+                            <sort_order>71</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sec_menu_links_3>
+                    </fields>
+                </footer>
+				 <contact translate="label">
+                    <label>Contact</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>130</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+						<whatsapp_contact translate="label">
+								<label>Whatsapp</label>
+								<frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+								<sort_order>5</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+						</whatsapp_contact>
+						 <whatsapp_contact_title translate="label comment">
+                            <label>Whatsapp Contact Title</label>
+                            <comment>Sets the Whatsapp Title</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </whatsapp_contact_title>
+                        <whatsapp_contact_number translate="label comment">
+                            <label>Whatsapp Contact Number</label>
+                            <comment>Sets the Whatsapp Number</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </whatsapp_contact_number>
+						<whatsapp_contact_msg translate="label comment">
+                            <label>Whatsapp msg</label>
+                            <comment>Sets the Whatsapp Msg</comment>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </whatsapp_contact_msg>
+                    </fields>
+                </contact>
+				 <sales translate="label">
+                    <label>Sales</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>140</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+						<sales_checkout_header translate="label">
+                            <label>Checkout</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>53</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sales_checkout_header>
+						 <company_field translate="label comment">
+                            <label>Show Company</label>
+                            <comment>Enabled , Disabled Company Field</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>54</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </company_field>
+						 <fax_field translate="label comment">
+                            <label>Show Fax</label>
+                            <comment>Enabled , Disabled Fax Field</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>55</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </fax_field>
+						<zip_code_field translate="label comment">
+                            <label>Show Postal Code</label>
+                            <comment>Enabled , Disabled Zip Code Field</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>56</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </zip_code_field>
+						<display_optional_postal_code translate="label comment">
+                            <label>Display optional Postal Code</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>58</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </display_optional_postal_code>
+						<sales_shipping_methods_header translate="label">
+                            <label>Shipping Methods</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sales_shipping_methods_header>
+						<sales_shipping_methods_links translate="label">
+                            <label>Shipping Methods</label>
+                            <frontend_model>itactica_intenso/adminhtml_system_config_form_field_array_menulinks</frontend_model>
+                            <backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sales_shipping_methods_links>
+                    </fields>
+                </sales>
+				<guest_order translate="label">
+                    <label>Guest Order Form</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>200</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+						 <guest_order_title translate="label comment">
+                            <label>Page Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </guest_order_title>
+                        <guest_order_keywords translate="label comment">
+                            <label>Meta Keywords</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </guest_order_keywords>
+						<guest_order_description translate="label comment">
+                            <label>Meta Description</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </guest_order_description>
+                    </fields>
+                </guest_order>
+				<product_label translate="label">
+                    <label>Product Label</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>200</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+						 <price_percentage translate="label comment">
+                            <label>Price Percentage</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </price_percentage>
+                        <sale_label translate="label comment">
+                            <label>Sale Label</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sale_label>
+						<new_label translate="label comment">
+                            <label>New Label</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </new_label>
+                    </fields>
+                </product_label>
+			</groups>
+		</intenso>
+    </sections>
+</config>

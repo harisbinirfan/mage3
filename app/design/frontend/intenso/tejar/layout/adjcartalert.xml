@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+
+<layout version="0.1.0">
+    <adjcartalert_unsubscribe_cart>
+        <reference name="root">
+            <action method="setTemplate"><template>page/2columns-right.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="adjcartalert/unsubscribe" name="adjcartalert.unsubscribe" template="adjcartalert/unsubscribe.phtml"/>
+        </reference>
+    </adjcartalert_unsubscribe_cart>
+
+    <checkout_onepage_index>
+        <reference name="before_body_end">
+            <block type="core/template" name="adjcartalert.collector.email.wrapper" template="adjcartalert/collector_email_wrapper.phtml" />
+        </reference>
+    </checkout_onepage_index>
+
+    <checkout_cart_index>
+        <reference name="before_body_end">
+            <block type="core/template" name="adjcartalert.collector.email.wrapper" template="adjcartalert/collector_email_wrapper.phtml" />
+        </reference>
+    </checkout_cart_index>
+
+    <checkout_multishipping>
+        <reference name="before_body_end">
+            <block type="core/template" name="adjcartalert.collector.email.wrapper" template="adjcartalert/collector_email_wrapper.phtml" />
+        </reference>
+    </checkout_multishipping>
+
+    <customer_account_login>
+        <reference name="before_body_end">
+            <block type="core/template" name="adjcartalert.collector.email.wrapper" template="adjcartalert/collector_email_wrapper.phtml" />
+        </reference>
+    </customer_account_login>
+
+    <customer_account_create>
+        <reference name="before_body_end">
+            <block type="core/template" name="adjcartalert.collector.email.wrapper" template="adjcartalert/collector_email_wrapper.phtml" />
+        </reference>
+    </customer_account_create>
+
+    <!-- Magebuzz_Simplecheckout -->
+    <simplecheckout_index_index>
+        <reference name="before_body_end">
+            <block type="core/template" name="adjcartalert.collector.email.wrapper" template="adjcartalert/collector_email_wrapper.phtml" />
+        </reference>
+    </simplecheckout_index_index>
+
+    <!-- GoMage LightCheckout -->
+    <gomage_checkout_onepage_index>
+        <reference name="before_body_end">
+            <block type="core/template" name="adjcartalert.collector.email.wrapper" template="adjcartalert/collector_email_wrapper.phtml" />
+        </reference>
+    </gomage_checkout_onepage_index>
+
+    <!-- AITOC One-page Checkout Booster -->
+    <aitcheckout_checkout_index>
+        <reference name="before_body_end">
+            <block type="core/template" name="adjcartalert.collector.email.wrapper" template="adjcartalert/collector_email_wrapper.phtml" />
+        </reference>
+    </aitcheckout_checkout_index>
+</layout>

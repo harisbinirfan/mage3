@@ -1,0 +1,124 @@
+<?php	
+	
+	//--- Load Page Action Name
+	$actionName = $this->getRequest()->getActionName();
+
+	$quantityToSubtract = 0;			
+
+	$_item = $item;
+	$additionalData = Mage::Helper('sales')->getAdditionalData($_item);
+	$product = $additionalData->getProduct();
+	$productImageUrl = $additionalData->getProductImage();
+	$productName = $additionalData->getProductName();
+	$productUrl = $additionalData->getProductUrl();
+		
+	//--- Get Item Quantity based on the Collection
+	if($collection_mode=='pending_canceled'){
+		$productQty = (int)$item->getQtyOrdered();		
+	}elseif($collection_mode=='pending'){
+		
+		//--- Check if the current product has been invoiced or shipped by comparing the quantities..
+		/*if((array_key_exists($config->getModel(), $invoiceQtyArray) && (int)$item->getQtyOrdered()==$invoiceQtyArray[$config->getModel()]) || (array_key_exists($config->getId(), $shippedQty) && (int)$item->getQtyOrdered() == $shippedQty[$config->getId()]))return;
+	
+		//--- Get the quantity to subtract
+		if(array_key_exists($config->getModel(), $invoiceQtyArray)){
+			$quantityToSubtract = $invoiceQtyArray[$config->getModel()];
+		}elseif(array_key_exists($config->getId(), $shippedQty)){
+			$quantityToSubtract = $shippedQty[$config->getId()];
+		}
+		$productQty = (int)$item->getQtyOrdered() - $quantityToSubtract;
+		*/
+		
+		
+		 
+		if($item->getQtyRefunded() && $item->getQtyShipped() >= $item->getQtyInvoiced() - $item->getQtyRefunded()){
+			$productQty =  ((int) $item->getQtyOrdered() - $item->getQtyInvoiced()) - ($item->getQtyShipped() - ( $item->getQtyInvoiced() - $item->getQtyRefunded() ));
+			
+		}elseif($item->getQtyRefunded() && $item->getQtyShipped() < $item->getQtyInvoiced() - $item->getQtyRefunded()){
+			
+				$productQty =  (int) $item->getQtyOrdered() - $item->getQtyInvoiced();
+			
+		}else{
+			$quantityToSubtract = $item->getQtyInvoiced() > $item->getQtyShipped()?$item->getQtyInvoiced():$item->getQtyShipped();
+			$productQty = (int) $item->getQtyOrdered() - abs($quantityToSubtract);
+		}
+		
+		//$productQty = $productQty -$item->getQtyRefunded();
+	}elseif($collection_mode=='invoice'){
+		
+		//--- Conitnue if Product is already displayed or if Product is main Configurable Product...
+		/*if(in_array($config->getId(),$printedIds) || $item->getOrderItem()->getParentItem()) return;
+		
+		//--- Continue if Current Product's Invoiced Quantity is equal to Shipped Quantity
+		if((array_key_exists($config->getId(), $shippedQty) && array_key_exists($config->getModel(), $invoiceQtyArray)) && $invoiceQtyArray[$config->getModel()]== $shippedQty[$config->getId()])return;
+		
+		//--- Get Product Quantity: if shipped then Invoiced Qty minus Shipped Quantity else Invoiced Qty
+		$productQty = in_array($shippedQty[$config->getId()],$shippedQty)?$invoiceQtyArray[$config->getModel()] - $shippedQty[$config->getId()]:$invoiceQtyArray[$config->getModel()];
+	*/
+		if((int)$item->getQtyInvoiced() <= (int)$item->getQtyShipped()){
+			$quantityInvoice = 0;
+		}else{
+			$quantityInvoice = $item->getQtyInvoiced() - abs( $item->getQtyShipped() + (int)$item->getQtyRefunded());
+		}
+		
+		$productQty = abs($quantityInvoice);
+		
+	}elseif($collection_mode=='shipped'){
+		if(isset($refundedQtyArray[$item->getProductId()]) ){
+			$productQty = (int) $totalQtyArray[$item->getProductId()] -  $refundedQtyArray[$item->getProductId()];
+		}else{
+			$productQty = (int)$item->getQty();
+				//$productQty = abs((int)$item->getQty() - $refundedQtyArray[$item->getProductId()]);
+		}
+	
+		
+	}elseif($collection_mode=='closed'){
+		$productQty = (int)$item->getQty();
+	}elseif($collection_mode=='history'){
+		$productQty = (int)$item->getQtyOrdered();
+	}elseif($collection_mode=='canceled'){
+		
+		if((int)$item->getQtyRefunded() && (int)$item->getQtyShipped()){
+			$productQty = (int)$item->getQtyOrdered() - abs( $item->getQtyRefunded()+  $item->getQtyShipped() );
+		}else{
+			$productQty = (int)$item->getQtyOrdered() - abs( $item->getQtyInvoiced()+  $item->getQtyShipped() );
+		}
+		
+		$productQty =  (int)$_item->getQtyCanceled();
+		
+	}
+	
+	//--- If product Qty is 0 return (don't display the item.)
+	if($productQty<=0){
+		return;
+	}
+	
+	?>
+	
+	 <tr class="">
+		 <td colspan="4">
+			 <table class="order-list-items">
+				<tbody>
+					<tr id="order-item-row-<?php echo $item->getId() ?>">
+						<td class="item-image-col"><a href="<?php echo $productUrl;?>"><img src="<?php echo $productImageUrl ; ?>" alt="<?php echo $productName; ?>" /></a></td>
+						<td class="item-detail-col"><h5 class="product-name"><a href="<?php echo $productUrl;?>"><span><?php echo $productName; ?></span></a></h5>
+						   <div class="col-qty">
+								<!-- Subtract the quantity Current Product Quantity from Invoiced or shipped Quantity -->
+								<p>Qty: <?php echo $productQty; ?></p>
+						   </div>
+						   <div class="col-price"><p><?php echo Mage::helper('core')->currency($item->getPrice(),true,true);?></p></div>
+							<div class="action-button">
+								<?php if (Mage::helper('itactica_quickview')->isEnabled()): ?>
+								<?php $quickViewProductId = isset($parentProducts[0])?$parentProduct->getId():$product->getId();?>
+									<a href="<?php echo $this->getUrl('itactica_quickview/product/view/id/' . $quickViewProductId) ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>" class="quickview-button btn tiny secondary"><?php echo $this->__('Buy it Again') ?></a>
+									 <?php else:?>
+									<a href="<?php echo $config->getProductUrl(); ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>" class="quickview-button btn tiny secondary"><?php echo $this->__('Buy it Again') ?></a>
+								<?php endif; ?>
+						   </div>
+						</td>
+						<td class="item-action-col"></td>
+					</tr>
+				 </tbody>
+			 </table>
+		 </td>
+	</tr>

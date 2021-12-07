@@ -1,0 +1,163 @@
+<?php
+/**
+ * Intenso Premium Theme
+ * 
+ * @category    Itactica
+ * @package     Itactica_FeaturedProducts
+ * @copyright   Copyright (c) 2014-2017 Intenso (https://www.getintenso.com)
+ * @license     http://getintenso.com/license
+ */
+/* @var $this Mage_Sendfriend_Block_Send */
+/**
+ * Send to friend form
+ *
+ * @see Mage_Sendfriend_Block_Send
+ */
+?>
+<script type="text/javascript">
+//<![CDATA[
+    i=0;
+    var recipCount  = 1;
+    var maxRecip    = <?php echo $this->getMaxRecipients() ?>;
+    function remove_recipient(i){
+        $('recipients_name'+i).up(2).remove();
+        recipCount--;
+        if(recipCount<maxRecip && maxRecip != 0) {
+            $('add_recipient_button').show();
+            $('max_recipient_message').hide();
+        }
+        return false;
+    }
+
+     function add_recipient(){
+        ul = $('recipients_options');
+        var li_mail = Element.extend(document.createElement("LI"));
+        li_mail.addClassName('fields additional-row');
+        li_mail.innerHTML = '<span><a href="delete_email" title="<?php echo $this->jsQuoteEscape($this->__('Remove Email')) ?>" onclick="remove_recipient('+i+'); return false" class="btn-remove small"><?php echo $this->jsQuoteEscape($this->__('Remove Email')) ?><\/a><\/span>'
+        li_mail.innerHTML += '<div class="field"><div class="input-field input-wrapper"><label for="recipients_name'+i+'" class="required label-floating"><?php echo $this->jsQuoteEscape($this->__('Name')) ?><\/label><input name="recipients[name][]" placeholder="<?php echo $this->jsQuoteEscape($this->__('Name')) ?>" type="text" class="input-text input-floating required-entry validate-value" id="recipients_name'+i+'"/><\/div>';
+        li_mail.innerHTML += '<div class="field"><div class="input-field input-wrapper"><label for="recipients_email'+i+'" class="required label-floating"><?php echo $this->jsQuoteEscape($this->__('Email Address')) ?><\/label><input name="recipients[email][]" value="" placeholder="<?php echo $this->jsQuoteEscape($this->__('Email Address')) ?>" title="<?php echo $this->jsQuoteEscape($this->__('Email Address')) ?>" id="recipients_email'+i+'" type="email" class="input-text input-floating required-entry validate-email validate-value" data-validation="email"/><\/div><\/div>';
+        i++;
+        recipCount++;
+        if(recipCount>=maxRecip && maxRecip != 0) {
+            $('add_recipient_button').hide();
+            $('max_recipient_message').show();
+        }
+
+        ul.appendChild(li_mail);
+		
+		
+		/* 3SD CODE To Reload Input box */
+		
+		;(function ($, window, document, undefined) {
+			 $(function () {
+					$('.input-field').floatLabels();
+				});
+		}(jQuery, this, this.document));
+    }
+//]]>
+</script>
+<div class="row">
+<div class="send-friend col-sm-8 col-sm-offset-2">
+    <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+    <div class="page-title">
+        <h1><?php echo $this->__('Email to a Friend') ?></h1>
+    </div>
+	<div class="account-form-box">
+		<form action="<?php echo $this->getSendUrl() ?>" method="post" id="product_sendtofriend_form">
+			<div class="fieldset">
+				<?php echo $this->getBlockHtml('formkey')?>
+				<h3 class="light"><?php echo $this->__('Sender:') ?></h3>
+				<ul class="form-list" id="sender_options">
+					<li class="fields">
+						<div class="field narrow">
+							<div class="input-field input-wrapper">
+								<label for="sender_name" class="required label-floating">Name</label>
+								<input name="sender[name]" placeholder="Name" value="<?php echo $this->escapeHtml($this->getUserName()) ?>" title="Name" id="sender_name" type="text" class="input-text input-floating required-entry validate-value" >
+								
+							</div>
+						</div>
+						<div class="field narrow">
+						   <div class="input-field input-wrapper">
+								<label for="sender_email" class="required label-floating">Email</label>
+							   <input name="sender[email]" placeholder="Email" value="<?php echo $this->escapeHtml($this->getEmail()) ?>" title="Email Address" id="sender_email" type="email" class="input-text input-floating required-entry validate-email validate-value">
+							   
+						   </div>
+						</div>
+					</li>
+					<li class="wide">
+						<div class="input-field input-wrapper  textarea">
+							<label for="sender_message" class="required label-floating textarea">Message</label>
+							<textarea name="sender[message]" placeholder="Message" class="required-entry input-floating validate-value" id="sender_message" cols="3" rows="3" ></textarea>
+							
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="fieldset">
+				    <h3 class="light">Recipient:</h3>
+					<ul class="form-list" id="recipients_options">
+						<li class="fields">
+							<div class="field narrow">
+								<div class="input-field input-wrapper">
+								<label for="recipients_name" class="required label-floating">Name</label>
+									<input name="recipients[name][]" placeholder="Name" type="text" class="input-text input-floating validate-value required-entry" id="recipients_name">
+								
+								</div>
+							</div>
+							<div class="field narrow">
+								<div class="input-field input-wrapper">
+									<label for="recipients_email" class="required label-floating">Email Address</label>
+									<input name="recipients[email][]" placeholder="Email Address" value="" title="Email Address" id="recipients_email" type="email" class="input-text input-floating required-entry validate-value validate-email">
+								
+								</div>
+							</div>
+						</li>
+					</ul>
+			</div>
+			<div class="buttons-set">
+				<div id="max_recipient_message" style="display:none;">
+					<?php if ($this->getMaxRecipients()): ?>
+					  <p class="limit"><?php echo $this->__('Maximum %d email addresses allowed.', $this->getMaxRecipients()) ?></p>
+					<?php endif; ?>
+				</div>
+				<?php if (1 < $this->getMaxRecipients()): ?>
+					<span id="add_recipient_button">
+						<button type="button" onclick="add_recipient();" class="btn  secondary"><span><span><?php echo $this->__('Add Recipient') ?></span></span></button>
+					</span>
+				<?php endif; ?>
+				<button type="submit" class="btn <?php if (!$this->canSend()):?> disabled<?php endif ?>"<?php if (!$this->canSend()):?> disabled="disabled"<?php endif ?>><span><span><?php echo $this->__('Send Email') ?></span></span></button>
+				<p class="back-link"><a href="#" onclick="history.back(); return false;"><small>&laquo; </small><?php echo $this->__('Back') ?></a></p>
+			</div>
+		</form>
+	</div>
+    <script type="text/javascript">
+    //<![CDATA[
+        var productSendtofriendForm = new VarienForm('product_sendtofriend_form');
+        productSendtofriendForm.submit = function() {
+            if(this.validator.validate()) {
+                this.form.submit();
+            }
+        }.bind(productSendtofriendForm);
+    //]]>
+    </script>
+</div>
+</div>
+</div>
+<style>
+.sendfriend-product-send .page-title{
+	margin: 20px 0 0 0;
+}
+.sendfriend-product-send .page-title h1{
+		font-size: 1.6rem; 
+     font-weight: 400; 
+     line-height: 1; 
+}
+.sendfriend-product-send  h3{
+		font-size: 1.2rem; 
+     font-weight: 400 !important; 
+     line-height: 1; 
+}
+span#add_recipient_button > .btn {
+    margin: 0px 0 5px 8px;
+}
+</style>

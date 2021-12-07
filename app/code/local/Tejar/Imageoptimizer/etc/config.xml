@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<config> 
+	<modules>
+        <Tejar_Imageoptimizer>
+            <version>0.0.1</version>
+        </Tejar_Imageoptimizer>
+    </modules>
+	 <default>
+        <apptrian_imageoptimizer>
+            <utility>
+				<imagick>0</imagick>
+				<imagick_options>convert %s -sampling-factor 4:2:0 -strip -quality 85 -interlace JPEG -colorspace sRGB %s</imagick_options>
+				<imagick_options_png>convert %s -sampling-factor 4:2:0 -strip -quality 85 -interlace JPEG -colorspace sRGB %s</imagick_options_png>
+				<imagick_options_gif>convert %s -sampling-factor 4:2:0 -strip -quality 85 -interlace JPEG -colorspace sRGB %s</imagick_options_gif>
+            </utility>
+        </apptrian_imageoptimizer>
+    </default>
+	<global>
+        <helpers>
+            <apptrian_imageoptimizer>
+				<rewrite>
+					<data>Tejar_Imageoptimizer_Helper_Data</data>
+				</rewrite>
+            </apptrian_imageoptimizer>
+        </helpers>
+    </global>
+</config>

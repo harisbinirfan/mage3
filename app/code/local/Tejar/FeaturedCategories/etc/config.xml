@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Intenso Premium Theme
+ *
+ * @category    Itactica
+ * @package     Itactica_FeaturedCategories
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+-->
+<config>
+    <modules>
+        <Tejar_FeaturedCategories>
+            <version>1.5.0</version>
+        </Tejar_FeaturedCategories>
+    </modules>
+    <global>
+        <resources>
+            <itactica_featuredcategories_setup>
+                <setup>
+                    <module>Tejar_FeaturedCategories</module>
+                    <class>Tejar_FeaturedCategories_Model_Resource_Setup</class>
+                </setup>
+            </itactica_featuredcategories_setup>
+        </resources>
+    </global>
+</config>

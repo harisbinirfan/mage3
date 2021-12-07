@@ -1,0 +1,22 @@
+<?php /* @var $this Mage_Core_Block_Template */ ?>
+<script type="text/javascript">
+    //<![CDATA[
+    $$('input.validate-email').each(function (emailInput) {
+        $(emailInput).observe('change', function (event) {
+            var el = $(Event.element(event));
+            if (el.value) {
+                var val = Validation.get('validate-email');
+                if (val.test($F(el), el)) {
+                    new Ajax.Request(
+                        '<?php echo $this->getUrl('alerts/email/save', array('_secure' => $this->getRequest()->isSecure())) ?>',
+                        {
+                            parameters: {email: el.value},
+                            method: 'post'
+                        }
+                    );
+                }
+            }
+        });
+    });
+    //]]>
+</script>

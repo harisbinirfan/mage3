@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<layout>
+	<filterproducts_sale_home_list>
+		<reference name="content">
+			<!-- insert extra blocks on which to hang some features for products in the list  -->
+			<block type="core/text_list" name="product_list.name.after" as="name.after">
+				<block type="core/template" name="product_list.swatches" template="configurableswatches/catalog/product/list/swatches.phtml" />
+			</block>
+			<block type="core/text_list" name="product_list.after" as="after">
+				<block type="configurableswatches/catalog_media_js_list" name="configurableswatches.media.js.list" />
+			</block>
+		</reference>
+	</filterproducts_sale_home_list>
+</layout>

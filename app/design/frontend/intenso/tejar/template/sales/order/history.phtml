@@ -1,0 +1,99 @@
+<?php
+   /**
+    * Intenso Premium Theme
+    *
+    * @category    design
+    * @package     intenso_default
+    * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+    * @license     http://getintenso.com/license
+    */
+   ?>
+<?php   
+	$_orders = $this->getOrders();
+	$store = Mage::app()->getStore();
+	$shippingMethods = @unserialize(Mage::getStoreConfig('intenso/sales/sales_shipping_methods_links', Mage::app()->getStore()));
+?>
+<div class="page-title">
+   <h1><?php echo $this->__('My Orders') ?></h1>
+</div>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<?php if($_orders->getSize()): ?>
+<div class="pager-top">
+   <h3><?php echo $this->__('Orders History') ?></h3>
+   <?php echo $this->getPagerHtml(); ?>
+</div>
+
+<?php $_odd = ''; ?>
+<?php foreach ($_orders as $_order): ?>
+<div class="orders-list-wrapper">
+	<table class="table_type_1 orders_table orders-list" id="my-orders-table-<?php echo $_order->getId();?>">
+	<!--================================================ Order COLLECTION ============================================-->	
+		 <thead>
+         <tr>
+            <th class="order-placed bg-color-light"><?php echo $this->__('Order Placed') ?><br/><?php echo $this->formatDate($_order->getCreatedAtStoreDate(), 'long') ?></th>
+            <th class="order-total bg-color-light"><?php echo $this->__('Total') ?><br/><?php echo $_order->formatPrice($_order->getGrandTotal()) ?></th>
+            <th class="Ship-to bg-color-light"><?php echo $this->__('Ship To') ?><br/><?php echo $_order->getShippingAddress() ? $this->escapeHtml($_order->getShippingAddress()->getName()) : '&nbsp;' ?></th>
+            <th class="Order-id bg-color-light"><?php echo $this->__('Order # ') ?><?php echo $_order->getRealOrderId() ?><br/><a href="<?php echo $this->getViewUrl($_order) ?>" title="<?php echo $this->__('View Order') ?>"><?php echo $this->__('Order Detail ') ?></a> <?php if ($this->helper('sales/reorder')->canReorder($_order)) : ?>| <a href="<?php echo $this->getReorderUrl($_order) ?>" class="" title="<?php echo $this->__('Reorder') ?>"><?php echo $this->__('Reorder') ?></a> <?php endif ?></th>
+         </tr>
+		 	<?php //echo "---> ",$gift_message_id;die;
+				$entireOrderGiftItemAvailable = "";
+				$message = Mage::getModel('giftmessage/message');
+				$gift_message_id = $_order->getGiftMessageId();
+				$items = $_order->getAllVisibleItems();
+				$entireOrderGift = "";
+				foreach($items as $item){
+				 if($this->helper('giftmessage/message')->getIsMessagesAvailable('order_item', $item) && $item->getGiftMessageId()){
+					$entireOrderGift = $item->getGiftMessageId();
+					$entireOrderGiftItemAvailable = $this->helper('giftmessage/message')->getIsMessagesAvailable('order_item', $item) && $item->getGiftMessageId();
+				 }
+				}
+				//echo "<pre>"; print_r($gift_message_id);die;
+				if(!is_null($gift_message_id) or !is_null($entireOrderGift) ) {
+				$message->load((int)$gift_message_id);
+				$gift_sender = $message->getData('sender');
+				$gift_recipient = $message->getData('recipient');
+				//echo $gift_message = $message->getData('message');
+			?>
+			<?php if($this->helper('giftmessage/message')->getIsMessagesAvailable('order', $_order) && $_order->getGiftMessageId() || $entireOrderGiftItemAvailable): ?>
+			
+				<tr>
+					<th colspan="4"><h6 class="gift-heading"><i class="icons-gift"></i> <?php echo $this->__('This is a gift order'); ?></h6></th>
+				</tr>
+				<?php endif ;?>
+			<?php } ?>
+			
+			
+      </thead>
+		<tbody>
+			<tr><td colspan="4" ><div class="my-order-status">
+			<h5><?php echo $_order->getStatusLabel(); ?></h5>
+			<strong>Product (<?php echo (int) $_order->getTotalQtyOrdered(); ?><?php // echo $_order->getData('total_qty_ordered'); ?>)</strong>
+			</div></td></tr>
+			 <tr class="">
+				<td colspan="4">
+					 <table class="order-list-items" id="my-orders-table-inner-<?php echo $_order->getId();?>">
+						<tbody>
+							<?php $collection_mode = 'history';
+							foreach($_order->getAllVisibleItems() as $item){ ?>
+									<?php include('item_loop.phtml'); ?>	
+							<?php }?>
+						</tbody>
+					</table>
+					<script type="text/javascript">decorateTable('my-orders-table-inner-<?php echo $_order->getId();?>');</script>
+				</td>
+			</tr>
+		</tbody>
+    <!--============================================== END Order COLLECTION ============================================-->	
+	</table>
+	<script type="text/javascript">decorateTable('my-orders-table-<?php echo $_order->getId();?>');</script>
+</div>
+<?php endforeach; ?>
+
+<div class="pager-bottom">
+   <?php echo $this->getPagerHtml(); ?>
+</div>
+<?php else: ?>
+<div class="order-history">
+   <p><?php echo $this->__('You have placed no orders.'); ?></p>
+</div>
+<?php endif ?>

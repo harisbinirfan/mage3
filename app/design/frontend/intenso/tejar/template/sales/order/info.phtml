@@ -1,0 +1,174 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php /** @var $this Mage_Sales_Block_Order_Info */ ?>
+<?php $_order = $this->getOrder() ?>
+<?php echo $this->getMessagesBlock()->toHtml() ?>
+<div class="page-title">
+    <h1><?php echo $this->__('Order #%s - %s', $_order->getRealOrderId(), $_order->getStatusLabel()) ?></h1>
+    <?php //  echo $this->getChildHtml('buttons') ?>
+</div>
+<?php echo $this->getStatusHistoryRssUrl($_order) ?>
+	<div class="title-buttons">	
+		<h3><?php echo $this->__('Ordered on ');?><?php echo $this->formatDate($_order->getCreatedAtStoreDate(), 'long') ?></h3>
+		<?php echo $this->getChildHtml('invoice_items');?>
+		<?php  echo $this->getChildHtml('buttons') ?>
+	</div>
+		
+		<table class="order-detail-table mbottom-5 mtop-0 border-blue-grey">
+			<tbody>
+			<?php //echo "---> ",$gift_message_id;die;
+				$entireOrderGiftItemAvailable = "";
+				$message = Mage::getModel('giftmessage/message');
+				$gift_message_id = $_order->getGiftMessageId();
+				$items = $_order->getAllVisibleItems();
+				$entireOrderGift = "";
+				foreach($items as $item){
+				 if($this->helper('giftmessage/message')->getIsMessagesAvailable('order_item', $item) && $item->getGiftMessageId()){
+					$entireOrderGift = $item->getGiftMessageId();
+					$entireOrderGiftItemAvailable = $this->helper('giftmessage/message')->getIsMessagesAvailable('order_item', $item) && $item->getGiftMessageId();
+				 }
+				}
+				//echo "<pre>"; print_r($gift_message_id);die;
+				if(!is_null($gift_message_id) or !is_null($entireOrderGift) ) {
+				$message->load((int)$gift_message_id);
+				$gift_sender = $message->getData('sender');
+				$gift_recipient = $message->getData('recipient');
+				//echo $gift_message = $message->getData('message');
+				
+			?>
+			<?php if($this->helper('giftmessage/message')->getIsMessagesAvailable('order', $_order) && $_order->getGiftMessageId() || $entireOrderGiftItemAvailable): ?>
+				<tr>
+					<td colspan="3"><h6 class="gift-heading"><i class="icons-gift"></i> <?php echo $this->__('This is a gift order'); ?></h6></td>
+				</tr>
+				<?php endif ;?>
+			<?php } ?>
+			<tr>
+			<td>
+			<h5>Shipping Address</h5>
+			<?php echo $_order->getShippingAddress()->format('html') ?>
+			 
+			</td>	
+			<td>
+			<h5>Payment Method</h5>
+				<p><?php echo $this->getPaymentInfoHtml() ?> 
+				</p>
+			</td>	
+			<td>
+			<h5>Order Summary</h5>
+				<table class="zebra">
+					<tbody>
+						<tr>
+							<td><?php echo $this->__('Sub Total') ?></td>
+							<td class="align_right">
+								<span class="price">
+								<?php echo $_order->getStatusLabel()=="Canceled"?$_order->formatPrice(0):$_order->formatPrice($_order->getSubtotal()); ?>
+								</span>
+							</td>
+						</tr>
+						
+						<?php if($_order->getShippingAmount() && $_order->getShippingAmount() > 0) :?>
+						<tr>
+							<td><?php echo $this->__('Shipping Amount') ?></td>
+							<td class="align_right"><span class="price"><?php  echo  $_order->formatPrice($_order->getShippingAmount()); ?></span></td>
+						</tr>
+						<?php endif ;?>
+						<?php if($_order->getDiscountAmount() && $_order->getDiscountAmount() > 0) :?>
+						<tr>
+							<td><?php echo $this->__('Discount Amount') ?></td>
+							<td class="align_right"><span class="price"><?php echo $_order->formatPrice($_order->getDiscountAmount()); ?></span></td>
+						</tr>
+						<?php endif ;?>
+						<?php if($_order->getTaxAmount() && $_order->getTaxAmount() > 0) :?>
+						<tr>
+							<td><?php echo $this->__('Tax Amount') ?></td>
+							<td class="align_right"><span class="price"><?php echo $_order->formatPrice($_order->getTaxAmount()); ?></span></td>
+						</tr>
+						<?php endif ;?>
+						<!--=================================== ZEE CODE ===================================-->
+							<!-- To display Store Crdit Amount Against this ORder...... -->
+								<?php if($_order->getStoreCreditAmount()>0):?>	
+										<tr>
+											<td><?php echo $this->__('Store Credit') ?></td>
+											<td class="align_right"><span class="price">-<?php echo  $_order->formatPrice($_order->getStoreCreditAmount());?></span>
+											</td>
+										</tr>
+									<?php endif; ?> 
+									<!-- To display Order Discount Amount (If Discount Coupon Used)...... -->
+							<?php if($_order->getDiscountAmount()):?>	
+									<tr>
+										<td><?php echo $this->__('Discount Amount') ?></td>
+										<td class="align_right"><span class="price"><?php echo  $_order->formatPrice($_order->getDiscountAmount());?></span>
+										</td>
+									</tr>
+								<?php endif; ?> 		
+						<!--=================================== ZEE CODE ===================================-->
+						<tr>
+							<td><?php echo $this->__('Grand Total') ?></td>
+							<td class="align_right"><span class="price"><?php echo $_order->getStatusLabel()=="Canceled"?$_order->formatPrice(0):$_order->formatPrice($_order->getGrandTotal()); ?></span></td>
+						</tr>
+						<!--=================================== ZEE CODE ===================================-->
+							<!-- To display Total Refunded (if Available)...... -->
+							<?php if($this->getOrder()->getTotalRefunded()):?>	
+									<tr>
+										<td><?php echo $this->__('Total Refunded') ?></td>
+										<td class="align_right"><span class="price"><?php echo  $_order->formatPrice($this->getOrder()->getTotalRefunded());?></span>
+										</td>
+									</tr>
+							<?php endif; ?> 
+						<!--=================================== ZEE CODE ===================================-->
+					<tbody>
+				</table>
+			</td>	
+		</tr>
+		<?php if(!is_null($gift_message_id)): ?>
+		<?php if($this->helper('giftmessage/message')->getIsMessagesAvailable('order', $_order) && $_order->getGiftMessageId()): ?>
+		<tr>
+			<td colspan="3">
+				<?php echo $this->getChildHtml('order_items_view_custom');?>
+			</td>
+		</tr>
+		<?php endif; ?> 
+		<?php endif; ?> 
+	</tbody>
+</table>
+<dl class="order-info">
+    <dt><?php echo $this->__('About This Order:') ?></dt>
+    <dd>
+        <?php $_links = $this->getLinks(); ?>
+        <ul id="order-info-tabs">
+        <?php foreach ($_links as $_link): ?>
+            <?php if($_link->getUrl()): ?>
+                <li><a href="<?php echo $_link->getUrl() ?>"><?php echo $_link->getLabel() ?></a></li>
+            <?php else: ?>
+                <li class="current"><strong><?php echo $_link->getLabel() ?></strong></li>
+            <?php endif; ?>
+        <?php endforeach; ?>
+        </ul>
+        <script type="text/javascript">decorateGeneric($('order-info-tabs').select('LI'),['first','last']);</script>
+    </dd>
+</dl>
+<div class="clearer"></div>

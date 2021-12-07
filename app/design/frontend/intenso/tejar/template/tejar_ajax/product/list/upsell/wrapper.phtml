@@ -1,0 +1,60 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php $itemCount = count($this->getItemCollection()->getItems()); ?>
+<?php if($itemCount): ?>
+<div class="owl-bg-related section-content">
+	<div class="container">
+		<div class="owl-middle-outer-narrow">
+			<h4 class="owl-title"><span class="content"><?php echo $this->__('You may also be interested in') ?></span></h4>
+			<div id="upsell__product_ajax" class="owl-top-narrow">
+				<div class="products-slider">
+					<?php for($x = 0; $x <= 8; $x++): ?>
+						<div class="item isotope-item"> 
+							<div class="item-content clearfix ">
+								<div class="item-images">
+									<div class="ph-item">
+										<div class="ph-col-12">
+											<div class="ph-picture-wrapper">
+												<div class="ph-picture"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="item-info">
+									<div class="ph-row">
+										<div class="ph-col-6 "></div>
+										<div class="ph-col-4 "></div>
+										<div class="ph-col-2 "></div>
+										<div class="ph-col-6 "></div>
+										<div class="ph-col-2 "></div>
+										<div class="ph-col-2 "></div>
+										<div class="ph-col-4"></div>
+										<div class="ph-col-8 empty"></div>
+										<div class="ph-col-8"></div>
+										<div class="ph-col-4 empty"></div>
+										<div class="ph-col-4"></div>
+										<div class="ph-col-8 empty"></div>
+									</div>
+								</div>
+								<div class="actions clearfix">
+									<div class="ph-item"><div class="ph-col-12"><div class="ph-row"><div class="ph-col-6 big"></div><div class="ph-col-6 big empty"></div><div class="ph-col-12 big ph-button"></div><div class="ph-col-12 big ph-button"></div></div></div></div>						
+								</div>
+							</div>
+						</div>
+					<?php endfor; ?>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<?php endif ?>
+
+

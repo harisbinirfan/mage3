@@ -1,0 +1,44 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+
+  
+<div class="row row-margin-5">
+    <div class="col-xs-6">
+		<div class="account-form-box min-height-175">
+			<h5 class="mbottom-0"><?php echo $this->__('Contact Information') ?></h5>
+			<a class="fsize-14 mbottom-10 block" href="<?php echo $this->getUrl('customer/account/edit') ?>" title="<?php echo $this->__('Edit') ?>"><span><?php echo $this->__('Edit') ?></span></a>
+            <p>
+                <strong><?php echo $this->escapeHtml($this->getCustomer()->getName()) ?></strong><br />
+                <?php echo $this->escapeHtml($this->getCustomer()->getEmail()) ?><br />
+                <a class="fsize-14" href="<?php echo $this->getChangePasswordUrl() ?>"><?php echo $this->__('Change Password') ?></a>
+            </p>
+        </div>
+    </div>
+    <?php if( $this->isNewsletterEnabled() ): ?>
+		<div class="col-xs-6">
+			<div class="account-form-box min-height-175">
+				<h5 class="mbottom-0"><?php echo $this->__('Newsletters') ?></h5>
+				<a class="fsize-14 mbottom-10 block" href="<?php echo $this->getUrl('newsletter/manage') ?>" title="<?php echo $this->__('Edit') ?>"><span><?php echo $this->__('Edit') ?></span></a>
+				<p>
+					<?php if( $this->getIsSubscribed() ): ?>
+						<?php echo $this->__("You are currently subscribed to 'General Subscription'.") ?>
+					<?php else: ?>
+						<?php echo $this->__('You are currently not subscribed to any newsletter.') ?>
+					<?php endif; ?>
+				</p>
+				
+			</div>
+		</div>
+        <?php /* Extensions placeholder */ ?>
+        <?php echo $this->getChildHtml('customer.account.dashboard.info.extra')?>
+		
+    <?php endif; ?>
+</div>

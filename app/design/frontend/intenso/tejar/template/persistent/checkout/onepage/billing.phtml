@@ -1,0 +1,626 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014-2015 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+/** @var Mage_Checkout_Block_Onepage_Billing $this */
+?>
+<?php $themeHelper = Mage::helper('itactica_intenso'); ?>
+<?php $store = Mage::app()->getStore();?>
+<form id="co-billing-form" action="">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="">
+                <ul class="form-list">
+                <?php if ($this->customerHasAddresses()): ?>
+                    <li class="row">
+                        <div class="col-sm-12">
+								<p for="billing-address-select"><?php echo $this->__('Select a billing address from your address book or enter a new address.') ?></p>
+								<div class="input-field input-wrapper select-wrapper chosen-wrapper">
+									<label class="required chosen-label"><?php echo $this->__('Select a billing address.') ?></label>
+									<div class="chozen-sp-1">
+										<?php echo $this->getAddressesHtmlSelect('billing') ?>
+									</div>
+								</div>
+						</div>
+                    </li>
+                <?php endif; ?>
+                <li id="billing-new-address-form"<?php if ($this->customerHasAddresses()): ?> style="display:none;"<?php endif; ?>>
+                    <input type="hidden" name="billing[address_id]" value="<?php echo $this->getAddress()->getId() ?>" id="billing:address_id" />
+                    <ul class="row">
+					
+						<!------- FIRST NAME AND LAST NAME -------->
+                        <li class="col-sm-12 field"><div class="row"><?php echo $this->getLayout()->createBlock('customer/widget_name')->setObject($this->getAddress()->getFirstname() ? $this->getAddress() : $this->getQuote()->getCustomer())->setForceUseCustomerRequiredAttributes(!$this->isCustomerLoggedIn())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?></div></li>
+						
+                        <!------- COMPANY NAME -------->
+						<?php if (Mage::helper('itactica_intenso')->useCompanyField() && $themeHelper->companyField()): ?>
+						<li class="col-sm-6">
+							<div class="input-field input-wrapper">
+								<label for="billing:company" class="label-floating"><?php echo $this->__('Company') ?></label>
+								<div class="input-box">
+									<input type="text" id="billing:company" name="billing[company]" placeholder="<?php echo $this->__('Company') ?>" value="<?php echo $this->escapeHtml($this->getAddress()->getCompany()) ?>"  title="<?php echo $this->__('Company') ?>" class="input-text input-floating <?php echo $this->helper('customer/address')->getAttributeValidationClass('company') ?>" />
+								</div>
+							</div>
+						</li>
+						<?php endif; ?>
+						
+						<!-------  EMAIL -------->
+						<?php if(!$this->isCustomerLoggedIn()): ?>
+						<li class="col-sm-6">
+							<div class="input-field input-wrapper">
+								<label for="billing:email" class="required label-floating"><em>*</em><?php echo $this->__('Email Address') ?></label>
+								<div class="input-box">
+									<input type="email" autocapitalize="off" autocorrect="off" spellcheck="false" name="billing[email]" placeholder="<?php echo $this->__('Email Address') ?>" id="billing:email" value="<?php echo $this->escapeHtml($this->getAddress()->getEmail()) ?>" title="<?php echo $this->quoteEscape($this->__('Email Address')) ?>" class="input-text input-floating validate-email required-entry" />
+								</div>
+							</div>
+						</li>
+						<?php endif; ?>
+						
+                        <!------- ADDRESS -------->
+						<?php $_streetValidationClass = $this->helper('customer/address')->getAttributeValidationClass('street'); ?>
+                        <li class="col-sm-12">
+							<div class="input-field input-wrapper">
+								<label for="billing:street1" class="required label-floating"><em>*</em><?php echo $this->__('Address') ?></label>
+								<div class="input-box">
+									<input type="text" title="<?php echo $this->quoteEscape($this->__('Street Address')) ?>" placeholder="<?php echo $this->quoteEscape($this->__('Street Address')) ?>" name="billing[street][]" id="billing:street1" value="<?php echo $this->escapeHtml($this->getAddress()->getStreet(1)) ?>" class="input-text input-floating <?php echo $_streetValidationClass ?>" />
+								</div>
+							</div>
+                        </li>
+						
+						<!------- ADDRESS 2 -------->
+						<?php $_streetValidationClass = trim(str_replace('required-entry', '', $_streetValidationClass)); ?>
+						<?php for ($_i = 2, $_n = $this->helper('customer/address')->getStreetLines(); $_i <= $_n; $_i++): ?>
+                        <li class="col-sm-12">
+							<div class="input-field input-wrapper">
+								<label for="billing:street1" class="required label-floating"><em>*</em><?php echo $this->quoteEscape($this->__('Street Address %s', $_i)) ?></label>
+								<div class="input-box">
+									<input type="text" title="<?php echo $this->quoteEscape($this->__('Street Address %s', $_i)) ?>" placeholder="<?php echo $this->quoteEscape($this->__('Street Address %s', $_i)) ?>" name="billing[street][]" id="billing:street<?php echo $_i ?>" value="<?php echo $this->escapeHtml($this->getAddress()->getStreet($_i)) ?>" class="input-text input-floating <?php echo $_streetValidationClass ?>" />
+								</div>
+							</div>
+                        </li>
+						<?php endfor; ?>
+				
+						<!------- VAT NUMBER -------->
+                        <?php if ($this->helper('customer/address')->isVatAttributeVisible()) : ?>
+                        <li class="col-sm-6">
+							<div class="input-field input-wrapper">
+								<label for="billing:vat_id" class="label-floating"><?php echo $this->__('VAT Number') ?></label>
+								<div class="input-box">
+									<input type="number" id="billing:vat_id" placeholder="<?php echo $this->__('VAT Number') ?>" name="billing[vat_id]" value="<?php echo $this->escapeHtml($this->getAddress()->getVatId()) ?>" title="<?php echo $this->quoteEscape($this->__('VAT Number')) ?>" class="input-text input-floating <?php echo $this->helper('customer/address')->getAttributeValidationClass('vat_id') ?>" />
+								</div>
+							</div>
+                        </li>
+                        <?php endif; ?>
+						
+						<!------- CITY -------->
+                        <li class="col-sm-6">
+                            <div class="input-field input-wrapper">
+                                <label for="billing:city" class="required label-floating"><em>*</em><?php echo $this->__('City') ?></label>
+                                <div class="input-box">
+                                    <input type="text" title="<?php echo $this->quoteEscape($this->__('City')) ?>" name="billing[city]" placeholder="<?php echo $this->__('City') ?>" value="<?php echo $this->escapeHtml($this->getAddress()->getCity()) ?>" class="input-text input-floating <?php echo $this->helper('customer/address')->getAttributeValidationClass('city') ?>" id="billing:city" />
+                                </div>
+                            </div>
+						</li>
+						
+						
+						<!------- STATE / PROVINCE -------->
+						<li class="col-sm-6 state-province-field input-field input-wrapper select-wrapper chosen-wrapper">
+                           
+                                <label for="billing:region_id" class="required chosen-label"><em>*</em><?php echo $this->__('State/Province') ?></label>
+                                
+                                    <select id="billing:region_id" name="billing[region_id]" title="<?php echo $this->quoteEscape($this->__('State/Province')) ?>" class="validate-select" style="display:none;">
+                                        <option value=""><?php echo $this->__('Please select region, state or province') ?></option>
+                                    </select>
+                                    <script type="text/javascript">
+                                    //<![CDATA[
+                                        $('billing:region_id').setAttribute('defaultValue',  "<?php echo $this->getAddress()->getRegionId() ?>");
+                                    //]]>
+                                    </script>
+                                    <input type="text" id="billing:region" name="billing[region]" placeholder="<?php echo $this->__('State/Province') ?>" value="<?php echo $this->escapeHtml($this->getAddress()->getRegion()) ?>"  title="<?php echo $this->quoteEscape($this->__('State/Province')) ?>" class="input-text input-floating <?php echo $this->helper('customer/address')->getAttributeValidationClass('region') ?>" style="display:none;" />
+                         
+                            
+                        </li>
+						<style>
+						.state-province-field.input-field label{
+								left: 31px;
+						}
+						</style>
+						
+												
+						<!------- ZIP / POSTAL CODE -------->
+						
+						 <?php if ($themeHelper->zipCodeField()): ?>
+						<?php if ($themeHelper->displayOptionalPostalCode() == 0): ?>
+			<!--============================ ZEE CODE ===============================--->
+						<select style="display:none;" id="optional_zipcode">
+						<?php $optionalZipcodeList = array();?>
+						<?php foreach(Mage::helper('directory')->getCountriesWithOptionalZip() as $optionalZip){?>
+						<?php array_push($optionalZipcodeList, strtolower($optionalZip));?>
+						<option value="<?php echo $optionalZip?>"><?php echo $optionalZip;?></option>
+						<?php }?>
+						</select>
+			<!--============================ ZEE CODE ===============================--->
+						<li <?php if(in_array(Mage::app()->getStore()->getCode(), $optionalZipcodeList) || in_array(strtolower(Mage::app()->getWebsite()->getConfig('general/country/default')), $optionalZipcodeList)){?> style="display:none;" <?php }?> class="col-sm-6 zip-postal-code">
+					<?php else: ?>
+						<li class="col-sm-6 zip-postal-code">
+					<?php endif;?>
+							<div class="input-field input-wrapper">
+								<label for="billing:postcode" class="required label-floating"><?php echo $this->__('Zip/Postal Code') ?></label>
+								<input type="text" title="<?php echo $this->quoteEscape($this->__('Zip/Postal Code')) ?>" name="billing[postcode]" placeholder="<?php echo $this->__('Zip/Postal Code') ?>" id="billing:postcode" value="<?php echo $this->escapeHtml($this->getAddress()->getPostcode()) ?>" class="input-text input-floating validate-zip-international <?php echo $this->helper('customer/address')->getAttributeValidationClass('postcode') ?>" <?php if(trim($this->helper('customer/address')->getAttributeValidationClass('postcode')) == "required-entry"):?><?php endif;?>/>
+							</div>
+						</li>
+						<?php endif; ?>
+					
+						
+						<!------- COUNTRY -------->
+						<li class="col-sm-6 country-field">
+                            <div class="input-field input-wrapper select-wrapper chosen-wrapper">
+                                <label for="billing:country_id" class="required chosen-label"><em>*</em><?php echo $this->__('Country') ?></label>
+                                <div class="input-box">
+                                    <?php // echo $this->getCountryHtmlSelect('billing') ?>
+									<!---------------------------------------------------- ZEE CODE ------------------------------------------------------->
+									<!----- To resolve Populating Country List issue --->
+									<?php 
+									
+										$defaultAddress = $this->getAddress()->getCountryId();
+										$allowedCountries = explode(',', Mage::getStoreConfig('general/country/allow', Mage::app()->getStore()));
+										$defaultCountry =  Mage::getStoreConfig('general/country/default', Mage::app()->getStore());
+										if($defaultAddress){
+											$defaultCountry = $defaultAddress;
+										}
+
+									?>
+									<select name="billing[country_id]" id="billing:country_id" class="validate-select" title="Country">
+										<option></option>
+										<?php foreach($allowedCountries as $countryCode){ ?>
+											<option <?php if($defaultCountry && $defaultCountry==$countryCode){ echo "selected"; }?> value="<?php echo $countryCode; ?>"><?php echo Mage::app()->getLocale()->getCountryTranslation($countryCode); ?></option>
+										<?php }?>
+									</select>
+									<!---------------------------------------------------- ZEE CODE ------------------------------------------------------->
+                                </div>
+                            </div>
+                        </li>
+
+						
+						
+						<!------- TELEPHONE -------->
+                        <li class="col-sm-6">
+                            <div class="input-field input-wrapper">
+                                <label for="billing:telephone" class="required label-floating"><em>*</em><?php echo $this->__('Telephone') ?></label>
+                                <div class="input-box">
+                                    <input type="tel" name="billing[telephone]" placeholder="<?php echo $this->__('Telephone') ?>" value="<?php echo $this->escapeHtml($this->getAddress()->getTelephone()) ?>" title="<?php echo $this->quoteEscape($this->__('Telephone')) ?>" class="input-text input-floating <?php echo $this->helper('customer/address')->getAttributeValidationClass('telephone') ?>" id="billing:telephone" />
+                                </div>
+                            </div>
+                            
+                        </li>
+						
+						
+						
+						<!-------- FAX --------->
+						<?php if ($themeHelper->faxField()): ?>
+						<li class="col-sm-6">
+                            <div class="input-field input-wrapper">
+                                <label for="billing:fax" class="label-floating"><?php echo $this->__('Fax') ?></label>
+                                <div class="input-box">
+                                    <input type="tel" name="billing[fax]" placeholder="<?php echo $this->__('Fax') ?>" value="<?php echo $this->escapeHtml($this->getAddress()->getFax()) ?>" title="<?php echo $this->__('Fax') ?>" class="input-text input-floating <?php echo $this->helper('customer/address')->getAttributeValidationClass('fax') ?>" id="billing:fax" />
+                                </div>
+                            </div>
+						</li>
+						<?php endif; ?>
+						
+						<!------- DATE OF BIRTH -------->
+                        <?php if(!$this->isCustomerLoggedIn()): ?>
+						<?php /* $_dob = $this->getLayout()->createBlock('customer/widget_dob') ?>
+						<?php $_gender = $this->getLayout()->createBlock('customer/widget_gender') ?>
+							<?php if ($_dob->isEnabled() || $_gender->isEnabled()): ?>
+								
+								<?php if ($_dob->isEnabled()): ?>
+								<li class="col-sm-6">
+									
+										<?php echo $_dob->setDate($this->getQuote()->getCustomerDob())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?>
+									
+								</li>
+								<?php endif; ?>
+								<?php if ($_gender->isEnabled()): ?>
+								<li class="col-sm-6">
+									
+										<?php echo $_gender->setGender($this->getQuote()->getCustomerGender())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?>
+								
+								</li>
+								<?php endif ?>
+								
+							<?php endif ?>
+
+                        <?php if ($this->isTaxvatEnabled()):?>
+                            <li class="col-sm-6"><div class="input-field input-wrapper"><?php echo $this->getTaxvatHtml() ?></div></li>
+                        <?php endif; */ ?>
+						<!------- PASSWORD -------->
+                            <li class="col-sm-12" id="register-customer-password">
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="input-field input-wrapper">
+											<label for="billing:customer_password" class="required label-floating"><em>*</em><?php echo $this->__('Password') ?></label>
+											<div class="input-box fade-label">
+												<input type="password" name="billing[customer_password]" placeholder="<?php echo $this->__('Password') ?>" id="billing:customer_password" title="<?php echo $this->quoteEscape($this->__('Password')) ?>" class="input-text input-floating required-entry validate-password" />
+											</div>
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="input-field input-wrapper">
+											<label for="billing:confirm_password" class="required label-floating"><em>*</em><?php echo $this->__('Confirm Password') ?></label>
+											<div class="input-box fade-label">
+												<input type="password" name="billing[confirm_password]" placeholder="<?php echo $this->__('Confirm Password') ?>" title="<?php echo $this->quoteEscape($this->__('Confirm Password')) ?>" id="billing:confirm_password" class="input-text input-floating required-entry validate-cpassword" />
+											</div>
+										</div>
+									</div>
+								</div>
+                            </li>
+							<ul class="col-sm-12">
+                            <?php echo $this->getChildHtml('persistent.remember.me'); ?>
+							</ul>
+                            <?php endif; ?>
+                            <?php if ($this->isCustomerLoggedIn() && $this->customerHasAddresses()):?>
+                                <li class="col-sm-12">
+                                    <input type="checkbox" name="billing[save_in_address_book]" value="1" title="<?php echo $this->quoteEscape($this->__('Save in address book')) ?>" id="billing:save_in_address_book" onchange="if(window.shipping) shipping.setSameAsBilling(false);"<?php if ($this->getAddress()->getSaveInAddressBook()):?> checked="checked"<?php endif;?> class="checkbox" /><label for="billing:save_in_address_book"><?php echo $this->__('Save in address book') ?></label>
+                                </li>
+                            <?php else:?>
+                                <li class="no-display"><input type="hidden" name="billing[save_in_address_book]" value="1" /></li>
+                            <?php endif; ?>
+							<li class="col-sm-6">
+								<ul>
+									<?php  echo $this->getChildHtml('form.additional.info'); ?>
+								</ul>
+							</li>
+                        </ul>
+                        <?php echo $this->getChildHtml('persistent.remember.me.tooltip'); ?>
+                 </li>
+                <?php if ($this->canShip()): ?>
+                    <li class="control">
+                        <input type="radio" name="billing[use_for_shipping]" id="billing:use_for_shipping_yes" value="1"<?php if ($this->isUseBillingAddressForShipping()) {?> checked="checked"<?php }?> title="<?php echo $this->quoteEscape($this->__('Ship to this address')) ?>" onclick="$('shipping:same_as_billing').checked = true;" class="radio" /><label for="billing:use_for_shipping_yes"><?php echo  $this->__('Ship to this address') ?></label></li>
+                    <li class="control">
+                        <input type="radio" name="billing[use_for_shipping]" id="billing:use_for_shipping_no" value="0"<?php if (!$this->isUseBillingAddressForShipping()) {?> checked="checked"<?php }?> title="<?php echo $this->quoteEscape($this->__('Ship to different address')) ?>" onclick="$('shipping:same_as_billing').checked = false;" class="radio" /><label for="billing:use_for_shipping_no"><?php echo $this->__('Ship to different address') ?></label>
+                    </li>
+                <?php endif; ?>
+                </ul>
+                <?php if (!$this->canShip()): ?>
+                    <input type="hidden" name="billing[use_for_shipping]" value="1" />
+                <?php endif; ?>
+                <div class="buttons-set" id="billing-buttons-container">
+                    <p class="required"><?php echo $this->__('* Required Fields') ?></p>
+                    <button type="button" title="<?php echo $this->__('Continue') ?>" class="btn btn-medium" onclick="billing.save(); <?php if(Mage::helper('itactica_intenso')->formFieldsType() == 'mdformfields'): ?>styleRegionInterval();<?php endif; ?>"><span><span><?php echo $this->__('Continue') ?></span><span class="please-wait" id="billing-please-wait" style="display:none;">
+                        <span class="spinner"></span>
+                    </span></span></button>
+                    <?php if (Mage::getSingleton('customer/session')->isLoggedIn()): ?>
+                    <p class="back-link"><a class="arrow-left" href="<?php echo Mage::helper('checkout/cart')->getCartUrl(); ?>"><?php echo $this->__('Back') ?></a></p>
+                    <?php else: ?>
+                    <p class="back-link"><a class="arrow-left" href="#" onclick="checkout.back(); return false;"><?php echo $this->__('Back') ?></a></p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+	<input id="isLoggedIn" type="hidden" value="<?php echo Mage::getSingleton('customer/session')->isLoggedIn()?1:0;?>" />
+	  <?php echo $this->getBlockHtml('formkey') ?>
+</form>
+<script>
+    var billing = new Billing('co-billing-form', '<?php echo $this->getUrl('checkout/onepage/getAddress') ?>address/', '<?php echo $this->getUrl('checkout/onepage/saveBilling') ?>');
+    var billingForm = new VarienForm('co-billing-form');
+
+    $('billing-address-select') && billing.newAddress(!$('billing-address-select').value);
+
+    var billingRegionUpdater = new RegionUpdater('billing:country_id', 'billing:region', 'billing:region_id', <?php echo $this->helper('directory')->getRegionJson() ?>, undefined, 'billing:postcode');
+    if ($('onepage-guest-register-button')) {
+        Event.observe($('onepage-guest-register-button'), 'click', function(event) {
+            var billingRememberMe = $('co-billing-form').select('#remember-me-box');
+            if (billingRememberMe.length > 0) {
+                if ($('login:guest') && $('login:guest').checked) {
+                    billingRememberMe[0].hide();
+                } else if ($('login:register') && ($('login:register').checked || $('login:register').type == 'hidden')) {
+                    billingRememberMe[0].show();
+                }
+            }
+        });
+    }
+	
+
+		//--- Floating Label fix for region label on country change: On Page Load 
+		/*
+		setTimeout(function(){
+		if(jQuery('#billing\\:country_id').val() == "" || jQuery('#billing\\:country_id').val() == null){
+				jQuery('#billing\\:region_id').siblings('label').removeClass('chosen-label');
+				jQuery('#billing\\:region').siblings('label').addClass('label-floating'); 
+			 }else{
+				 console.log(jQuery('#billing\\:region').is(':visible'));
+				 if(jQuery('#billing\\:region_id').is(':visible')){
+					 
+					 jQuery('#billing\\:region').siblings('label').removeClass('label-floating');
+					 jQuery('#billing\\:region_id').siblings('label').addClass('chosen-label');
+				 }
+				 else if (jQuery('#billing\\:region').is(':visible')) {
+					
+					jQuery('#billing\\:region_id').siblings('label').removeClass('chosen-label');
+					jQuery('#billing\\:region').siblings('label').addClass('label-floating');
+				 }
+			}
+		},500);
+		//--- Floating Label fix for region label on country change: On country Change event
+		jQuery('#billing\\:country_id, #onepage-guest-register-button').bind("change keyup blur focus", function(e) {
+			 if(jQuery(this).val() == "" || jQuery(this).val() == null){
+				jQuery('#billing\\:region_id').siblings('label').removeClass('chosen-label');
+				jQuery('#billing\\:region').siblings('label').addClass('label-floating'); 
+			 }
+			else{
+				 if(jQuery('#billing\\:region_id').is(':visible')){
+					 jQuery('#billing\\:region').siblings('label').removeClass('label-floating');
+					 jQuery('#billing\\:region_id').siblings('label').addClass('chosen-label');
+				 }
+				 else if (jQuery('#billing\\:region').is(':visible')) {
+					jQuery('#billing\\:region_id').siblings('label').removeClass('chosen-label');
+					jQuery('#billing\\:region').siblings('label').addClass('label-floating');
+				 }
+			 }
+		});
+
+	
+	<?php if ($themeHelper->displayOptionalPostalCode() == 0): ?>
+	//--- Hide list of countries with 'Optional Zipcode' toggle Post Code ... 
+	jQuery('#optional_zipcode_chosen').hide();
+	var arr = [];	
+		jQuery('#optional_zipcode').children().each(function(){
+			arr.push(jQuery(this).val());
+		});
+	jQuery('#billing\\:country_id').on('change keyup', function(event) {
+		
+		if(jQuery.inArray(jQuery(this).val(),arr)!==-1){
+			jQuery('#billing\\:postcode').parent().parent().hide();
+		}else{
+			jQuery('#billing\\:postcode').parent().parent().show();
+		}
+		//console.log(jQuery.type(arr));
+	});
+	
+   <?php endif; ?>
+*/
+
+    <?php if(Mage::helper('itactica_intenso')->formFieldsType() == 'mdformfields'): ?>
+    // fix inputbox behaviour for payment forms injected via ajax
+    var fixInputbox;
+    function attachInputboxFunctions() {
+        fixInputbox = setInterval(function() { checkForm() }, 500);
+    }
+    function checkForm() {
+        if($('checkout-step-payment').visible()) {
+            stopInterval();
+            jQuery('.input-box').has('select').addClass('input-box-select');
+            jQuery('.input-box').has('select').parent().addClass('select-list');
+            jQuery('#checkout-payment-method-load .input-box').addClass('fade-label');
+            Intenso.libs.ui.bindInputboxes();
+            jQuery("select").each(function(){
+                jQuery(this).on('change', function() {
+                    jQuery(this).siblings('.validation-advice').hide(300);
+                });
+            });
+        }
+    }
+    function stopInterval() {
+        clearInterval(fixInputbox);
+    }
+	
+	if(jQuery('.state-province-field').hasClass('.select-list')){
+		 jQuery("label[for*='shipping:region']").removeClass("chosen-label");
+		 jQuery("label[for*='shipping:region']").addClass("label-floating");
+	}
+	else{
+		 jQuery("label[for*='shipping:region']").addClass("chosen-label");
+		 jQuery("label[for*='shipping:region']").removeClass("label-floating");
+	}
+
+    jQuery(function() {
+        jQuery('#billing\\:country_id').on('change keyup', function(event) {
+            billingRegionUpdater.update();
+        });
+		
+
+        if (canUseChosen()) {
+            // since the billing select box is replaced by chosen.js we need to simulate the change event
+            var selectEl,
+                selectVal;
+            jQuery('#billing-address-select').on('change keyup', function(event) {
+                if (selectEl == jQuery(this)[0] && selectVal == jQuery(this).val()) return;
+                selectEl = jQuery(this)[0];
+                selectVal = jQuery(this).val();
+                setTimeout(function(){
+                    if (selectEl === event.target) {
+                        selectEl.simulate('change');
+                    }
+                    jQuery("select").each(function(){
+                        jQuery(this).chosen("destroy").chosen();
+                    });
+                },0);
+            });
+            // fix RegionUpdater for chosen.js
+            Object.extend(Validation, {
+                isVisible : function(elm) {
+                    while(elm.tagName != 'BODY') {
+					// validate DOB and Region hidden select boxes
+					
+					// 3SD Code choose New Address again after existing address validation will not let proceed
+					// This code working register login user to validate dropdown like state/province
+					if($('isLoggedIn').value == 1){
+						// Get Billing and Shipping Address dropdown id
+						if($('billing-address-select').value.length == 0 || $('shipping-address-select').value.length == 0 ){
+							if (elm.id == 'billing:country_id' 
+								|| elm.id == 'shipping:country_id' 
+								|| elm.id == 'billing:month' 
+								|| elm.id == 'billing:day' 
+								|| elm.id == 'billing:year' 
+								|| elm.id == 'billing:region_id' 
+								|| elm.id == 'shipping:region_id') {
+								if ((elm.id == 'billing:region_id' && !($('billing_region_id_chosen').visible()))
+									|| (elm.id == 'shipping:region_id' && !($('shipping_region_id_chosen').visible()))
+									|| (elm.id == 'billing:country_id' && !($('billing_country_id_chosen').visible()))
+									|| (elm.id == 'shipping:country_id' && !($('shipping_country_id_chosen').visible()))
+									) {
+									return false;
+								}
+								return true;
+							}
+						}
+						} 
+						// This code working guest user to validate dropdown like state/province
+						else {
+							if (elm.id == 'billing:country_id' 
+								|| elm.id == 'shipping:country_id' 
+								|| elm.id == 'billing:month' 
+								|| elm.id == 'billing:day' 
+								|| elm.id == 'billing:year' 
+								|| elm.id == 'billing:region_id' 
+								|| elm.id == 'shipping:region_id') {
+								if ((elm.id == 'billing:region_id' && !($('billing_region_id_chosen').visible()))
+									|| (elm.id == 'shipping:region_id' && !($('shipping_region_id_chosen').visible()))
+									|| (elm.id == 'billing:country_id' && !($('billing_country_id_chosen').visible()))
+									|| (elm.id == 'shipping:country_id' && !($('shipping_country_id_chosen').visible()))
+									) {
+									return false;
+								}
+								return true;
+							}
+						}
+						
+                        if(!$(elm).visible()) return false;
+                        elm = elm.parentNode;
+                    }
+                    return true;
+                }    
+            });
+            billingRegionUpdater.update = billingRegionUpdater.update.wrap(function(parentMethod){
+                // parent "update" method call
+                parentMethod();
+                 
+                // after "update" method fires
+                billingRegionUpdater.regionSelectEl.hide();
+                regionChosen = jQuery('#billing_region_id_chosen');
+                if(billingRegionUpdater.regionTextEl.visible()) {
+                    regionChosen.hide();
+                    regionChosen.parent().removeClass('input-box-select');
+                    regionChosen.parent().parent().removeClass('select-list');
+					jQuery('label[for="billing\\:region_id"]').removeClass('chosen-label');
+					jQuery('label[for="billing\\:region_id"]').addClass('label-floating');
+                } else {
+                    regionChosen.show();
+                    regionChosen.parent().addClass('input-box-select');
+                    regionChosen.parent().parent().addClass('select-list');
+                    jQuery('#billing\\:region_id').trigger("chosen:updated");
+					jQuery('label[for="billing\\:region_id"]').removeClass('label-floating');
+					jQuery('label[for="billing\\:region_id"]').addClass('chosen-label');
+                }
+            });
+
+            jQuery('#billing\\:region_id').on('change keyup', function(event) {
+                jQuery('#billing\\:region').val(jQuery(this).children("option").filter(":selected").text());
+            });
+
+        } else {
+            billingRegionUpdater.update = billingRegionUpdater.update.wrap(function(parentMethod){
+                // parent "update" method call
+                parentMethod();
+                 
+                // after "update" method fires
+                if(billingRegionUpdater.regionTextEl.visible()) {
+                    jQuery('.state-province-field').removeClass('select-list');
+                    jQuery('.state-province-field > .input-box').removeClass('input-box-select');
+					jQuery('label[for="billing\\:region_id"]').removeClass('chosen-label');
+					jQuery('label[for="billing\\:region_id"]').addClass('label-floating');
+                } else {
+                    jQuery('.state-province-field').addClass('select-list');
+                    jQuery('.state-province-field > .input-box').addClass('input-box-select');
+					jQuery('label[for="billing\\:region_id"]').removeClass('label-floating');
+					jQuery('label[for="billing\\:region_id"]').addClass('chosen-label');
+                }
+            });
+        }
+        window.setTimeout(function () {
+            billingRegionUpdater.update();
+        }, 500);
+
+        function canUseChosen() {
+            if (window.navigator.appName === "Microsoft Internet Explorer") {
+                return document.documentMode >= 8;
+            }
+            if (/iP(od|hone)/i.test(window.navigator.userAgent)) {
+                return false;
+            }
+            if (/Android/i.test(window.navigator.userAgent)) {
+                if (/Mobile/i.test(window.navigator.userAgent)) {
+                    return false;
+                }
+            } 
+            return true;
+        }
+    });
+	<?php else: ?>
+	if(jQuery('.state-province-field').hasClass('.select-list')){
+		 jQuery("label[for*='shipping:region']").removeClass("chosen-label");
+		 jQuery("label[for*='shipping:region']").addClass("label-floating");
+	}
+	else{
+		 jQuery("label[for*='shipping:region']").addClass("chosen-label");
+		 jQuery("label[for*='shipping:region']").removeClass("label-floating");
+	}
+
+	jQuery(function() {
+		jQuery('#billing\\:country_id').on('change keyup', function(event) {
+			billingRegionUpdater.update();
+		});
+			
+		<?php if ($themeHelper->displayOptionalPostalCode() == 0): ?>
+			//--- Hide list of countries with 'Optional Zipcode' toggle Post Code ... 
+			jQuery('#optional_zipcode_chosen').hide();
+			var arr = [];	
+				jQuery('#optional_zipcode').children().each(function(){
+					arr.push(jQuery(this).val());
+				});
+			jQuery('#billing\\:country_id').on('change keyup', function(event) {
+				
+				if(jQuery.inArray(jQuery(this).val(),arr)!==-1){
+					jQuery('#billing\\:postcode').parent().parent().hide();
+				}else{
+					jQuery('#billing\\:postcode').parent().parent().show();
+				}
+				//console.log(jQuery.type(arr));
+			});
+			
+		   <?php endif; ?>
+
+      
+		billingRegionUpdater.update = billingRegionUpdater.update.wrap(function(parentMethod){
+			// parent "update" method call
+			parentMethod();
+			 
+			// after "update" method fires
+			if(billingRegionUpdater.regionTextEl.visible()) {
+				jQuery('.state-province-field').removeClass('select-list');
+				jQuery('.state-province-field > .input-box').removeClass('input-box-select');
+				jQuery('.state-province-field  label').removeClass('chosen-label');
+				jQuery('.state-province-field  label').addClass('label-floating');
+			} else {
+				jQuery('.state-province-field').addClass('select-list');
+				jQuery('.state-province-field > .input-box').addClass('input-box-select');
+				jQuery('.state-province-field  label').removeClass('label-floating');
+				jQuery('.state-province-field  label').addClass('chosen-label');
+			}
+		});
+        
+        window.setTimeout(function () {
+            billingRegionUpdater.update();
+        }, 500);
+
+    });
+    <?php endif; ?>
+	
+
+</script>

@@ -1,0 +1,486 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license/regular
+ */
+/**
+ * head.phtml
+ */
+/*=================================ZEE CODE=================================*/
+//--- Get Default Store Url and URL Key/Suffix to be used as href for x-default
+$defaultStoreUrl   = Mage::helper('tejar_alternate')->getDefaultStoreUrl();
+$defaultPageUrlKey = Mage::helper('tejar_alternate')->getPageDefaultUrlKey();
+$helper = Mage::helper('itactica_intenso');
+$storeId = $this->getRequest()->getParam('store-id');
+$d = $helper->getStoreDesignConfig($storeId);
+$s = $helper->getStoreSetupConfig($storeId);
+$linksArrayTwo = @unserialize(Mage::getStoreConfig('intenso/footer/sec_menu_links_2', Mage::app()->getStore()));
+?>
+<meta http-equiv="Content-Type" content="<?php echo $this->getContentType() ?>" />
+
+<title><?php echo $this->getTitle(); ?></title>
+<meta name="description" content="<?php echo htmlspecialchars(strip_tags($this->getDescription())) ?>" />
+<meta name="keywords" content="<?php echo htmlspecialchars($this->getKeywords()) ?>" />
+<meta name="robots" content="<?php echo htmlspecialchars($this->getRobots()) ?>" />
+<link rel="preload" href="<?php echo $this->getSkinUrl('fonts/open-sans-v13-latin-regular.woff2'); ?>" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="<?php echo $this->getSkinUrl('fonts/open-sans-v13-latin-300.woff2'); ?>" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="<?php echo $this->getSkinUrl('fonts/open-sans-v13-latin-600.woff2'); ?>" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="<?php echo $this->getSkinUrl('fonts/tejaricon.woff2'); ?>" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="<?php echo $this->getSkinUrl('fonts/fontello.woff2'); ?>" as="font" type="font/woff2" crossorigin>
+<?php /* Open Graph Protocol for Facebook and SEO START */ ?>
+<?php /* 3SD CODE open graph protocol */ ?>
+<?php
+	$twitterUrl = "";
+	foreach ($linksArrayTwo as $menuItemTwo): ?>
+<?php if($menuItemTwo['menu_item'] == 'Twitter' && $menuItemTwo['url']){
+
+		$twitterUrl =  parse_url($menuItemTwo['url'], PHP_URL_PATH);
+		$twitterUrl = ltrim($twitterUrl,"/");
+	}
+
+?>
+<?php endforeach;  ?>
+<?php
+$facebookId = "";
+if(Mage::getStoreConfig('customer/tejar_socialconnect_facebook/client_id',Mage::app()->getStore()) &&
+	Mage::getStoreConfig('customer/tejar_socialconnect_facebook/enabled',Mage::app()->getStore())){
+	$facebookId = Mage::getStoreConfig('customer/tejar_socialconnect_facebook/client_id',Mage::app()->getStore());
+}
+?>
+
+<meta property="fb:app_id" content="<?php echo $facebookId; ?>">
+<?php if(Mage::registry('current_product') ): ?>
+<?php $product = Mage::registry('current_product'); ?>
+<?php
+	$customStockStatusText = "";
+	if($product->getCustomStockAvailability()){
+		$customStockStatusText = Mage::helper('catalog/data')->getCustomStockStatusText($product);
+	}
+
+	$isAvailable = "";
+	if($product->isAvailable() && (!$product->getCustomStockAvailability() || Mage::helper('catalog/data')->customStockAddtoCartStatus($product))){
+		$isAvailable = $product->isAvailable() && (!$product->getCustomStockAvailability() || Mage::helper('catalog/data')->customStockAddtoCartStatus($product));
+	}
+
+	$manufacturer = "";
+	if($product->getAttributeText('manufacturer')){
+		$manufacturer = $product->getAttributeText('manufacturer');
+	}
+
+	$condition = "";
+	if($product->getAttributeText('condition')){
+		$condition = $product->getAttributeText('condition');
+	}
+
+	$now = date("Y-m-d");
+	$specialPrice = $product->getSpecialPrice();
+	$newsFromSpecial = substr($product->getData('special_from_date'),0,10);
+	$newsToSpecial =  substr($product->getData('special_to_date'),0,10);
+?>
+<meta property="og:title" content="<?php echo htmlspecialchars($product->getName()); ?>" />
+<meta property="og:type" content="product" />
+<meta property="og:image:width" content="450"/>
+<meta property="og:image:height" content="298"/>
+<meta property="og:image" content="<?php echo $this->helper('catalog/image')->init($product, 'image')->resize(450,298);?>" />
+<meta property="og:image:alt" content="<?php echo htmlspecialchars($product->getName()); ?>" />
+<meta property="og:url" content="<?php echo Mage::registry('product')->getProductUrl(); ?>" />
+<?php if($product->getDescription()): ?>
+<meta property="og:description" content="<?php echo $schemaDescription = htmlspecialchars(strip_tags($product->getDescription())); ?>" />
+<?php elseif($product->getShortDescription()): ?>
+<meta property="og:description" content="<?php echo $schemaDescription = htmlspecialchars(strip_tags($product->getShortDescription())); ?>" />
+<?php else: ?>
+<meta property="og:description" content="<?php echo $schemaDescription = htmlspecialchars(strip_tags($product->getName())); ?>" />
+<?php endif ?>
+<meta property="og:price:amount" content="<?php echo Mage::helper('core')->currency($product->getPrice(), false , false); ?>">
+<meta property="og:price:currency" content="<?php echo Mage::app()->getStore()->getCurrentCurrencyCode(); ?>">
+<?php if($product->getLastCategory()): ?>
+<meta property="product:category" content="<?php echo $product->getLastCategory()->getName(); ?>">
+<?php endif; ?>
+<?php if($manufacturer): ?>
+<meta property="product:brand" content="<?php echo $manufacturer; ?>">
+<?php endif; ?>
+<?php if($isAvailable): ?>
+<meta property="product:availability" content="<?php echo  $customStockStatusText!=""?$customStockStatusText:$this->__('In Stock'); ?>">
+<?php else: ?>
+<meta property="product:availability" content="<?php echo  $customStockStatusText!=""?$customStockStatusText:$this->__('Out of stock'); ?>">
+<?php endif; ?>
+<?php if($condition): ?>
+<meta property="product:condition" content="<?php echo $condition; ?>">
+<?php endif; ?>
+<meta property="product:retailer_item_id" content="<?php echo $product->getId(); ?>">
+<!-- <meta property="product:catalog_id" content="<?php // echo $product->getId(); ?>"> -->
+<meta property="product:price:amount" content="<?php echo Mage::helper('core')->currency($product->getPrice(), false , false); ?>">
+<meta property="product:price:currency" content="<?php echo Mage::app()->getStore()->getCurrentCurrencyCode(); ?>">
+<?php if ($newsToSpecial != '' || $newsFromSpecial != '' || $specialPrice != ''): ?>
+<?php if (($newsToSpecial != '' && $newsFromSpecial != '' && $now>=$newsFromSpecial && $now<=$newsToSpecial) || ($newsToSpecial == '' && $now >=$newsFromSpecial) || ($newsFromSpecial == '' && $now<=$newsToSpecial)): ?>
+<?php if($specialPrice): ?>
+<meta property="product:sale_price:amount" content="<?php echo Mage::helper('core')->currency($product->getSpecialPrice(), false , false); ?>">
+<meta property="product:sale_price:currency" content="<?php echo Mage::app()->getStore()->getCurrentCurrencyCode(); ?>">
+<?php endif; ?>
+<?php if($newsFromSpecial): ?>
+<meta property="product:sale_price_dates:end" content="<?php echo date("Y-m-d", strtotime($newsFromSpecial)) . "T" . date("h:i", strtotime($newsFromSpecial)); ?>">
+<?php endif; ?>
+<?php if($newsToSpecial): ?>
+<meta property="product:sale_price_dates:end" content="<?php echo date("Y-m-d", strtotime($newsToSpecial)) . "T" . date("h:i", strtotime($newsToSpecial)); ?>">
+<?php endif; ?>
+<?php endif; ?>
+<?php endif; ?>
+<meta property="og:site_name" content="<?php echo Mage::app()->getStore()->getName(); ?>" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="<?php echo htmlspecialchars($product->getName()); ?>" />
+<meta name="twitter:description" content="<?php echo $schemaDescription; ?>" />
+<meta name="twitter:image" content="<?php echo $this->helper('catalog/image')->init($product, 'image')->resize(450,298);?>" />
+<meta name="twitter:image:alt" content="<?php echo htmlspecialchars($product->getName()); ?>" />
+<?php if ($isAvailable): ?>
+<meta name="twitter:label1" content="Price">
+<meta name="twitter:data1" content="<?php echo Mage::helper('core')->currency($product->getFinalPrice(),true,false); ?>">
+<?php else: ?>
+<meta name="twitter:label1" content="Availability">
+<meta name="twitter:data1" content="<?php echo  $customStockStatusText!=""?$customStockStatusText:$this->__('Out of stock'); ?>">
+<?php endif; ?>
+<?php if($manufacturer): ?>
+<meta name="twitter:label2" content="Manufacturer">
+<meta name="twitter:data2" content="<?php echo $manufacturer; ?>">
+<?php endif; ?>
+<?php if($twitterUrl){ ?>
+<meta name="twitter:site" content="@<?php echo $twitterUrl; ?>">
+<meta name="twitter:creator" content="@<?php echo $twitterUrl; ?>">
+<?php } ?>
+<meta name="twitter:domain" content="<?php echo Mage::getBaseUrl(); ?>">
+
+<?php 	
+		$time = strtotime(Mage::getModel('core/date')->date('Y-m-d H:i:s')); 
+		$_currentUrl = Mage::helper('core/url')->getCurrentUrl();
+		$reviewHelper = $this->getLayout()->createBlock('review/helper');
+		$reviewHelper->setDisplayIfEmpty(true);
+		if (!$product->getRatingSummary()) {
+			Mage::getModel('review/review')->getEntitySummary($product, Mage::app()->getStore()->getId());
+		}
+		$reviewHelper->setProduct($product);
+		$reviewBlock = $this->getLayout()->createBlock('itactica_extendedreviews/product_review_list');
+		$reviewCollection = $reviewBlock->getReviewsCollection();
+		$reviewCollection->getSelect()->limit(1);
+?>
+
+<?php
+		// Load Parent Product
+		$productId	= Mage::app()->getRequest()->getParam('id');
+        $parentIds = Mage::getSingleton('catalog/product_type_configurable')->getParentIdsByChild($productId);
+?>
+
+<?php if(!empty($parentIds)): ?>
+<?php if(isset($parentIds[0])): ?>
+<meta property="product:custom_label_0" content="associated" />
+<meta property="product:item_group_id" content="c_<?php echo $parentIds[0]; ?>" />
+<?php else: ?>
+<meta property="product:custom_label_0" content="<?php echo $product->getTypeId(); ?>" />
+<?php endif; ?>
+<?php else: ?>
+<meta property="product:custom_label_0" content="<?php echo $product->getTypeId(); ?>" />
+<?php endif; ?>
+<?php
+	$sourcing = "international";
+	if($product->getData('sourcing') && $product->getExistsStoreValueFlag('sourcing')){
+		$sourcing = "national";
+	}
+?>
+<meta property="product:custom_label_1" content="<?php echo $sourcing; ?>" />
+
+<?php
+$mpn = "";
+if($product->hasData('model')){
+	$mpn = htmlspecialchars($product->getData('model'));
+}  else {
+	if($product->hasData('manufacturer')){
+		$manu = $product->getAttributeText('manufacturer');
+		$manu = "/^{$manu}/i";
+		$mpn = Mage::helper('core/string')->truncate(htmlspecialchars(trim(preg_replace($manu, '', $product->getName()))),30,"");
+	} else {
+		$mpn = Mage::helper('core/string')->truncate(htmlspecialchars($product->getName()),30,"");
+	}
+}
+?>
+
+<script type="application/ld+json">
+{"@context": "https://schema.org/","@type": "Product","name": "<?php echo htmlspecialchars($product->getName()); ?>","image": ["<?php echo $this->helper('catalog/image')->init($product, 'image')->resize(450,298); ?>"],"description": "<?php echo $schemaDescription; ?>","sku": "<?php echo $product->getData('sku'); ?>","mpn": "<?php echo $mpn; ?>","brand": {"@type": "Brand","name": "<?php echo $manufacturer; ?>"},<?php foreach($reviewCollection as $review): ?>"review": {"@type": "Review","reviewRating": {"@type": "Rating","ratingValue": "<?php echo $review->getRatingSummary(); ?>","bestRating": "100"},"author": {"@type": "Person","name": "<?php echo $this->htmlEscape($review->getNickname()); ?>"}},<?php endforeach; ?><?php if($reviewHelper->getRatingSummary() && $reviewHelper->getReviewsCount()): ?>"aggregateRating": {"@type": "AggregateRating","ratingValue": "<?php echo $reviewHelper->getRatingSummary()/20; ?>","reviewCount": "<?php echo $reviewHelper->getReviewsCount(); ?>"},<?php endif; ?>"offers": {"@type": "Offer","url": "<?php echo $_currentUrl; ?>","priceCurrency": "<?php echo Mage::app()->getStore()->getCurrentCurrencyCode(); ?>","price": "<?php echo preg_replace('/[^0-9|.]/', '', Mage::helper('core')->currency($product->getFinalPrice())); ?>","priceValidUntil": "<?php echo date('Y-m-d', strtotime('+1 month', $time)); ?>","itemCondition": "https://schema.org/<?php echo  $product->getAttributeText('condition');?>Condition","availability": "<?php if($isAvailable) echo 'https://schema.org/InStock'; else echo 'https://schema.org/OutOfStock'; ?>"}}
+</script>
+
+<?php elseif($category = Mage::registry('current_category')): ?>
+<?php
+	$getLargeImageCat = Mage::getModel('catalog/layer')->getCurrentCategory()->getImageUrl(); //Get the file name of the Image stored for the category
+	$getSmallImageCat = Mage::getModel('catalog/layer')->getCurrentCategory()->getThumbnail(); //Get the file name of the Image stored for the category
+	if($getSmallImageCat){
+		$getResult = Mage::getBaseUrl('media').'catalog/category/'.$getSmallImageCat;
+	}
+	else{
+		$getResult = $getLargeImageCat;
+	}
+?>
+<meta property="og:title" content="<?php echo $category->getName() ?>" />
+<meta property="og:type" content="product.group" />
+<meta property="og:image" content="<?php echo $getResult; //Get the file name of the Image stored for the category ?>" />
+<meta property="og:url" content="<?php echo $this->helper('core/url')->getCurrentUrl();?>" />
+<meta property="og:description" content="<?php echo htmlspecialchars(strip_tags($category->getDescription())) ?>" />
+<meta property="og:site_name" content="<?php echo Mage::app()->getStore()->getName(); ?>" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="<?php echo $category->getName() ?>" />
+<meta name="twitter:description" content="<?php echo htmlspecialchars(strip_tags($category->getDescription())) ?>" />
+<meta name="twitter:image" content="<?php echo $getResult; //Get the file name of the Image stored for the category ?>" />
+<?php if($twitterUrl){ ?>
+<meta name="twitter:site" content="@<?php echo $twitterUrl; ?>">
+<meta name="twitter:creator" content="@<?php echo $twitterUrl; ?>">
+<?php } ?>
+<meta name="twitter:domain" content="<?php echo Mage::getBaseUrl(); ?>">
+<?php elseif((Mage::getSingleton('cms/page')->getIdentifier() == 'home' &&
+ Mage::app()->getFrontController()->getRequest()->getRouteName() == 'cms')) : ?>
+<meta property="og:title" content="<?php echo $this->getTitle() ?>" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="<?php echo Mage::getBaseUrl('media'). 'logo/'. $s['header']['cms_logo_image'];?>" />
+<meta property="og:url" content="<?php echo $this->helper('core/url')->getCurrentUrl();?>" />
+<meta property="og:description" content="<?php echo strip_tags($this->getDescription()) ?>" />
+<meta property="og:site_name" content="<?php echo Mage::app()->getStore()->getName(); ?>" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="<?php echo $this->getTitle() ?>" />
+<meta name="twitter:description" content="<?php echo strip_tags($this->getDescription()) ?>" />
+<meta name="twitter:image" content="<?php echo Mage::getBaseUrl('media'). 'logo/'. $s['header']['cms_logo_image'];?>" />
+<?php if($twitterUrl){ ?>
+<meta name="twitter:site" content="@<?php echo $twitterUrl; ?>">
+<meta name="twitter:creator" content="@<?php echo $twitterUrl; ?>">
+<?php } ?>
+<meta name="twitter:domain" content="<?php echo Mage::getBaseUrl(); ?>">
+<?php else: ?>
+<meta property="og:title" content="<?php echo $this->getTitle() ?>" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="<?php echo Mage::getBaseUrl('media'). 'logo/'. $s['header']['cms_logo_image'];?>" />
+<meta property="og:url" content="<?php echo $this->helper('core/url')->getCurrentUrl();?>" />
+<meta property="og:description" content="<?php echo strip_tags($this->getDescription()) ?>" />
+<meta property="og:site_name" content="<?php echo Mage::app()->getStore()->getName(); ?>" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="<?php echo $this->getTitle() ?>" />
+<meta name="twitter:description" content="<?php echo strip_tags($this->getDescription()) ?>" />
+<meta name="twitter:image" content="<?php echo Mage::getBaseUrl('media'). 'logo/'. $s['header']['cms_logo_image'];?>" />
+<?php if($twitterUrl){ ?>
+<meta name="twitter:site" content="@<?php echo $twitterUrl; ?>">
+<meta name="twitter:creator" content="@<?php echo $twitterUrl; ?>">
+<?php } ?>
+<meta name="twitter:domain" content="<?php echo Mage::getBaseUrl(); ?>">
+<?php endif; ?>
+<?php /* 3SD CODE open graph protocol */ ?>
+<?php /* Open Graph Protocol for Facebook and SEO END */ ?>
+<link rel="manifest" href="<?php echo $this->getSkinUrl('fav/site.webmanifest'); ?>">
+<link rel="icon" href="<?php echo $this->getFaviconFile(); ?>" type="image/x-icon" />
+<link rel="shortcut icon" href="<?php echo $this->getFaviconFile(); ?>" type="image/x-icon" />
+<link rel="mask-icon" href="<?php echo $this->getSkinUrl('fav/safari-pinned-tab.svg'); ?>" color="#000000">
+<link rel="apple-touch-icon-precomposed" sizes="76x76" href="<?php echo $this->getSkinUrl('fav/apple-touch-icon.png'); ?>">
+<link rel="apple-touch-icon" sizes="76x76" href="<?php echo $this->getSkinUrl('fav/apple-touch-icon.png'); ?>">
+<meta name="msapplication-TileColor" content="#FFFFFF">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="apple-mobile-web-app-title" content="<?php echo Mage::app()->getStore()->getName(); ?>">
+<meta name="application-name" content="<?php echo Mage::app()->getStore()->getName(); ?>">
+<meta name="apple-mobile-web-app-status-bar-style" content="#FFFFFF">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<?php /*===========================ZEE CODE=============================*/ ?>
+<link rel="alternate" hreflang="x-default" href="<?php echo $defaultStoreUrl.trim($defaultPageUrlKey,'/');?>" />
+<?php /*===========================ZEE CODE=============================*/ ?>
+<?php echo $this->getCssJsHtml() ?>
+<?php // echo Mage::helper('itactica_intenso')->getGoogleFontsScript() ?>
+<?php /*===========================3SD CODE=============================*/ ?>
+<?php
+// Magento Pagination Code
+$actionName = $this->getAction()->getFullActionName();
+if ($actionName == 'catalog_category_view') // Category Page
+{
+    $category = Mage::registry('current_category');
+    $prodCol = $category->getProductCollection()->addAttributeToFilter('status', 1)->addAttributeToFilter('visibility', array('in' => array(Mage_Catalog_Model_Product_Visibility::VISIBILITY_IN_CATALOG, Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH)));
+    $tool = $this->getLayout()->createBlock('page/html_pager')->setLimit($this->getLayout()->createBlock('catalog/product_list_toolbar')->getLimit())->setCollection($prodCol);
+    $linkPrev = false;
+    $linkNext = false;
+    if ($tool->getCollection()->getSelectCountSql()) {
+        if ($tool->getLastPageNum() > 1) {
+            if (!$tool->isFirstPage()) {
+                $linkPrev = true;
+                if ($tool->getCurrentPage() == 2) {
+                    $url = explode('?', $tool->getPreviousPageUrl());
+                    $prevUrl = @$url[0];
+                }
+                else {
+                    $prevUrl = $tool->getPreviousPageUrl();
+                }
+            }
+            if (!$tool->isLastPage()) {
+                $linkNext = true;
+                $nextUrl = $tool->getNextPageUrl();
+            }
+        }
+    }
+    if ($linkPrev) echo '<link rel="prev" href="' . $prevUrl . '" />' . "\n";
+    if ($linkNext) echo '<link rel="next" href="' . $nextUrl . '" />' . "\n";
+}
+?>
+<?php /*===========================3SD CODE=============================*/ ?>
+<?php echo $this->getIncludes() ?>
+<?php echo $this->getChildHtml() ?>
+<?php // echo $this->helper('core/js')->getTranslatorScript() ?>
+<?php /*===========================3SD CODE=============================*/?>
+
+ <?php if(Mage::getStoreConfigFlag('design/head/demonotice')): ?>
+<style>
+.sticky_part.sticky{
+	    position: relative !important;
+}
+.header_space {
+     height: auto;
+}
+.m-hide.main-header.header  {
+	position: relative;
+}
+</style>
+<?php endif; ?>
+<?php /*===========================3SD CODE=============================*/?>
+<script type="text/javascript">
+var Try = {
+  these: function() {
+    var returnValue;
+    for (var i = 0, length = arguments.length; i < length; i++) {
+      var lambda = arguments[i];
+      try {
+        returnValue = lambda();
+        break;
+      } catch (e) { }
+    }
+    return returnValue;
+  }
+};
+
+var XMLHttp = {
+  getTransport: function() {
+    return Try.these(
+      function() {return new XMLHttpRequest()},
+      function() {return new ActiveXObject('Msxml2.XMLHTTP')},
+      function() {return new ActiveXObject('Microsoft.XMLHTTP')}
+    ) || false;
+  },
+
+  activeRequestCount: 0
+};
+
+function setRequestHeaders(transport){
+	var headers = {
+      'X-Requested-With': 'XMLHttpRequest',
+      'X-Prototype-Version': '1.7',
+      'Accept': 'text/javascript, text/html, application/xml, text/xml, */*'
+    };
+
+	for (var name in headers)
+      transport.setRequestHeader(name, headers[name]);
+}
+
+</script>
+<script type="text/javascript">
+// 3SD Code LazyLoad for Alt Image
+const  altLazyLoad = function(elem){
+	var lazyImages = Array.prototype.slice.call(document.querySelectorAll(elem),0);
+	var active = false;
+	lazyImages.forEach(function(lazyImage) {
+		const _lazyImage = function(e){
+			if (active === false) {
+				active = true;
+				this.parentNode.classList.add('spinner');
+				this.src = this.dataset.src;
+				this.classList.remove("alt-lazyload");
+				lazyImage.classList.add("lazyLoaded");
+				lazyImage.addEventListener("load", function(){
+					lazyImage.parentNode.classList.remove('spinner');
+					lazyImage.style.background = "none";
+				});
+				if(this.classList.contains("alt-lazyload") === false){
+					this.removeEventListener("mouseenter", _lazyImage);
+					this.removeEventListener("touchmove", _lazyImage);
+					this.removeEventListener("touchstart", _lazyImage);
+				}
+			};
+			active = false;
+		};
+		lazyImage.addEventListener("mouseenter", _lazyImage);
+		lazyImage.addEventListener("touchmove", _lazyImage);
+		lazyImage.addEventListener("touchstart", _lazyImage);
+	});
+};
+
+// 3SD Code LazyLoad for All
+const lazyLoad = function() {
+	var active = false;
+	var lazyImages = Array.prototype.slice.call(document.querySelectorAll("img.lazyload"),0);
+
+	if (active === false) {
+	  active = true;
+	  setTimeout(function() {
+		lazyImages.forEach(function(lazyImage) {
+		  if ((lazyImage.getBoundingClientRect().top <= window.innerHeight && lazyImage.getBoundingClientRect().bottom >= 0) && getComputedStyle(lazyImage).display !== "none" && lazyImage.offsetWidth !== 0 && lazyImage.offsetHeight !== 0) {
+			  // console.log(lazyImage.offsetWidth);
+			lazyImage.dataset.src&&(lazyImage.src=lazyImage.dataset.src);
+			lazyImage.dataset.srcset&&(lazyImage.srcset=lazyImage.dataset.srcset);
+			lazyImage.dataset.sizes&&(lazyImage.sizes=lazyImage.dataset.sizes);
+
+			lazyImage.addEventListener("load", function(){
+				lazyImage.style.background = "none";
+				lazyImage.dataset.src&&(lazyImage.removeAttribute('data-src'));
+				lazyImage.dataset.srcset&&(lazyImage.removeAttribute('data-srcset'));
+				lazyImage.dataset.sizes&&(lazyImage.removeAttribute('data-sizes'));
+				lazyImage.classList.remove("lazyload");
+				lazyImage.classList.add("lazyLoaded");
+			});
+
+			lazyImages = lazyImages.filter(function(image) {
+			  return image !== lazyImage;
+			});
+
+			if (lazyImages.length === 0) {
+			  document.removeEventListener("scroll", lazyLoad);
+			  window.removeEventListener("resize", lazyLoad);
+			  window.removeEventListener("orientationchange", lazyLoad);
+			}
+		  }
+		});
+
+		active = false;
+	  }, 200);
+	}
+	document.addEventListener("scroll", lazyLoad);
+	window.addEventListener("resize", lazyLoad);
+	window.addEventListener("orientationchange", lazyLoad);
+};
+document.addEventListener("DOMContentLoaded", function() {
+altLazyLoad('img.alt-lazyload');
+lazyLoad();
+});
+</script>
+<script type="text/javascript">
+xScriptFragment = '<script[^>]*>([\\S\\s]*?)<\/script>';
+function xStripScript(element) {
+	return element.replace(new RegExp(xScriptFragment, 'img'), '');
+}
+
+function xStripTags(element) {
+	return element.replace(/<\w+(\s+("[^"]*"|'[^']*'|[^>])+)?>|<\/\w+>/gi, '');
+}
+
+function xExtractScripts(element) {
+var matchAll = new RegExp(xScriptFragment, 'img'),
+	matchOne = new RegExp(xScriptFragment, 'im');
+	return (element.match(matchAll) || []).map(function(xStripTags) {
+		return (xStripTags.match(matchOne) || ['', ''])[1];
+	});
+}
+
+function xEvalScripts(element) {
+	return xExtractScripts(element).map(function(script) {
+		return eval(script)
+	});
+}
+</script>

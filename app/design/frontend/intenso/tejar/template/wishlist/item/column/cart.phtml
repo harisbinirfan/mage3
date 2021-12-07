@@ -1,0 +1,49 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+
+/* @var $this Mage_Wishlist_Block_Customer_Wishlist_Item_Column_Cart */
+/* @var Mage_Wishlist_Model_Item $item */
+$item = $this->getItem();
+$product = $item->getProduct();
+$options = $this->getChild('customer.wishlist.item.options')
+    ->setItem($item)
+    ->getConfiguredOptions();
+	
+	
+	$_product = Mage::getModel('catalog/product')->load($product->getId());
+		/*--------------------------------------------------- ZEE CODE ------------------------------------------*/	
+	//--- Get Custom Stock Status if Avialable............
+			$customStockStatusText = "";
+			$customInStockStatus = true;
+			if($_product->hasData('custom_stock_availability') && $_product->getCustomStockAvailability()){
+				$customStockStatusText = Mage::helper('catalog/data')->getCustomStockStatusText($_product);
+				if(Mage::helper('catalog/data')->customStockAddtoCartStatus($product)){
+					$customInStockStatus = true;
+				}else{
+					$customInStockStatus = false;
+				}
+			}
+			/* CONTINUE -  Check if Custom In Stock Status is FALSE and if 'Display Out of Stock Products' Option 
+			 * in Admin/Config Catalog Inventory is set to 'YES' Or 'NO'
+			 */
+			$inStock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($product)->getIsInStock();
+			$displayOutOfStockConfigValue = Mage::getStoreConfig('cataloginventory/options/show_out_of_stock');
+			//if((!$inStock && !$displayOutOfStockConfigValue) || (!$customInStockStatus && !$displayOutOfStockConfigValue))continue;
+	/*---------------------------------------------------- ZEE CODE -------------------------------------------*/	
+?>
+
+<?php if ($product->isSaleable() &&  $customInStockStatus == true ): ?>
+	<?php echo $this->getPriceHtml($product, empty($options));?>
+<?php else : ?>
+<?php if ($product->getStockItem()->getIsInStock() && $customInStockStatus): ?>
+<?php else :?>
+	<p class="availability out-of-stock"><span class="hide">Availability:</span><span class="singal-truncate"><?php echo $customStockStatusText!=""?$customStockStatusText:"Out of Stock"?></span></p>	
+<?php endif; ?>
+<?php endif; ?>

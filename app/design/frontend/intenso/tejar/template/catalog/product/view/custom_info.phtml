@@ -1,0 +1,21 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014-2015 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+
+<?php $block = Mage::getModel('cms/block')->getCollection()->addStoreFilter(Mage::app()->getStore()->getId(), true)->addFieldToFilter('identifier', 'product_view_block_3')->getFirstItem(); ?>
+<?php if ($block->getIsActive()): ?>
+<div style="display:none;" class="tab-content" id="tab_custom_tabbed_contents">
+<div class="product-collateral custom-info clearfix row">
+    
+        <?php echo $this->getChildHtml('product_view_block_3'); ?>
+    
+</div>
+</div>
+<?php endif; ?>

@@ -1,0 +1,48 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+/**
+ * @var Mage_Page_Block_Html_Header $this
+ */
+?>
+<?php $themeHelper = Mage::helper('itactica_intenso'); ?>
+<?php $smallLogo = ($this->getLogoSrcSmall()) ? $this->getLogoSrcSmall() : $this->getLogoSrc(); ?>
+<?php $isStickyEnabled = $themeHelper->stickyMenuUrl(); ?>
+<?php $store = Mage::app()->getStore();?>
+<header class="m-hide " id="header">
+<div class="only-logo">
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 center">
+				<a href="<?php echo $this->getUrl('') ?>">
+					<?php if(Mage::getStoreConfig('design/header/logo_src' , Mage::app()->getStore())): ?>
+						<img class="main-logo" src="<?php echo $this->getLogoSrc() ?>" alt="<?php echo $this->getLogoAlt() ?>" title="<?php echo $this->getLogoAlt() ?>" width="110" height="32">
+						<img class="main-logo-small" src="<?php echo $smallLogo ?>" alt="<?php echo $this->getLogoAlt() ?>" title="<?php echo $this->getLogoAlt() ?>" width="110" height="32">
+					<?php else: ?>
+						<svg xmlns="http://www.w3.org/2000/svg" class="main-logo" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Tejar_logo" x="0px" y="0px" width="313.061px" height="91.5px" viewBox="128.689 0 313.061 91.5" enable-background="new 128.689 0 313.061 91.5" xml:space="preserve"><g><g><path d="M151.609,13.768h-9.821l-2.584,9.821h-9.511V1.362h59.959v22.227h-9.614l-2.584-9.821h-9.821v48.587l9.821,3.102v8.787    h-35.666v-8.787l9.821-3.102V13.768z"/><path d="M239.996,42.197h-20.882v19.642h18.504l2.378-8.478h9.304v20.883h-53.964v-8.787l7.753-3.102V13.768l-7.753-3.102V1.879    l23.777-0.517h28.946v19.952h-9.304l-2.584-7.546h-17.057v17.057h20.882V42.197z"/><path d="M283.309,63.286c0,17.987-5.375,27.499-23.57,27.499c-3.308,0-7.857-0.725-7.857-0.725l1.344-10.647h4.962    c6.203,0,9.098-3.411,9.098-9.925v-55.72l-7.753-3.102V1.879l31.53-0.517v9.304l-7.753,3.102V63.286z"/><path d="M371.489,74.244h-32.875v-8.787l7.754-2.791l-2.481-7.547h-22.95l-2.584,7.443l8.063,2.895v8.787h-31.221v-8.787    l7.547-2.895l22.743-60.89l16.541-0.31l22.226,61.2l7.237,2.895V74.244z M332.722,19.557l-8.167,24.5h15.921L332.722,19.557z"/><path d="M375.62,65.457l7.754-3.102V13.768l-7.754-3.102V1.879l23.777-0.517h7.856c16.954,0,26.878,7.03,26.878,21.089    c0,9.717-4.651,16.023-11.682,19.539c1.138,1.344,2.688,3.308,4.342,6.72l6.927,14.162l7.029,2.585v8.787h-19.124l-8.685-19.125    c-3.515-7.856-4.445-9.511-9.924-9.511h-3.618v16.747l7.443,3.102v8.787H375.62V65.457z M405.29,34.753    c8.167,0,12.922-3.928,12.922-10.854c0-5.893-3.929-10.131-10.338-10.131h-8.477v20.985H405.29z"/></g></g></svg>
+					<?php endif; ?>
+					<span class="domain"><?php if($store->getCode()== "default"):?><?php else: ?><?php echo $name = $store->getCode();?><?php endif;?></span>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+</header>
+<script>
+function popwin(url){
+		var top = screen.height/4;
+		var left = screen.width/4;
+		var thePopCode = window.open(url,'','height=500, width=600, top='+top+', left='+left+', directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no');
+
+		if (window.focus) 
+		{
+			thePopCode.focus();
+		}
+	}
+</script>

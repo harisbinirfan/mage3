@@ -1,0 +1,60 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+
+<?php $_orders = $this->getOrders(); ?>
+<section class="section-offset">		
+	<div class="box-account box-recent">
+		<div class="box-head">
+			<h3><?php echo $this->__('Recent Orders') ?></h3>
+			<?php if( sizeof($_orders->getItems()) > 0 ): ?><a href="<?php echo $this->getUrl('sales/order/history') ?>"><?php echo $this->__('View All Orders') ?></a><?php endif; ?>
+		</div>
+	</div>
+<?php if( sizeof($_orders->getItems()) > 0 ): ?>
+    <table class="table_type_4 wb-table table-seprater orders_table" id="my-orders-table">
+        <thead>
+            <tr>
+                <th class="order_number_col"><?php echo $this->__('Order #') ?></th>
+                <th class="date"><?php echo $this->__('Date') ?></th>
+                <th class="ship_col"><?php echo $this->__('Ship To') ?></th>
+                <th class="order_total_col"><span class="nobr"><?php echo $this->__('Total') ?></span></th>
+                <th class="status"><?php echo $this->__('Status') ?></th>
+                <th class="product_action_col"><?php echo $this->__('Action') ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($_orders as $_order): ?>
+                <tr>
+                    <td class="order_number_col"><a href="<?php echo $this->getViewUrl($_order) ?>" title="<?php echo $this->__('View Order') ?>"><?php echo $_order->getRealOrderId() ?></a></td>
+                    <td class="date"><span class="nobr"><?php echo $this->formatDate($_order->getCreatedAtStoreDate()) ?></span></td>
+                    <td class="ship_col"><?php echo $_order->getShippingAddress() ? $this->escapeHtml($_order->getShippingAddress()->getName()) : '&nbsp;' ?></td>
+                    <td class="order_total_col"><?php echo $_order->formatPrice($_order->getGrandTotal()) ?></td>
+                    <td class="status"><em><?php echo $_order->getStatusLabel() ?></em></td>
+                    <td class="product_action_col a-center">
+                        <span class="nobr">
+                        <a class="btn-floating theme" href="<?php echo $this->getViewUrl($_order) ?>" title="<?php echo $this->__('View Order') ?>"><i class="icons-eye-5"></i><span class="hide"><?php echo $this->__('View Order') ?></span></a>
+                        <?php if ($this->helper('sales/reorder')->canReorder($_order)) : ?>
+                             <a href="<?php echo $this->getReorderUrl($_order) ?>" class="btn-floating green" title="<?php echo $this->__('Reorder') ?>"><i class="icons-loop-2"></i><span class="hide"><?php echo $this->__('Reorder') ?></span></a>
+                        <?php endif ?>
+						<?php /* if($_order->getStatusLabel()== "Pending") : ?>
+							 <a class="btn-floating red" onclick='if(!confirm("Are You Sure?")){return false;}' title="<?php echo $this->__('Cancel') ?>" href="<?php echo $this->getUrl('sales/order/cancelOrderFrontend/').'id/'.$_order->getId();?>"><i class="icons-cancel-2"></i><span class="hide"><?php echo $this->__('Cancel') ?></span></a>
+						<?php endif */ ?>
+                        </span>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <script type="text/javascript">decorateTable('my-orders-table')</script>
+<?php else: ?>
+    <p><?php echo $this->__('You have placed no orders.'); ?></p>
+<?php endif; ?>
+
+</section>

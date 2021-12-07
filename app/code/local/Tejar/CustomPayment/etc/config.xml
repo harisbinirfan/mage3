@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<modules>
+		<Tejar_CustomPayment>
+		<version>1.0.0</version>
+		</Tejar_CustomPayment>
+	</modules>
+	<global>
+		<models>
+			<custompayment>
+				<class>Tejar_CustomPayment_Model</class>
+			</custompayment>
+			</models>
+		<helpers>
+			<custompayment>
+				<class>Tejar_CustomPayment_Helper</class>
+			</custompayment>
+		</helpers>
+		<blocks>
+			<custompayment>
+				<class>Tejar_CustomPayment_Block</class>
+			</custompayment>
+		</blocks>
+	</global>
+
+	<default>
+		<payment>
+			<custompayment>
+				<model>custompayment/standard</model>
+				<active>1</active>
+				<order_status>pending</order_status>
+				 <title>Easypaisa, JazzCash/Mobile Paisa, UPaisa, TimePey</title>
+				<allowspecific>1</allowspecific>
+				<sort_order>101</sort_order>
+			</custompayment>
+			<cash_in_advance>
+				<model>custompayment/cash</model>
+				<active>1</active>
+				<order_status>pending</order_status>
+				 <title>Cash in Advance</title>
+				<allowspecific>1</allowspecific>
+				<sort_order>102</sort_order>
+			</cash_in_advance>
+		</payment>
+	</default>
+
+	<frontend>
+		<routers>
+			<custompayment>
+				<use>standard</use>
+				<args>
+				<module>Tejar_CustomPayment</module>
+				<frontname>custompayment</frontname>
+				</args>
+			</custompayment>
+		</routers>
+	</frontend>
+</config>

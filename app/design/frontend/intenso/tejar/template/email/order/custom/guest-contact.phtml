@@ -1,0 +1,126 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/**
+ * @var $this Mage_Sales_Block_Order_Totals
+ * @see Mage_Sales_Block_Order_Totals
+ */
+?>
+<?php $_order = $this->getOrder() ?>
+
+<!--/[] 3SD CODE Get Store Phone Number []\-->
+<?php  $storePhone = Mage::getStoreConfig('general/store_information/phone');?>
+<tr>
+	<td align="center" valign="top" id="templateFooterCenter">
+		<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" class="templateContainer">
+			<tr>
+				<td valign="top" id="footerCenter">
+					<table align="left" border="0" cellpadding="0" cellspacing="0" width="33.3333333%" class="columnWrapper">
+						<tr>
+							<td valign="top" class="columnContainer">
+								<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
+									<tbody class="mcnTextBlockOuter">
+										<tr>
+											<td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
+												<table align="center" border="0" cellpadding="0" cellspacing="0" style="width: auto;" class="mcnTextContentContainer">
+													<tbody>
+														<tr>
+															<td class="contact-icon" width="48">
+																<img src="<?php echo Mage::getDesign()->getSkinUrl('email/account.png'); ?>" height="48" width="48">
+															</td>
+															<td valign="top" align="left" class="contact-link">
+															
+																<p class="align-left"><a href="<?php echo $this->getUrl('customer/account'); ?>" target="_blank"><strong>My Account</strong></a></p>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+					</table>
+				
+					<table align="left" border="0" cellpadding="0" cellspacing="0" width="33.3333333%" class="columnWrapper">
+						<tr>
+							<td valign="top" class="columnContainer">
+								<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
+									<tbody class="mcnTextBlockOuter">
+										<tr>
+											<td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
+												<table align="center" border="0" cellpadding="0" cellspacing="0" style="width: auto;" class="mcnTextContentContainer">
+													<tbody>
+														<tr>
+															<td class="contact-icon" width="48">
+																<img src="<?php echo Mage::getDesign()->getSkinUrl('email/mail.png'); ?>" height="48" width="48">
+															</td>
+															<td valign="top" align="left" class="contact-link">
+																<p class="align-left"><a href="<?php echo rtrim($this->getUrl(), '/'); ?>/contact" target="_blank"><strong>Contact us</strong></a></p>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+					</table>
+				
+					<table align="left" border="0" cellpadding="0" cellspacing="0" width="33.3333333%" class="columnWrapper" style="border-right: none !important; border-bottom: none !important;">
+						<tr>
+							<td valign="top" class="columnContainer">
+								<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
+									<tbody class="mcnTextBlockOuter">
+										<tr>
+											<td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
+												<table align="center" border="0" cellpadding="0" cellspacing="0" style="width: auto;" class="mcnTextContentContainer">
+													<tbody>
+														<tr>
+															<td class="contact-icon" width="48">
+																<img src="<?php echo Mage::getDesign()->getSkinUrl('email/order.png'); ?>" height="48" width="48">
+															</td>
+															<td valign="top" align="left" class="contact-link">
+																<p class="align-left"><a href="<?php echo rtrim($this->getUrl(), '/'); ?>/sales/guest/form" target="_blank"><strong>Order Status</strong></a></p>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</td>
+</tr>
+<?php  ?>		

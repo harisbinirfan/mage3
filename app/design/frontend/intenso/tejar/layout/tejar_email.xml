@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<layout>
+	<sales_tejar_email_order_items>
+        <block type="sales/order_email_items" name="items" template="email/order/items.phtml">
+            <action method="addItemRender"><type>default</type><block>sales/order_email_items_order_default</block><template>email/tejar_email/default.phtml</template></action>
+            <action method="addItemRender"><type>grouped</type><block>sales/order_email_items_order_grouped</block><template>email/tejar_email/default.phtml</template></action>
+            <block type="sales/order_totals" name="order_totals" template="sales/order/totals.phtml">
+                <action method="setLabelProperties"><value>colspan="3" align="right" style="padding:3px 9px"</value></action>
+                <action method="setValueProperties"><value>align="right" style="padding:3px 9px"</value></action>
+                <block type="tax/sales_order_tax" name="tax" template="tax/order/tax.phtml">
+                    <action method="setIsPlaneMode"><value>1</value></action>
+                </block>
+            </block>
+        </block>
+        <block type="core/text_list" name="additional.product.info" />
+    </sales_tejar_email_order_items>
+</layout>

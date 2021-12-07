@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config>  
+    <modules>  
+        <Tejar_Alternate>  
+            <active>true</active>  
+            <codePool>local</codePool>
+          
+        </Tejar_Alternate>  
+    </modules>  
+</config> 

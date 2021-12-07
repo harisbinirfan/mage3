@@ -1,0 +1,50 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php 
+$prefix = Mage::getStoreConfig('design/head/title_prefix');
+$title = $this->getLayout()->getBlock('head')->getTitle();
+$processedTitle = trim(substr($title, strlen($prefix)));
+?>
+<?php 
+$suffix = Mage::getStoreConfig('design/head/title_suffix');
+$processedTitle2 = substr($processedTitle, 0, strlen($suffix) * -1);
+?>
+<div class="account-title-content">
+<div class="row">
+    <div class="col-xs-7">
+		<div class="page-title">
+			<?php $_links = $this->getLinks(); ?>
+			<?php $_index = 1; ?>
+			<?php $_count = count($_links); ?>
+			<?php $title = "";?>
+			<?php foreach ($_links as $_link): ?>
+				<?php $_last = ($_index++ >= $_count); ?>
+				<?php if ($this->isActive($_link)): ?>
+					<h1><span class="truncate"><?php echo $title = $_link->getLabel() ?></span></h1>
+				<?php endif; ?>
+				
+			<?php endforeach; ?>
+			<!-- If no Title Found -->
+			<?php if($title==""){?> 
+			<h1><span class="truncate"><?php echo $processedTitle2;?></span></h1>
+			<?php } ?>
+	  
+		</div>
+    </div>
+    <div class="actions col-xs-5 align_right">
+	
+        <div class="action-for-small-only ">
+            <a class="btn small show-left-menu  filter-toggle"><?php echo $this->__('Account menu'); ?></a>
+        </div>
+    </div>
+    
+</div>
+</div>

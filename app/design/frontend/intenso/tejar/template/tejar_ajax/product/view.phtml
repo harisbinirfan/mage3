@@ -1,0 +1,35 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014-2015 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+
+/**
+ * Product quick view template
+ *
+ * @see Mage_Catalog_Block_Product_View
+ * @see Mage_Review_Block_Product_View
+ */
+?>
+
+<?php 
+    $_product = $this->getProduct();
+?>
+
+<script src="<?php echo $this->getSkinUrl('js/form.mini.js');?>" type="text/javascript"></script>
+<script>
+    var optionsPrice = new Product.OptionsPrice(<?php echo $this->getJsonConfig() ?>);
+</script>
+<!-- Product Pic & Info -->
+
+<?php if ($_product->isSaleable() && $this->hasOptions()):?>
+	<?php echo $this->getChildChildHtml('container1', '', true, true) ?>
+<?php endif;?>
+
+<?php if ($_product->isSaleable() && $this->hasOptions()):?>
+	<?php echo $this->getChildChildHtml('container2', '', true, true) ?>
+<?php endif;?>

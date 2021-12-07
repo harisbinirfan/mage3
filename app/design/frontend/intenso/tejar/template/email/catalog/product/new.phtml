@@ -1,0 +1,74 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php $_productsCount = 0 ; ?>
+<?php
+$_productsCountarray = array("","first", "second", "third", "frouth");
+$_columnCountarray = array("","1column","2column","3column","4column");
+$q = $this->getColumnCount();
+?>
+<?php if (($_products = $this->getProductCollection()) && $_products->getSize()): ?>
+<h2 class="subtitle products"><?php echo $this->__('New Products') ?></h2>
+<?php $_columnCount = $this->getColumnCount(); ?>
+    <table class="products-grid" width="100%" cellpadding="0" align="center" cellspacing="0" border="0">
+    <?php $i=0; foreach ($_products->getItems() as $_product): ?>
+	<?php $_productsCount++ ; ?>
+	<?php $q++; ?>
+        <?php if ($i++%$_columnCount==0): ?>
+        <tr>
+			<td class="<?php echo $_columnCountarray[$_columnCount]; ?><?php if($q > count($_products)):?> last-row <?php endif ?>">
+        <?php endif ?>
+            <div style="display:inline-block;max-width:25%;min-width:175px;vertical-align:top;width:100%;padding-top:10px;padding-bottom:10px" class="<?php echo $_productsCountarray[$_productsCount]; ?>-column mobile-wrapper">
+                <div class="product-wrapper">
+					<table width="100%" cellpadding="0" align="center" cellspacing="0" border="0">
+						<tr>
+							<td>
+							<a href="<?php  echo $_product->getProductUrl() ?>" title="<?php echo $this->escapeHtml($_product->getName()) ?>" class="product-image">
+								<?php  $_imgSize = 150; ?>
+								<img src="<?php  echo $this->helper('catalog/image')->init($_product, 'small_image')->resize($_imgSize); ?>" alt="<?php  echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+							</a>		
+							</td>
+						</tr>
+						<tr>
+							<td class="item-detail">
+								<?php $_productName = strlen(trim($this->escapeHtml($_product->getName())))>=50 ?substr($this->escapeHtml($_product->getName()), 0,45)."...":$this->escapeHtml($_product->getName()); ?>
+								<h3 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->escapeHtml($_product->getName()) ?>"><?php echo $_productName; ?></a></h3>							
+								<?php //  echo $this->getReviewsSummaryHtml($_product, 'short') ?>		
+								<?php echo $this->getPriceHtml($_product, true, '-new') ?>
+							</td>
+						</tr>
+					</table>
+                </div>  
+			</div>
+        <?php if ($i%$_columnCount==0 || $i==count($_products)): ?>
+		<?php $_productsCount = 0 ; ?>
+			</td>
+		</tr>
+		
+        <?php endif ?>
+    <?php endforeach; ?>
+    </table>
+<?php endif; ?>

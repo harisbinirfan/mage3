@@ -1,0 +1,11 @@
+<?php $copyright = Mage::getStoreConfig('design/footer/copyright' , Mage::app()->getStore()) ?>
+<?php if($copyright): ?>
+<?php
+	$format = $copyright;
+	$year = Mage::getModel('core/date')->date('Y');
+	$storeName = $storePhone = Mage::getStoreConfig('general/store_information/name');
+	$copyright = sprintf($format, $year, $storeName);
+
+?>
+<?php echo $copyright; ?>
+<?php endif; ?>

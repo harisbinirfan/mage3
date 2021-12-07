@@ -1,0 +1,50 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+
+/**
+ * Product description template
+ *
+ * @see Mage_Catalog_Block_Product_View_Description
+ */
+?>
+<?php $_product = $this->getProduct(); ?>
+<?php
+$_inTheBox = "";
+if($_product->getData('in_the_box')): ?>
+<?php $_inTheBox = $_product->getData('in_the_box');?>
+<?php $_inTheBoxLabel = $_product->getResource()->getAttribute('in_the_box')->getStoreLabel(); ?>
+<?php endif; ?>
+<?php $_description = $this->getProduct()->getDescription(); ?>
+<?php if ($_description || $_inTheBox): ?>
+
+	<?php if (Mage::getModel('cms/block')->setStoreId(Mage::app()->getStore()->getId())->load('product_view_block_2')->getIsActive()): ?>
+	<div class="product-description-static-block hide-for-small-only columns">
+            <?php echo $this->getChildHtml('product_view_block_2') ?>
+	</div>
+	<?php endif; ?>
+	<div class="product-description">
+		<div <?php if(!$_product->getShortDescription()): ?><?php endif; ?>>
+			<div class="row">
+			<?php if ($_description): ?>
+				<div class="<?php if($_inTheBox){echo "col-sm-9";}else{echo "col-sm-12";}?>" id="longDescription">
+					<?php echo $this->helper('catalog/output')->productAttribute($this->getProduct(), $_description, 'description') ?>
+						<?php if($_product->getData('product_video')): ?>
+							<iframe class="product_video" width="560" height="315" src="https://www.youtube.com/embed/<?php echo $_product->getData('product_video'); ?>" frameborder="0" allowfullscreen></iframe>
+						<?php endif; ?>
+				</div>
+				<?php endif; ?>
+				<div class="col-sm-3" class="in_the_box" id="inTheBox" <?php if(!$_inTheBox){echo "style='display: none;'";}?>>
+					<h3><?php echo $_inTheBoxLabel; ?></h3>
+					<?php echo $_inTheBox; ?>
+				</div>
+			</div>
+		</div>
+	</div>
+<?php endif; ?>

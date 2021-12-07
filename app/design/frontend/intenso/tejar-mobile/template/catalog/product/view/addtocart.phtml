@@ -1,0 +1,206 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014-2015 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php $_product = $this->getProduct(); ?>
+<?php $buttonTitle = $this->__('Add to Cart'); ?>
+<?php $productData = Mage::getModel('cataloginventory/stock_item')->loadByProduct($_product); ?>
+<?php
+	$attributeOptions = array();
+	if ($_product->isConfigurable()) {
+		$productAttributeOptions = $_product->getTypeInstance(true)->getConfigurableAttributesAsArray($_product);
+		foreach ($productAttributeOptions as $productAttribute) {
+		    $attributeOptions[] = $productAttribute['label'];
+		}
+	}
+	//--- Get Custom Stock Status...
+	$customStockAlertStatus = Mage::helper('catalog/data')->customStockAddtoCartStatus($_product);
+	//var_dump($customStockAlertStatus);die;
+?>
+<?php // if($_product->isSaleable()): ?>
+		
+	<?php if(!$_product->isGrouped()): ?>
+
+			<div class="description_section_2 v_centered" style="text-align: center;">
+				<span class="title">Quantity :</span>
+				<div class="qty qty-wrapper min clearfix">
+					<button type="button" class="theme_button" id="minus" data-direction="minus">&#45;</button>
+					<input min="1" max="999" pattern="\d*" autocomplete="off" id="qty" type="number" class="input-text qty validation-passed" name="qty" value="<?php echo $this->getProductDefaultQty() * 1 ?>" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Qty')) ?>">
+					<button type="button" class="theme_button" data-direction="plus" id="plus">&#43;</button>
+				</div>
+			</div>
+					<!--===============ZEE CODE===========-->
+					<input  type="hidden" value="<?php echo $this->getProductDefaultQty() * 1 ?>" id="qty_clone" />
+					<!--===============ZEE CODE===========-->
+	<?php endif; ?>
+
+	<?php if(Mage::getStoreConfig('intenso/product_page/product_show_add_to_cart', Mage::app()->getStore())): ?>
+		<button  style="margin-bottom: 4px;" <?php echo $customStockAlertStatus == false || $_product->isSaleable() ==false?'disabled="disabled"':""; ?> type="button" title="<?php echo $buttonTitle ?>" id="product-addtocart-button" class="btn btn-cart-pro" onclick="productAddToCartForm.submit(this, null, null)"><span><span><?php echo $buttonTitle ?></span></span></button>	
+	<?php endif; ?>
+	<?php if(Mage::getStoreConfig('intenso/product_page/product_show_buy_now', Mage::app()->getStore())): ?>
+		<?php  if(Mage::getSingleton('customer/session')->isLoggedIn() || !Mage::getStoreConfig('onestepcheckout/general/active',  Mage::app()->getStore())){ ?>
+		
+				<button style="margin-bottom: 0;" <?php echo $customStockAlertStatus == false || $_product->isSaleable()==false?'disabled="disabled"':""; ?> type="button" title="<?php echo $this->__('Buy Now') ?>" id="buy-now" class="buy-now btn btn-cart-pro" onclick="productAddToCartForm.submit(this, null, 'buynow')"><span><span><?php echo $this->__('Buy Now') ?></span></span></button>
+		<?php }else{?>
+				<button style="margin-bottom: 0;" <?php echo $customStockAlertStatus == false || $_product->isSaleable()==false?'disabled="disabled"':""; ?> type="button" title="<?php echo $this->__('Buy Now') ?>" id="buy-now" class="buy-now btn btn-cart-pro" <?php if(!Mage::getSingleton('customer/session')->isLoggedIn()){?>   data-reveal-id="myModal" <?php }?>><span><span><?php echo $this->__('Buy Now') ?></span></span></button>
+		<?php } ?>
+	<?php endif; ?>
+	<?php echo $this->getChildHtml('', true, true) ?>
+<?php // endif; ?>
+<script>
+//=================== ZEE CODE ========================//
+var productBuyNowForm;
+document.addEventListener('DOMContentLoaded' , function(){	
+		productBuyNowForm = new VarienForm('product_addtocart_form');
+                    productBuyNowForm.submit = function(button, url) {
+						
+                        <?php if(Mage::helper('itactica_intenso')->formFieldsType() == 'mdformfields'): ?>
+                        Object.extend(Validation, {
+                            isVisible : function(elm) {
+                                while(elm.tagName != 'BODY') {
+                                    // validate hidden select boxes when chosen.js is enabled
+                                    if (elm.className.indexOf('super-attribute-select') > -1 || elm.className.indexOf('product-custom-option') > -1) {
+                                        elm = elm.parentNode;
+                                    }
+                                    if(!$(elm).visible()) return false;
+                                    elm = elm.parentNode;
+                                }
+                                return true;
+                            }    
+                        });
+                        <?php endif; ?>
+                        if (this.validator.validate()) {
+                            var form = this.form;
+                            var oldUrl = form.action;
+
+                            if (url) {
+                               form.action = url;
+                            }
+                            var e = null;
+                            try {
+                                this.form.submit();
+                            } catch (e) {
+                            }
+                            this.form.action = oldUrl;
+                            if (e) {
+                                throw e;
+                            }
+
+                            if (button && button != 'undefined') {
+                                button.disabled = true;
+                            }
+							//console.log('HERE3333--->');
+							//window.location.href = "<?php Mage::getBaseUrl();?>checkout/onepage";
+							/*jQuery.ajax({
+							type:"GET",
+							url:location,
+							success:function(data){
+								
+								// window.location.href = "<?php Mage::getBaseUrl();?>checkout/onepage";
+							}
+						 });*/
+						 							
+                        }
+						
+						
+                    }.bind(productBuyNowForm);
+
+                    productBuyNowForm.submitLight = function(button, url){
+                        if(this.validator) {
+                            var nv = Validation.methods;
+                            delete Validation.methods['required-entry'];
+                            delete Validation.methods['validate-one-required'];
+                            delete Validation.methods['validate-one-required-by-name'];
+                            // Remove custom datetime validators
+                            for (var methodName in Validation.methods) {
+                                if (methodName.match(/^validate-datetime-.*/i)) {
+                                    delete Validation.methods[methodName];
+                                }
+                            }
+
+                            if (this.validator.validate()) {
+                                if (url) {
+                                    this.form.action = url;
+                                }
+                                this.form.submit();
+                            }
+                            Object.extend(Validation.methods, nv);
+                        }
+						
+						
+						
+                    }.bind(productBuyNowForm);
+					
+			//--- The file is being executed twice, hence unbind the click event on 'quick view button'
+			//--- to execute plus and minus once only....
+			
+			jQuery('#plus, #minus').bind().click(function(){
+				//console.log('d');
+				jQuery('#qty').val(jQuery('#qty_clone').val()); 
+					var jQuerythis = jQuery(this),
+						d = jQuerythis.data('direction'),
+						input = jQuerythis.siblings('input'),
+						c = +input.val();
+					if((c == 1 && d == "minus") || c=="" || c==null){ 
+						input.val(1);
+						return false;
+					}
+					input.val(d == "minus" ? --c : ++c);
+					jQuery('#qty_clone').val(jQuery('#qty').val()); 
+				});
+
+			jQuery(document).on("click touchstart",function(e) {
+				//console.log(e.which);
+				if( e.target.id != "qty" && e.target.id != "plus" && e.target.id != "minus"){
+					//Restore the quantity value if clicked anywhere on Body and Hide the Update button
+				//if(jQuery('#qty').val()==""){
+					jQuery('#qty').val(jQuery('#qty_clone').val()); 
+				}else{
+					// e.preventDefault();
+				} 
+			});
+				
+			jQuery('#qty').bind('copy paste', function (e) {
+				   e.preventDefault();
+				});
+				
+			//Taking care for iPhone Done Issue...	
+			jQuery('#qty').bind('blur', function(e){
+				//alert('HELLO');
+				jQuery('#qty').val(jQuery('#qty_clone').val()); 
+			});	
+			
+			jQuery('#qty').bind('keydown', function (event) {
+				
+				var kC = event.which;
+				//var kC = event.keyCode;
+				//--- if input was not integer...
+				if( !((kC >= 48 && kC <= 57 && kC!==190) || (kC >= 96 && kC <= 105) || kC == 8 || kC==16)) return false;
+				//--- if special character was entered while shift key is pressed..
+				
+				//--- Avoid Special Characters..
+				if(event.shiftKey == true ){
+						
+						event.preventDefault();
+					}
+				setTimeout(function(){
+					
+						if(jQuery('#qty').val().length && jQuery('#qty').val()>=1){
+							
+							jQuery('#qty_clone').val(jQuery('#qty').val()); 
+						}else if(kC===13){
+							jQuery('#qty').val(jQuery('#qty_clone').val()); 
+						}
+					
+				},700);
+			});	
+		});		
+<!--==================================================== ZEE CODE ==========================================-->
+</script>
+<!--==================================================== ZEE CODE ==========================================-->

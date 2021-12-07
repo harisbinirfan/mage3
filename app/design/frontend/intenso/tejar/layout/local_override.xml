@@ -1,0 +1,641 @@
+<?xml version="1.0"?>
+<layout>
+	<default>
+		<reference name="head">
+			<action method="removeItem"><type>js</type><script>smartwave/jquery/jquery-ui.min.js</script></action>
+			<action method="removeItem"><type>js_css</type><name>smartwave/jquery/jquery-ui.min.css</name></action>
+		</reference>
+	</default>
+	<cms_index_index>
+		<reference name="head">
+			<action method="removeItem"><type>js</type><script>prototype/prototype.js</script></action>
+				<action method="removeItem"><type>js</type><script>lib/ccard.js</script></action>
+				<action method="removeItem"><type>js</type><script>prototype/validation.js</script></action>
+				<action method="removeItem"><type>js</type><script>scriptaculous/builder.js</script></action>
+				<action method="removeItem"><type>js</type><script>scriptaculous/effects.js</script></action>
+				<action method="removeItem"><type>js</type><script>scriptaculous/dragdrop.js</script></action>
+				<action method="removeItem"><type>js</type><script>scriptaculous/controls.js</script></action>
+				<action method="removeItem"><type>js</type><script>scriptaculous/slider.js</script></action>
+				<action method="removeItem"><type>js</type><script>varien/js.js</script></action>
+				<action method="removeItem"><type>js</type><script>varien/form.js</script></action>
+				<action method="removeItem"><type>js</type><script>varien/menu.js</script></action>
+				<action method="removeItem"><type>js</type><script>mage/translate.js</script></action>
+				<action method="removeItem"><type>js</type><script>mage/cookies.js</script></action>
+				<action method="removeItem"><type>js</type><script>smartwave/jquery/jquery-1.12.1.min.js</script></action>
+				<action method="removeItem"><type>js</type><script>smartwave/jquery/jquery-migrate-1.2.1.min.js</script></action>
+				<action method="removeItem"><type>js</type><script>smartwave/jquery/jquery-noconflict.js</script></action>
+				<action method="removeItem"><type>skin_js</type><name>js/lib/noconflict.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/lib/lazysizes.min.js</name></action>
+				<action method="removeItem"><type>js</type><script>smartwave/jquery/jquery-ui.min.js</script></action>
+				<action method="removeItem"><type>skin_js</type><name>js/lib/trunk8.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/bootstrap.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/stickyfill.min.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>/js/foundation.min.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/lib/foundation/foundation.topbar.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/additional.js</name><params>defer</params></action>
+				<action method="removeItem" ifconfig="intenso/exit_intent_popup/enable_popup"><type>skin_js</type><name>js/lib/ouibounce.js</name></action>
+				<action method="removeItem"><type>js</type><name>smartwave/jquery/plugins/selectbox/jquery.selectbox.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>slick/js/slick.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>slick/js/slick.min.js</name></action>
+				<action method="removeItem"><type>js</type><script>smartwave/jquery/plugins/owl-carousel/owl.carousel.min.js</script></action>
+				<action method="removeItem"><type>js</type><script>smartwave/jquery/plugins/owl-carousel/owl.carousel.js</script></action>
+				<action method="removeItem"><type>js</type><script>smartwave/jquery/plugins/jquery-accordion/js/jquery.accordion.js</script></action>
+				<action method="removeItem"><type>js</type><script>smartwave/ajaxcart/ajaxaddto.js</script></action>
+				<action method="removeItem"><type>skin_js</type><name>js/form.mini.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/theme.core.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/intenso.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/lib/slider.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/modernizr.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/lib/modernizr.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/hideMaxListItem.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/lib/slider.js</name></action>
+				<action method="removeItem" ifconfig="sales/msrp/enabled"><type>skin_js</type><name>js/msrp.js</name></action>
+				<action method="removeItem" ifconfig="sales/msrp/enabled"><type>skin_js</type><name>js/msrp_rwd.js</name></action>
+
+
+
+				<action method="addJs"><script>prototype/prototype.js</script><params>data-required="_" defer</params></action>
+                <action method="addJs"><script>lib/ccard.js</script><params>data-required="_" defer</params></action>
+                <action method="addJs"><script>prototype/validation.js</script><params>data-required="_" defer</params></action>
+                <action method="addJs"><script>scriptaculous/builder.js</script><params>data-required="_" defer</params></action>
+                <action method="addJs"><script>scriptaculous/effects.js</script><params>data-required="_" defer</params></action>
+                <action method="addJs"><script>scriptaculous/dragdrop.js</script><params>data-required="_" defer</params></action>
+                <action method="addJs"><script>scriptaculous/controls.js</script><params>data-required="_" defer</params></action>
+                <action method="addJs"><script>scriptaculous/slider.js</script><params>data-required="_" defer</params></action>
+                <action method="addJs"><script>varien/js.js</script><params>data-required="_" defer</params></action>
+                <action method="addJs"><script>varien/form.js</script><params>data-required="_" defer</params></action>
+                <action method="addJs"><script>varien/menu.js</script><params>data-required="_" defer</params></action>
+                <action method="addJs"><script>mage/translate.js</script><params>data-required="_" defer</params></action>
+                <action method="addJs"><script>mage/cookies.js</script><params>data-required="_" defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/lib/modernizr.js</name><params>data-required="_" defer</params></action>
+				<action method="addJs"><script>smartwave/jquery/jquery-1.12.1.min.js</script><params>data-required="_" defer</params></action>
+				<action method="addJs"><script>smartwave/jquery/jquery-migrate-1.2.1.min.js</script><params>data-required="_" defer</params></action>
+				<action method="addJs"><script>smartwave/jquery/jquery-noconflict.js</script><params>data-required="_" defer</params></action>
+				
+				<action method="removeItem"><type>js</type><script>lib/ccard.js</script></action>
+				<action method="removeItem"><type>js</type><script>varien/menu.js</script></action>
+				<action method="addItem"><type>skin_js</type><name>js/configurableswatches/product-media.js</name><params>data-required="_" defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/configurableswatches/swatches-list.js</name><params>data-required="_" defer</params></action>
+        </reference>
+		<reference name="before_body_end_scripts">
+				<action method="removeItem" ifconfig="intenso_design/page/form_fields_style"><type>skin_js</type><name>js/lib/chosen.jquery.min.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/intenso.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/lib/extendedreviews.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/lib/pinchzoom.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/lib/imagelightbox.js</name></action>
+				<action method="removeItem" ifconfig="intenso/quickview/enable"><type>skin_js</type><name>js/lib/intenso.quickview.js</name></action>
+				<!-- <action method="addJs"><script>smartwave/jquery/jquery-ui.min.js</script><params>defer</params></action> -->
+				<action method="addJs"><script>smartwave/jquery/plugins/jquery-accordion/js/jquery.accordion.js</script><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/form.mini.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/theme.core.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>slick/js/slick.min.js</name><params>defer</params></action>
+				<action method="addItem"><type>js</type><name>smartwave/jquery/plugins/selectbox/jquery.selectbox.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/hideMaxListItem.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/lib/trunk8.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/bootstrap.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/foundation.min.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/lib/foundation/foundation.topbar.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/additional.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/intenso.js</name><params>defer</params></action>
+				<action method="addJs"><script>smartwave/ajaxcart/ajaxaddto.js</script><params>defer</params></action>
+				<action method="addItem" ifconfig="sales/msrp/enabled"><type>skin_js</type><name>js/msrp.js</name><params>defer</params></action>
+				<action method="addItem" ifconfig="sales/msrp/enabled"><type>skin_js</type><name>js/msrp_rwd.js</name><params>defer</params></action>
+				<action method="addItem" ifconfig="intenso/exit_intent_popup/enable_popup"><type>skin_js</type><name>js/lib/ouibounce.js</name><params>defer</params></action>
+		</reference>
+	</cms_index_index>
+
+
+	 <catalogsearch_result_index>
+		<reference name="head">
+			<action method="removeItem"><type>js</type><script>prototype/prototype.js</script></action>
+			<action method="removeItem"><type>js</type><script>lib/ccard.js</script></action>
+			<action method="removeItem"><type>js</type><script>prototype/validation.js</script></action>
+			<action method="removeItem"><type>js</type><script>scriptaculous/builder.js</script></action>
+			<action method="removeItem"><type>js</type><script>scriptaculous/effects.js</script></action>
+			<action method="removeItem"><type>js</type><script>scriptaculous/dragdrop.js</script></action>
+			<action method="removeItem"><type>js</type><script>scriptaculous/controls.js</script></action>
+			<action method="removeItem"><type>js</type><script>scriptaculous/slider.js</script></action>
+			<action method="removeItem"><type>js</type><script>varien/js.js</script></action>
+			<action method="removeItem"><type>js</type><script>varien/form.js</script></action>
+			<action method="removeItem"><type>js</type><script>varien/menu.js</script></action>
+			<action method="removeItem"><type>js</type><script>mage/translate.js</script></action>
+			<action method="removeItem"><type>js</type><script>mage/cookies.js</script></action>
+			<action method="removeItem"><type>js</type><script>smartwave/jquery/jquery-1.12.1.min.js</script></action>
+			<action method="removeItem"><type>js</type><script>smartwave/jquery/jquery-migrate-1.2.1.min.js</script></action>
+			<action method="removeItem"><type>js</type><script>smartwave/jquery/jquery-noconflict.js</script></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/noconflict.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/lazysizes.min.js</name></action>
+			<action method="removeItem"><type>js</type><script>smartwave/jquery/jquery-ui.min.js</script></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/trunk8.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/bootstrap.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/stickyfill.min.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>/js/foundation.min.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/foundation/foundation.topbar.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/additional.js</name><params>defer</params></action>
+			<action method="removeItem" ifconfig="intenso/exit_intent_popup/enable_popup"><type>skin_js</type><name>js/lib/ouibounce.js</name></action>
+			<action method="removeItem"><type>js</type><name>smartwave/jquery/plugins/selectbox/jquery.selectbox.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>slick/js/slick.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>slick/js/slick.min.js</name></action>
+			<action method="removeItem"><type>js</type><script>smartwave/jquery/plugins/owl-carousel/owl.carousel.min.js</script></action>
+			<action method="removeItem"><type>js</type><script>smartwave/jquery/plugins/owl-carousel/owl.carousel.js</script></action>
+			<action method="removeItem"><type>js</type><script>smartwave/jquery/plugins/jquery-accordion/js/jquery.accordion.js</script></action>
+			<action method="removeItem"><type>js</type><script>smartwave/ajaxcart/ajaxaddto.js</script></action>
+			<action method="removeItem"><type>skin_js</type><name>js/form.mini.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/theme.core.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/intenso.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/slider.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/modernizr.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/modernizr.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/hideMaxListItem.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/slider.js</name></action>
+			<action method="removeItem" ifconfig="sales/msrp/enabled"><type>skin_js</type><name>js/msrp.js</name></action>
+			<action method="removeItem" ifconfig="sales/msrp/enabled"><type>skin_js</type><name>js/msrp_rwd.js</name></action>
+
+			<action ifconfig="intenso/quickview/enable" method="removeItem"><type>js</type><script>varien/product.js</script><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="removeItem"><type>js</type><script>varien/configurable.js</script><params>defer</params></action>
+			<action ifconfig="intenso/quickview/enable" method="removeItem"><type>js</type><script>varien/product_options.js</script><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="removeItem"><type>skin_js</type><name>js/configurableswatches/product-media.js</name><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="removeItem"><type>skin_js</type><name>js/configurableswatches/swatches-list.js</name><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="removeItem"><type>skin_js</type><name>js/configurableswatches/swatches-product.js</name><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="removeItem"><type>js</type><name>calendar/calendar.js</name><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="removeItem"><type>js</type><name>calendar/calendar-setup.js</name><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="removeItem"><type>skin_js</type><name>js/bundle.js</name><params>defer</params></action>
+			<action method="removeItem" ifconfig="itactica_layerednavigation/catalog/enabled"><type>skin_js</type><name>js/lib/native.history.js</name></action>
+			<action method="addJs"><script>prototype/prototype.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>lib/ccard.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>prototype/validation.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>scriptaculous/builder.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>scriptaculous/effects.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>scriptaculous/dragdrop.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>scriptaculous/controls.js</script><params>data-required="_" defer</params></action>
+			<!-- <action method="addJs"><script>scriptaculous/slider.js</script><params>data-required="_" defer</params></action> -->
+			<action method="addItem"><type>skin_js</type><name>js/lib/slider.js</name><params>defer</params></action>
+			<action method="addJs"><script>varien/js.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>varien/form.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>varien/menu.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>mage/translate.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>mage/cookies.js</script><params>data-required="_" defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/lib/modernizr.js</name><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>smartwave/jquery/jquery-1.12.1.min.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>smartwave/jquery/jquery-migrate-1.2.1.min.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>smartwave/jquery/jquery-noconflict.js</script><params>data-required="_" defer</params></action>
+			<action ifconfig="intenso/quickview/enable" method="addJs"><script>varien/product.js</script><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="addJs"><script>varien/configurable.js</script><params>defer</params></action>
+			<action ifconfig="intenso/quickview/enable" method="addJs"><script>varien/product_options.js</script><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="addItem"><type>skin_js</type><name>js/configurableswatches/product-media.js</name><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="addItem"><type>skin_js</type><name>js/configurableswatches/swatches-list.js</name><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="addItem"><type>skin_js</type><name>js/configurableswatches/swatches-product.js</name><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="addItem"><type>js</type><name>calendar/calendar.js</name><params>defer</params><!--<params/><if/><condition>can_load_calendar_js</condition>--></action>
+            <action ifconfig="intenso/quickview/enable" method="addItem"><type>js</type><name>calendar/calendar-setup.js</name><params>defer</params><!--<params/><if/><condition>can_load_calendar_js</condition>--></action>
+            <action ifconfig="intenso/quickview/enable" method="addItem"><type>skin_js</type><name>js/bundle.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/configurableswatches/product-media.js</name><params>defer</params></action>
+            <action method="addItem"><type>skin_js</type><name>js/configurableswatches/swatches-list.js</name><params>defer</params></action>
+
+			<action method="removeItem"><type>js</type><script>lib/ccard.js</script></action>
+			<action method="removeItem"><type>js</type><script>varien/menu.js</script></action>
+		</reference>
+		<reference name="before_body_end_scripts">
+				<action method="removeItem" ifconfig="intenso_design/page/form_fields_style"><type>skin_js</type><name>js/lib/chosen.jquery.min.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/intenso.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/lib/extendedreviews.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/lib/pinchzoom.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/lib/imagelightbox.js</name></action>
+				<action method="removeItem" ifconfig="intenso/quickview/enable"><type>skin_js</type><name>js/lib/intenso.quickview.js</name></action>
+				<!-- <action method="addJs"><script>smartwave/jquery/jquery-ui.min.js</script><params>defer</params></action> -->
+				<action method="addJs"><script>smartwave/jquery/plugins/jquery-accordion/js/jquery.accordion.js</script><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/theme.core.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>slick/js/slick.min.js</name><params>defer</params></action>
+				<action method="addItem"><type>js</type><name>smartwave/jquery/plugins/selectbox/jquery.selectbox.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/hideMaxListItem.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/lib/trunk8.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/bootstrap.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/foundation.min.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/lib/foundation/foundation.topbar.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/additional.js</name><params>defer</params></action>
+				<action method="addItem" ifconfig="itactica_layerednavigation/catalog/enabled"><type>skin_js</type><name>js/lib/native.history.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/intenso.js</name><params>defer</params></action>
+				<action method="addItem" ifconfig="intenso/quickview/enable"><type>skin_js</type><name>js/lib/intenso.quickview.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/lib/extendedreviews.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/lib/pinchzoom.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/lib/imagelightbox.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/form.mini.js</name><params>defer</params></action>
+				<action method="addJs"><script>smartwave/ajaxcart/ajaxaddto.js</script><params>defer</params></action>
+				<action method="addItem" ifconfig="sales/msrp/enabled"><type>skin_js</type><name>js/msrp.js</name><params>defer</params></action>
+				<action method="addItem" ifconfig="sales/msrp/enabled"><type>skin_js</type><name>js/msrp_rwd.js</name><params>defer</params></action>
+				<action method="addItem" ifconfig="intenso/exit_intent_popup/enable_popup"><type>skin_js</type><name>js/lib/ouibounce.js</name><params>defer</params></action>
+		</reference>
+		<reference name="search_result_list">
+			<block ifconfig="itactica_layerednavigation/catalog/ajax_load_list" type="core/text_list" name="search_result_list.after" as="after">
+                <block ifconfig="itactica_layerednavigation/catalog/ajax_load_list" type="configurableswatches/catalog_media_js_list" name="configurableswatches.media.js.list" template="tejar_ajax/media/js.phtml" />
+            </block>
+		</reference>
+    </catalogsearch_result_index>
+
+	 <catalog_category_layered translate="label">
+	 	<reference name="head">
+			<action method="removeItem"><type>js</type><script>prototype/prototype.js</script></action>
+			<action method="removeItem"><type>js</type><script>lib/ccard.js</script></action>
+			<action method="removeItem"><type>js</type><script>prototype/validation.js</script></action>
+			<action method="removeItem"><type>js</type><script>scriptaculous/builder.js</script></action>
+			<action method="removeItem"><type>js</type><script>scriptaculous/effects.js</script></action>
+			<action method="removeItem"><type>js</type><script>scriptaculous/dragdrop.js</script></action>
+			<action method="removeItem"><type>js</type><script>scriptaculous/controls.js</script></action>
+			<action method="removeItem"><type>js</type><script>scriptaculous/slider.js</script></action>
+			<action method="removeItem"><type>js</type><script>varien/js.js</script></action>
+			<action method="removeItem"><type>js</type><script>varien/form.js</script></action>
+			<action method="removeItem"><type>js</type><script>varien/menu.js</script></action>
+			<action method="removeItem"><type>js</type><script>mage/translate.js</script></action>
+			<action method="removeItem"><type>js</type><script>mage/cookies.js</script></action>
+			<action method="removeItem"><type>js</type><script>smartwave/jquery/jquery-1.12.1.min.js</script></action>
+			<action method="removeItem"><type>js</type><script>smartwave/jquery/jquery-migrate-1.2.1.min.js</script></action>
+			<action method="removeItem"><type>js</type><script>smartwave/jquery/jquery-noconflict.js</script></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/noconflict.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/lazysizes.min.js</name></action>
+			<action method="removeItem"><type>js</type><script>smartwave/jquery/jquery-ui.min.js</script></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/trunk8.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/bootstrap.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/stickyfill.min.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>/js/foundation.min.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/foundation/foundation.topbar.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/additional.js</name><params>defer</params></action>
+			<action method="removeItem" ifconfig="intenso/exit_intent_popup/enable_popup"><type>skin_js</type><name>js/lib/ouibounce.js</name></action>
+			<action method="removeItem"><type>js</type><name>smartwave/jquery/plugins/selectbox/jquery.selectbox.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>slick/js/slick.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>slick/js/slick.min.js</name></action>
+			<action method="removeItem"><type>js</type><script>smartwave/jquery/plugins/owl-carousel/owl.carousel.min.js</script></action>
+			<action method="removeItem"><type>js</type><script>smartwave/jquery/plugins/owl-carousel/owl.carousel.js</script></action>
+			<action method="removeItem"><type>js</type><script>smartwave/jquery/plugins/jquery-accordion/js/jquery.accordion.js</script></action>
+			<action method="removeItem"><type>js</type><script>smartwave/ajaxcart/ajaxaddto.js</script></action>
+			<action method="removeItem"><type>skin_js</type><name>js/form.mini.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/theme.core.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/intenso.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/slider.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/modernizr.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/modernizr.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/hideMaxListItem.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/slider.js</name></action>
+			<action method="removeItem" ifconfig="sales/msrp/enabled"><type>skin_js</type><name>js/msrp.js</name></action>
+			<action method="removeItem" ifconfig="sales/msrp/enabled"><type>skin_js</type><name>js/msrp_rwd.js</name></action>
+
+			<action ifconfig="intenso/quickview/enable" method="removeItem"><type>js</type><script>varien/product.js</script><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="removeItem"><type>js</type><script>varien/configurable.js</script><params>defer</params></action>
+			<action ifconfig="intenso/quickview/enable" method="removeItem"><type>js</type><script>varien/product_options.js</script><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="removeItem"><type>skin_js</type><name>js/configurableswatches/product-media.js</name><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="removeItem"><type>skin_js</type><name>js/configurableswatches/swatches-list.js</name><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="removeItem"><type>skin_js</type><name>js/configurableswatches/swatches-product.js</name><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="removeItem"><type>js</type><name>calendar/calendar.js</name><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="removeItem"><type>js</type><name>calendar/calendar-setup.js</name><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="removeItem"><type>skin_js</type><name>js/bundle.js</name><params>defer</params></action>
+			<action method="removeItem" ifconfig="itactica_layerednavigation/catalog/enabled"><type>skin_js</type><name>js/lib/native.history.js</name></action>
+			<action method="addJs"><script>prototype/prototype.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>lib/ccard.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>prototype/validation.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>scriptaculous/builder.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>scriptaculous/effects.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>scriptaculous/dragdrop.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>scriptaculous/controls.js</script><params>data-required="_" defer</params></action>
+			<!-- <action method="addJs"><script>scriptaculous/slider.js</script><params>data-required="_" defer</params></action> -->
+			<action method="addItem"><type>skin_js</type><name>js/lib/slider.js</name><params>defer</params></action>
+			<action method="addJs"><script>varien/js.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>varien/form.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>varien/menu.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>mage/translate.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>mage/cookies.js</script><params>data-required="_" defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/lib/modernizr.js</name><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>smartwave/jquery/jquery-1.12.1.min.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>smartwave/jquery/jquery-migrate-1.2.1.min.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>smartwave/jquery/jquery-noconflict.js</script><params>data-required="_" defer</params></action>
+			<action ifconfig="intenso/quickview/enable" method="addJs"><script>varien/product.js</script><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="addJs"><script>varien/configurable.js</script><params>defer</params></action>
+			<action ifconfig="intenso/quickview/enable" method="addJs"><script>varien/product_options.js</script><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="addItem"><type>skin_js</type><name>js/configurableswatches/product-media.js</name><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="addItem"><type>skin_js</type><name>js/configurableswatches/swatches-list.js</name><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="addItem"><type>skin_js</type><name>js/configurableswatches/swatches-product.js</name><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="addItem"><type>js</type><name>calendar/calendar.js</name><params>defer</params><!--<params/><if/><condition>can_load_calendar_js</condition>--></action>
+            <action ifconfig="intenso/quickview/enable" method="addItem"><type>js</type><name>calendar/calendar-setup.js</name><params>defer</params><!--<params/><if/><condition>can_load_calendar_js</condition>--></action>
+            <action ifconfig="intenso/quickview/enable" method="addItem"><type>skin_js</type><name>js/bundle.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/configurableswatches/product-media.js</name><params>defer</params></action>
+            <action method="addItem"><type>skin_js</type><name>js/configurableswatches/swatches-list.js</name><params>defer</params></action>
+
+			<action method="removeItem"><type>js</type><script>lib/ccard.js</script></action>
+			<action method="removeItem"><type>js</type><script>varien/menu.js</script></action>
+		</reference>
+		<reference name="before_body_end_scripts">
+			<action method="removeItem" ifconfig="intenso_design/page/form_fields_style"><type>skin_js</type><name>js/lib/chosen.jquery.min.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/intenso.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/extendedreviews.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/pinchzoom.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/imagelightbox.js</name></action>
+			<action method="removeItem" ifconfig="intenso/quickview/enable"><type>skin_js</type><name>js/lib/intenso.quickview.js</name></action>
+			<!-- <action method="addJs"><script>smartwave/jquery/jquery-ui.min.js</script><params>defer</params></action> -->
+			<action method="addJs"><script>smartwave/jquery/plugins/jquery-accordion/js/jquery.accordion.js</script><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/theme.core.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>slick/js/slick.min.js</name><params>defer</params></action>
+			<action method="addItem"><type>js</type><name>smartwave/jquery/plugins/selectbox/jquery.selectbox.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/hideMaxListItem.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/lib/trunk8.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/bootstrap.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/foundation.min.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/lib/foundation/foundation.topbar.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/additional.js</name><params>defer</params></action>
+			<action method="addItem" ifconfig="itactica_layerednavigation/catalog/enabled"><type>skin_js</type><name>js/lib/native.history.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/intenso.js</name><params>defer</params></action>
+			<action method="addItem" ifconfig="intenso/quickview/enable"><type>skin_js</type><name>js/lib/intenso.quickview.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/lib/extendedreviews.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/lib/pinchzoom.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/lib/imagelightbox.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/form.mini.js</name><params>defer</params></action>
+			<action method="addJs"><script>smartwave/ajaxcart/ajaxaddto.js</script><params>defer</params></action>
+			<action method="addItem" ifconfig="sales/msrp/enabled"><type>skin_js</type><name>js/msrp.js</name><params>defer</params></action>
+			<action method="addItem" ifconfig="sales/msrp/enabled"><type>skin_js</type><name>js/msrp_rwd.js</name><params>defer</params></action>
+			<action method="addItem" ifconfig="intenso/exit_intent_popup/enable_popup"><type>skin_js</type><name>js/lib/ouibounce.js</name><params>defer</params></action>
+		</reference>
+		<reference name="product_list">
+			<block type="reports/product_viewed" before="right.permanent.callout" name="left.reports.product.viewed.wrapper" template="tejar_ajax/reports/product_viewed.phtml" />
+			<block ifconfig="itactica_layerednavigation/catalog/ajax_load_list" type="core/text_list" name="product_list.after" as="after">
+                <block ifconfig="itactica_layerednavigation/catalog/ajax_load_list" type="configurableswatches/catalog_media_js_list" name="configurableswatches.media.js.list" template="tejar_ajax/media/js.phtml" />
+            </block>
+		</reference>
+	 </catalog_category_layered>
+
+
+	  <catalog_category_default translate="label">
+	 	<reference name="head">
+			<action method="removeItem"><type>js</type><script>prototype/prototype.js</script></action>
+			<action method="removeItem"><type>js</type><script>lib/ccard.js</script></action>
+			<action method="removeItem"><type>js</type><script>prototype/validation.js</script></action>
+			<action method="removeItem"><type>js</type><script>scriptaculous/builder.js</script></action>
+			<action method="removeItem"><type>js</type><script>scriptaculous/effects.js</script></action>
+			<action method="removeItem"><type>js</type><script>scriptaculous/dragdrop.js</script></action>
+			<action method="removeItem"><type>js</type><script>scriptaculous/controls.js</script></action>
+			<action method="removeItem"><type>js</type><script>scriptaculous/slider.js</script></action>
+			<action method="removeItem"><type>js</type><script>varien/js.js</script></action>
+			<action method="removeItem"><type>js</type><script>varien/form.js</script></action>
+			<action method="removeItem"><type>js</type><script>varien/menu.js</script></action>
+			<action method="removeItem"><type>js</type><script>mage/translate.js</script></action>
+			<action method="removeItem"><type>js</type><script>mage/cookies.js</script></action>
+			<action method="removeItem"><type>js</type><script>smartwave/jquery/jquery-1.12.1.min.js</script></action>
+			<action method="removeItem"><type>js</type><script>smartwave/jquery/jquery-migrate-1.2.1.min.js</script></action>
+			<action method="removeItem"><type>js</type><script>smartwave/jquery/jquery-noconflict.js</script></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/noconflict.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/lazysizes.min.js</name></action>
+			<action method="removeItem"><type>js</type><script>smartwave/jquery/jquery-ui.min.js</script></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/trunk8.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/bootstrap.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/stickyfill.min.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>/js/foundation.min.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/foundation/foundation.topbar.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/additional.js</name><params>defer</params></action>
+			<action method="removeItem" ifconfig="intenso/exit_intent_popup/enable_popup"><type>skin_js</type><name>js/lib/ouibounce.js</name></action>
+			<action method="removeItem"><type>js</type><name>smartwave/jquery/plugins/selectbox/jquery.selectbox.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>slick/js/slick.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>slick/js/slick.min.js</name></action>
+			<action method="removeItem"><type>js</type><script>smartwave/jquery/plugins/owl-carousel/owl.carousel.min.js</script></action>
+			<action method="removeItem"><type>js</type><script>smartwave/jquery/plugins/owl-carousel/owl.carousel.js</script></action>
+			<action method="removeItem"><type>js</type><script>smartwave/jquery/plugins/jquery-accordion/js/jquery.accordion.js</script></action>
+			<action method="removeItem"><type>js</type><script>smartwave/ajaxcart/ajaxaddto.js</script></action>
+			<action method="removeItem"><type>skin_js</type><name>js/form.mini.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/theme.core.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/intenso.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/slider.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/modernizr.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/modernizr.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/hideMaxListItem.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/slider.js</name></action>
+			<action method="removeItem" ifconfig="sales/msrp/enabled"><type>skin_js</type><name>js/msrp.js</name></action>
+			<action method="removeItem" ifconfig="sales/msrp/enabled"><type>skin_js</type><name>js/msrp_rwd.js</name></action>
+
+
+			<action ifconfig="intenso/quickview/enable" method="removeItem"><type>js</type><script>varien/product.js</script><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="removeItem"><type>js</type><script>varien/configurable.js</script><params>defer</params></action>
+			<action ifconfig="intenso/quickview/enable" method="removeItem"><type>js</type><script>varien/product_options.js</script><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="removeItem"><type>skin_js</type><name>js/configurableswatches/product-media.js</name><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="removeItem"><type>skin_js</type><name>js/configurableswatches/swatches-list.js</name><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="removeItem"><type>skin_js</type><name>js/configurableswatches/swatches-product.js</name><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="removeItem"><type>js</type><name>calendar/calendar.js</name><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="removeItem"><type>js</type><name>calendar/calendar-setup.js</name><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="removeItem"><type>skin_js</type><name>js/bundle.js</name><params>defer</params></action>
+			<action method="removeItem" ifconfig="itactica_layerednavigation/catalog/enabled"><type>skin_js</type><name>js/lib/native.history.js</name></action>
+			<action method="addJs"><script>prototype/prototype.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>lib/ccard.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>prototype/validation.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>scriptaculous/builder.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>scriptaculous/effects.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>scriptaculous/dragdrop.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>scriptaculous/controls.js</script><params>data-required="_" defer</params></action>
+			<!-- <action method="addJs"><script>scriptaculous/slider.js</script><params>data-required="_" defer</params></action> -->
+			<action method="addItem"><type>skin_js</type><name>js/lib/slider.js</name><params>defer</params></action>
+			<action method="addJs"><script>varien/js.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>varien/form.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>varien/menu.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>mage/translate.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>mage/cookies.js</script><params>data-required="_" defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/lib/modernizr.js</name><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>smartwave/jquery/jquery-1.12.1.min.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>smartwave/jquery/jquery-migrate-1.2.1.min.js</script><params>data-required="_" defer</params></action>
+			<action method="addJs"><script>smartwave/jquery/jquery-noconflict.js</script><params>data-required="_" defer</params></action>
+			<action ifconfig="intenso/quickview/enable" method="addJs"><script>varien/product.js</script><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="addJs"><script>varien/configurable.js</script><params>defer</params></action>
+			<action ifconfig="intenso/quickview/enable" method="addJs"><script>varien/product_options.js</script><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="addItem"><type>skin_js</type><name>js/configurableswatches/product-media.js</name><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="addItem"><type>skin_js</type><name>js/configurableswatches/swatches-list.js</name><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="addItem"><type>skin_js</type><name>js/configurableswatches/swatches-product.js</name><params>defer</params></action>
+            <action ifconfig="intenso/quickview/enable" method="addItem"><type>js</type><name>calendar/calendar.js</name><params>defer</params><!--<params/><if/><condition>can_load_calendar_js</condition>--></action>
+            <action ifconfig="intenso/quickview/enable" method="addItem"><type>js</type><name>calendar/calendar-setup.js</name><params>defer</params><!--<params/><if/><condition>can_load_calendar_js</condition>--></action>
+            <action ifconfig="intenso/quickview/enable" method="addItem"><type>skin_js</type><name>js/bundle.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/configurableswatches/product-media.js</name><params>defer</params></action>
+            <action method="addItem"><type>skin_js</type><name>js/configurableswatches/swatches-list.js</name><params>defer</params></action>
+
+			<action method="removeItem"><type>js</type><script>lib/ccard.js</script></action>
+			<action method="removeItem"><type>js</type><script>varien/menu.js</script></action>
+		</reference>
+		<reference name="before_body_end_scripts">
+			<action method="removeItem" ifconfig="intenso_design/page/form_fields_style"><type>skin_js</type><name>js/lib/chosen.jquery.min.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/intenso.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/extendedreviews.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/pinchzoom.js</name></action>
+			<action method="removeItem"><type>skin_js</type><name>js/lib/imagelightbox.js</name></action>
+			<action method="removeItem" ifconfig="intenso/quickview/enable"><type>skin_js</type><name>js/lib/intenso.quickview.js</name></action>
+			<!-- <action method="addJs"><script>smartwave/jquery/jquery-ui.min.js</script><params>defer</params></action> -->
+			<action method="addJs"><script>smartwave/jquery/plugins/jquery-accordion/js/jquery.accordion.js</script><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/theme.core.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>slick/js/slick.min.js</name><params>defer</params></action>
+			<action method="addItem"><type>js</type><name>smartwave/jquery/plugins/selectbox/jquery.selectbox.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/hideMaxListItem.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/lib/trunk8.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/bootstrap.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/foundation.min.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/lib/foundation/foundation.topbar.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/additional.js</name><params>defer</params></action>
+			<action method="addItem" ifconfig="itactica_layerednavigation/catalog/enabled"><type>skin_js</type><name>js/lib/native.history.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/intenso.js</name><params>defer</params></action>
+			<action method="addItem" ifconfig="intenso/quickview/enable"><type>skin_js</type><name>js/lib/intenso.quickview.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/lib/extendedreviews.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/lib/pinchzoom.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/lib/imagelightbox.js</name><params>defer</params></action>
+			<action method="addItem"><type>skin_js</type><name>js/form.mini.js</name><params>defer</params></action>
+			<action method="addJs"><script>smartwave/ajaxcart/ajaxaddto.js</script><params>defer</params></action>
+			<action method="addItem" ifconfig="sales/msrp/enabled"><type>skin_js</type><name>js/msrp.js</name><params>defer</params></action>
+			<action method="addItem" ifconfig="sales/msrp/enabled"><type>skin_js</type><name>js/msrp_rwd.js</name><params>defer</params></action>
+			<action method="addItem" ifconfig="intenso/exit_intent_popup/enable_popup"><type>skin_js</type><name>js/lib/ouibounce.js</name><params>defer</params></action>
+		</reference>
+		<reference name="product_list">
+			<block type="reports/product_viewed" before="right.permanent.callout" name="left.reports.product.viewed.wrapper" template="tejar_ajax/reports/product_viewed.phtml" />
+			<block ifconfig="itactica_layerednavigation/catalog/ajax_load_list" type="core/text_list" name="product_list.after" as="after">
+                <block ifconfig="itactica_layerednavigation/catalog/ajax_load_list" type="configurableswatches/catalog_media_js_list" name="configurableswatches.media.js.list" template="tejar_ajax/media/js.phtml" />
+            </block>
+		</reference>
+	 </catalog_category_default>
+
+	<catalog_product_view>
+		<reference name="head">
+				<action method="removeItem"><type>js</type><script>prototype/prototype.js</script></action>
+				<action method="removeItem"><type>js</type><script>lib/ccard.js</script></action>
+				<action method="removeItem"><type>js</type><script>prototype/validation.js</script></action>
+				<action method="removeItem"><type>js</type><script>scriptaculous/builder.js</script></action>
+				<action method="removeItem"><type>js</type><script>scriptaculous/effects.js</script></action>
+				<action method="removeItem"><type>js</type><script>scriptaculous/dragdrop.js</script></action>
+				<action method="removeItem"><type>js</type><script>scriptaculous/controls.js</script></action>
+				<action method="removeItem"><type>js</type><script>scriptaculous/slider.js</script></action>
+				<action method="removeItem"><type>js</type><script>varien/js.js</script></action>
+				<action method="removeItem"><type>js</type><script>varien/form.js</script></action>
+				<action method="removeItem"><type>js</type><script>varien/menu.js</script></action>
+				<action method="removeItem"><type>js</type><script>mage/translate.js</script></action>
+				<action method="removeItem"><type>js</type><script>mage/cookies.js</script></action>
+				<action method="removeItem"><type>js</type><script>smartwave/jquery/jquery-1.12.1.min.js</script></action>
+				<action method="removeItem"><type>js</type><script>smartwave/jquery/jquery-migrate-1.2.1.min.js</script></action>
+				<action method="removeItem"><type>js</type><script>smartwave/jquery/jquery-noconflict.js</script></action>
+				<action method="removeItem"><type>skin_js</type><name>js/lib/noconflict.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/lib/lazysizes.min.js</name></action>
+				<action method="removeItem"><type>js</type><script>smartwave/jquery/jquery-ui.min.js</script></action>
+				<action method="removeItem"><type>skin_js</type><name>js/lib/trunk8.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/bootstrap.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/stickyfill.min.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>/js/foundation.min.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/lib/foundation/foundation.topbar.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/additional.js</name><params>defer</params></action>
+				<action method="removeItem" ifconfig="intenso/exit_intent_popup/enable_popup"><type>skin_js</type><name>js/lib/ouibounce.js</name></action>
+				<action method="removeItem"><type>js</type><name>smartwave/jquery/plugins/selectbox/jquery.selectbox.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>slick/js/slick.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>slick/js/slick.min.js</name></action>
+				<action method="removeItem"><type>js</type><script>smartwave/jquery/plugins/owl-carousel/owl.carousel.min.js</script></action>
+				<action method="removeItem"><type>js</type><script>smartwave/jquery/plugins/owl-carousel/owl.carousel.js</script></action>
+				<action method="removeItem"><type>js</type><script>smartwave/jquery/plugins/jquery-accordion/js/jquery.accordion.js</script></action>
+				<action method="removeItem"><type>js</type><script>smartwave/ajaxcart/ajaxaddto.js</script></action>
+				<action method="removeItem"><type>skin_js</type><name>js/form.mini.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/theme.core.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/intenso.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/lib/slider.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/modernizr.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/lib/modernizr.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/hideMaxListItem.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/lib/slider.js</name></action>
+				<action method="removeItem"><type>js</type><script>varien/product.js</script></action>
+				<action method="removeItem"><type>js</type><script>varien/product_options.js</script></action>
+				<action method="removeItem"><type>js</type><script>varien/configurable.js</script></action>
+				<action method="removeItem"><type>js</type><name>calendar/calendar.js</name><!--<params/><if/><condition>can_load_calendar_js</condition>--></action>
+				<action method="removeItem"><type>js</type><name>calendar/calendar-setup.js</name><!--<params/><if/><condition>can_load_calendar_js</condition>--></action>
+				<action method="removeItem" ifconfig="sales/msrp/enabled"><type>skin_js</type><name>js/msrp.js</name></action>
+				<action method="removeItem" ifconfig="sales/msrp/enabled"><type>skin_js</type><name>js/msrp_rwd.js</name></action>
+
+
+				<action method="addJs"><script>prototype/prototype.js</script><params>data-required="_" defer</params></action>
+                <action method="addJs"><script>lib/ccard.js</script><params>data-required="_" defer</params></action>
+                <action method="addJs"><script>prototype/validation.js</script><params>data-required="_" defer</params></action>
+                <action method="addJs"><script>scriptaculous/builder.js</script><params>data-required="_" defer</params></action>
+                <action method="addJs"><script>scriptaculous/effects.js</script><params>data-required="_" defer</params></action>
+                <action method="addJs"><script>scriptaculous/dragdrop.js</script><params>data-required="_" defer</params></action>
+                <action method="addJs"><script>scriptaculous/controls.js</script><params>data-required="_" defer</params></action>
+                <action method="addJs"><script>scriptaculous/slider.js</script><params>data-required="_" defer</params></action>
+                <action method="addJs"><script>varien/js.js</script><params>data-required="_" defer</params></action>
+                <action method="addJs"><script>varien/form.js</script><params>data-required="_" defer</params></action>
+                <action method="addJs"><script>varien/menu.js</script><params>data-required="_" defer</params></action>
+                <action method="addJs"><script>mage/translate.js</script><params>data-required="_" defer</params></action>
+                <action method="addJs"><script>mage/cookies.js</script><params>data-required="_" defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/lib/modernizr.js</name><params>data-required="_" defer</params></action>
+				<action method="addJs"><script>smartwave/jquery/jquery-1.12.1.min.js</script><params>data-required="_" defer</params></action>
+				<action method="addJs"><script>smartwave/jquery/jquery-migrate-1.2.1.min.js</script><params>data-required="_" defer</params></action>
+				<action method="addJs"><script>smartwave/jquery/jquery-noconflict.js</script><params>data-required="_" defer</params></action>
+
+				<action method="addJs"><script>varien/product.js</script><params>data-required="_" defer</params></action>
+				<action method="addJs"><script>varien/product_options.js</script><params>data-required="_" defer</params></action>
+				<action method="addJs"><script>varien/configurable.js</script><params>data-required="_" defer</params></action>
+
+				<action method="addItem"><type>js</type><name>calendar/calendar.js</name><params>data-required="_" defer</params><!--<params/><if/><condition>can_load_calendar_js</condition>--></action>
+				<action method="addItem"><type>js</type><name>calendar/calendar-setup.js</name><params>data-required="_" defer</params><!--<params/><if/><condition>can_load_calendar_js</condition>--></action>
+
+				<!-- <action method="removeItem"><type>js</type><script>scriptaculous/builder.js</script></action> -->
+				<!-- <action method="removeItem"><type>js</type><script>scriptaculous/effects.js</script></action> -->
+				<action method="removeItem"><type>js</type><script>scriptaculous/dragdrop.js</script></action>
+				<action method="removeItem"><type>js</type><script>scriptaculous/controls.js</script></action>
+				<action method="removeItem"><type>js</type><script>scriptaculous/slider.js</script></action>
+				<action method="removeItem"><type>js</type><script>lib/ccard.js</script></action>
+				<action method="removeItem"><type>js</type><script>varien/menu.js</script></action>
+        </reference>
+		<reference name="before_body_end_scripts">
+				<action method="removeItem" ifconfig="intenso_design/page/form_fields_style"><type>skin_js</type><name>js/lib/chosen.jquery.min.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/intenso.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/lib/extendedreviews.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/lib/pinchzoom.js</name></action>
+				<action method="removeItem"><type>skin_js</type><name>js/lib/imagelightbox.js</name></action>
+				<action method="removeItem" ifconfig="intenso/quickview/enable"><type>skin_js</type><name>js/lib/intenso.quickview.js</name></action>
+				<!-- <action method="addJs"><script>smartwave/jquery/jquery-ui.min.js</script><params>defer</params></action> -->
+				<action method="addJs"><script>smartwave/jquery/plugins/jquery-accordion/js/jquery.accordion.js</script><params>defer</params></action>
+
+				<action method="addItem"><type>skin_js</type><name>js/theme.core.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>slick/js/slick.min.js</name><params>defer</params></action>
+				<action method="addItem"><type>js</type><name>smartwave/jquery/plugins/selectbox/jquery.selectbox.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/hideMaxListItem.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/lib/trunk8.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/bootstrap.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/foundation.min.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/lib/foundation/foundation.topbar.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/additional.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/intenso.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/lib/extendedreviews.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/lib/pinchzoom.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/lib/imagelightbox.js</name><params>defer</params></action>
+				<action method="addItem"><type>skin_js</type><name>js/form.mini.js</name><params>defer</params></action>
+				<action method="addJs"><script>smartwave/ajaxcart/ajaxaddto.js</script><params>defer</params></action>
+				<action method="addItem" ifconfig="sales/msrp/enabled"><type>skin_js</type><name>js/msrp.js</name><params>defer</params></action>
+				<action method="addItem" ifconfig="sales/msrp/enabled"><type>skin_js</type><name>js/msrp_rwd.js</name><params>defer</params></action>
+				<action method="addItem" ifconfig="intenso/exit_intent_popup/enable_popup"><type>skin_js</type><name>js/lib/ouibounce.js</name><params>defer</params></action>
+		</reference>
+		<reference name="product.info">
+			<block ifconfig="catalog/related/is_ajax" type="catalog/product_list_related" name="catalog.product.related" as="related_products" template="tejar_ajax/product/list/related/wrapper.phtml"/>
+			<block ifconfig="catalog/related/is_ajax" type="mageworx_alsobought/list" name="catalog.product.alsobought" as="alsobought_products" before="-" template="tejar_ajax/product/list/related/wrapper.phtml" />
+			<block ifconfig="catalog/related/is_ajax" type="catalog/product_list_upsell" name="product.info.upsell" as="upsell_products" before="-" template="tejar_ajax/product/list/upsell/wrapper.phtml" />
+			<block ifconfig="catalog/related/is_ajax" type="catalog/product_list_crosssell" name="product.info.crosssell" as="crosssell_products" before="-" template="tejar_ajax/product/list/crosssell/wrapper.phtml" />
+		</reference>
+	</catalog_product_view>
+
+
+
+	<product_list>
+		<reference name="head">
+			<action method="addItem"><type>skin_js</type><name>js/configurableswatches/product-media.js</name><params>defer</params></action>
+            <action method="addItem"><type>skin_js</type><name>js/configurableswatches/swatches-list.js</name><params>defer</params></action>
+		</reference>
+		<reference name="product_list.after">
+			<block ifconfig="itactica_layerednavigation/catalog/ajax_load_list" type="configurableswatches/catalog_media_js_list" name="configurableswatches.media.js.list" template="tejar_ajax/media/product/js.phtml" />
+        </reference>
+	</product_list>
+
+	 <PRODUCT_TYPE_configurable>
+        <reference name="head">
+			<action method="removeItem"><type>skin_js</type><name>js/configurableswatches/product-media.js</name></action>
+            <action method="removeItem"><type>skin_js</type><name helper="configurableswatches/getSwatchesProductJs"></name></action>
+            <action method="addItem"><type>skin_js</type><name>js/configurableswatches/product-media.js</name><params> defer</params></action>
+            <action method="addItem"><type>skin_js</type><name helper="configurableswatches/getSwatchesProductJs"></name><params> defer</params></action>
+        </reference>
+		<reference name="product.info.options.configurable">
+            <block ifconfig="intenso/product_page/swatch_ajax" type="core/text_list" name="product.info.options.configurable.after" as="after">
+                <block ifconfig="intenso/product_page/swatch_ajax" type="core/template" template="tejar_ajax/configurableswatches/catalog/product/view/type/configurable/swatch-js.phtml" />
+            </block>
+        </reference>
+	 </PRODUCT_TYPE_configurable>
+
+
+
+
+</layout>

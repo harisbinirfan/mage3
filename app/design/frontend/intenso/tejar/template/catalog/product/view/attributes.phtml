@@ -1,0 +1,41 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+
+/**
+ * Product additional attributes template
+ *
+ * @see Mage_Catalog_Block_Product_View_Attributes
+ */
+?>
+<?php
+    $_helper = $this->helper('catalog/output');
+    $_product = $this->getProduct()
+?>
+<?php if($_additional = $this->getAdditionalData()): ?>
+<div class="Additional_info">
+	<div class="table_wrap">
+        <table class="data-table" id="product-attribute-specs-table">
+            <tbody>
+            <?php foreach ($_additional as $_data): ?>
+                <tr>
+                    <th><?php echo $this->escapeHtml($this->__($_data['label'])) ?></th>
+                    <td <?php if($this->escapeHtml($this->__($_data['label']))=="SKU"):?>id="<?php echo $this->escapeHtml($this->__($_data['label']))=="SKU"?'associated-sku':''; ?>"<?php endif;?>><?php echo $_helper->productAttribute($_product, $_data['value'], $_data['code']) ?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+	<script type="text/javascript">
+	document.addEventListener("DOMContentLoaded", function(){
+		decorateTable('product-attribute-specs-table');
+	});
+	</script>
+</div>
+<?php endif;?>

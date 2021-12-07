@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Tejar is not affiliated with or in any way responsible for this code.
+ *
+ * Commercial support is available directly from the [extension author](http://www.techytalk.info/contact/).
+ *
+ * @category Marko-M
+ * @package SocialConnect
+ * @author Marko Martinović <marko@techytalk.info>
+ * @copyright Copyright (c) Marko Martinović (http://www.techytalk.info)
+ * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ */
+-->
+<config>
+    <modules>
+        <Tejar_SocialConnect>
+            <version>0.1.0</version>
+        </Tejar_SocialConnect>
+    </modules>
+    <default>
+        <customer>
+            <tejar_socialconnect_google>
+                <enabled>0</enabled>
+            </tejar_socialconnect_google>
+            <tejar_socialconnect_facebook>
+                <enabled>0</enabled>
+            </tejar_socialconnect_facebook>
+            <tejar_socialconnect_twitter>
+                <enabled>0</enabled>
+            </tejar_socialconnect_twitter>
+            <tejar_socialconnect_linkedin>
+                <enabled>0</enabled>
+            </tejar_socialconnect_linkedin>
+        </customer>
+    </default>
+    <frontend>
+        <translate>
+            <modules>
+                <Tejar_SocialConnect>
+                     <files>
+                        <default>Tejar_SocialConnect.csv</default>
+                     </files>
+                </Tejar_SocialConnect>
+            </modules>
+        </translate>
+        <layout>
+            <updates>
+                <tejar_socialconnect>
+                    <file>tejar_socialconnect.xml</file>
+                </tejar_socialconnect>
+            </updates>
+        </layout>
+        <routers>
+            <tejar_socialconnect>
+                <use>standard</use>
+                <args>
+                    <module>Tejar_SocialConnect</module>
+                    <frontName>socialconnect</frontName>
+                </args>
+            </tejar_socialconnect>
+			<customer>
+				<args>
+					<modules>
+						<Tejar_SocialConnect before="Mage_Customer">Tejar_SocialConnect_Customer</Tejar_SocialConnect>
+					</modules>
+				</args>
+			</customer>
+        </routers>
+		
+    </frontend>
+    <global>
+        <models>
+            <tejar_socialconnect>
+                <class>Tejar_SocialConnect_Model</class>
+            </tejar_socialconnect>
+        </models>
+        <blocks>
+            <tejar_socialconnect>
+                <class>Tejar_SocialConnect_Block</class>
+            </tejar_socialconnect>
+        </blocks>
+        <helpers>
+            <tejar_socialconnect>
+                <class>Tejar_SocialConnect_Helper</class>
+            </tejar_socialconnect>
+        </helpers>
+        <resources>
+            <tejar_socialconnect_setup>
+                <setup>
+                    <module>Tejar_SocialConnect</module>
+                    <class>Tejar_SocialConnect_Model_Resource_Setup</class>
+                </setup>
+            </tejar_socialconnect_setup>
+        </resources>
+		<events>
+            <customer_logout>
+                <observers>
+                    <tejar_socialconnect_model_observer>
+                        <type>singleton</type>
+                        <class>Tejar_SocialConnect_Model_Observer</class>
+                        <method>CustomerLogout</method>
+                    </tejar_socialconnect_model_observer>
+                </observers>
+            </customer_logout>
+        </events>
+    </global>
+</config>

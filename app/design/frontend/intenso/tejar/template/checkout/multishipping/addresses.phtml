@@ -1,0 +1,140 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php
+/**
+ * Ship to multiple address template
+ *
+ * @see Mage_Checkout_Block_Multishipping_Addresses
+ */
+?>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="page-title">
+            <h1><?php echo $this->__('Ship to Multiple Addresses') ?></h1>
+            <p class="pull-left"><?php echo $this->__('Please select shipping address for applicable items') ?></p>
+			<?php if (Mage::helper('checkout')->canOnepageCheckout()): ?>
+			<p class="pull-right"><a href="<?php if(Mage::getStoreConfig('checkout/options/checkout_onepage_tejar_custom')==1 ): ?><?php echo $this->getUrl('buy/checkout/onepage/'); ?><?php else: ?><?php echo $this->getUrl('checkout/onepage/'); ?><?php endif; ?>" ><?php echo $this->__('Ship to one address') ?></a></p>
+			<?php endif; ?>
+        </div>
+		<div class="multi_shipping" id="checkout-review-table-wrapper">
+				<form id="checkout_multishipping_form" action="<?php echo $this->getPostActionUrl() ?>" method="post">
+						<div class="multiple-checkout">
+							<div class="title-buttons"></div>
+								<input type="hidden" name="continue" value="0" id="can_continue_flag" />
+								<input type="hidden" name="new_address" value="0" id="add_new_address_flag" />
+								<table class="table_type_1 theme_table shopping_cart_table" id="multiship-addresses-table">
+									<thead>
+										<tr>
+											<th class="product_image_col"><?php echo $this->__('Image') ?></th>
+											<th class="product_title_col"><?php echo $this->__('Product') ?></th>
+											<th class="product_qty_col a-center"><?php echo $this->__('Qty') ?></th>
+											<th class="product_title_col"><?php echo $this->__('Send To') ?></th>
+											<th class="product_qty_col"><?php echo $this->__('Action') ?></th>
+										</tr>
+									</thead>
+									<tbody>
+									<?php foreach ($this->getItems() as $_index => $_item): 
+									
+									
+										$configItem = Mage::getModel('catalog/product')->loadByAttribute('sku', $_item->getSku());
+										/*--------------------------------------------------------*/
+										/* 3SD CODE ASSOCIATE PRODUCT NAME */
+										if($_item->getSku() == ''){
+											$configItemId = Mage::getModel('catalog/product')->load($_item->getId()) ;
+										}
+										else
+										{
+										$configItemId = Mage::getModel('catalog/product')->loadByAttribute('sku', $_item->getSku());
+										}
+										/*--------------------------------------------------------*/
+										$product = Mage::getModel('catalog/product')->setStoreId(Mage::app()->getStore()->getId())->load($_item->getProductId());
+										//--- Get Product Brand...
+										$productBrand  = $product->getAttributeText('manufacturer');
+										//$productModel = Mage::getModel('catalog/product')->load($item->getProduct()->getId())->getModel();
+										//--- Taking Model by using loadByAttribute as currently unable to get it from $product object..
+										$productModel  = $configItem->getModel();
+										//echo var_dump($configItem->getData('model'));
+	
+											//--- Create Brand URL...
+										  $brandUrl=Mage::getUrl(); 
+										  $brandName = strtolower($product->getAttributeText('manufacturer'));
+										  $brandName = str_replace(' ', '-', $brandName);
+										  
+										  //--- Fix for replacing space and '&' from brand name.
+										  $brandName = str_replace(' ', '-', $brandName);
+										  $brandName = str_replace('-&-', '-', $brandName);
+									
+									?>
+										<?php if ($_item->getQuoteItem()) :?>
+										<tr>
+											<td>
+									<a href="<?php echo $product->getProductUrl() ?>" title="<?php echo $_item->getName() ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($configItem, 'small_image')->resize(150); ?>" width="150" height="150" class="media-object img-responsive" alt="<?php echo $this->getImageLabel($configItem, 'small_image'); ?>"/></a>
+											</td>
+											<td>
+												<h2 class="product-name"><a href="<?php echo $product->getProductUrl(); ?>" class=""><span><?php echo $this->escapeHtml($configItemId->getName()); ?></span></a></h2>
+												<div class="cart-brand-model">
+													<p>By: <a href="<?php echo $brandUrl;?><?php echo strtolower($brandName);?>"><?php echo $productBrand;?></a></p>
+													<p>Model: <span><?php echo $productModel;?></span></p>
+												</div>
+												<?php // echo $this->getItemHtml($_item->getQuoteItem())?>
+												
+											</td>
+											  <td id="qty-wrapper-<?php echo $_item->getId() ?>">
+												<?php if ($this->getQty() < 10): ?>
+													<select name="ship[<?php echo $_index ?>][<?php echo $_item->getQuoteItemId() ?>][qty]" id="ship[<?php echo $_item->getId() ?>][qty]" class="simulate-change">
+														<?php for ($i=1; $i < 10; $i++): ?>
+															<option value="<?php echo $i ?>"<?php if ($_item->getQty() == $i): ?> selected="selected"<?php endif; ?>><?php echo $i ?></option>
+														<?php endfor; ?>
+														<option value="10">10+</option>
+													</select>
+													<script type="text/javascript">
+														$("ship[<?php echo $_item->getId() ?>][qty]").observe('change', function(){
+															if ($(this).getValue() == 10) {
+																$("qty-wrapper-<?php echo $_item->getId() ?>").update('<input type="number" name="ship[<?php echo $_index ?>][<?php echo $_item->getQuoteItemId() ?>][qty]" value="<?php echo $_item->getQty() ?>" size="4" title="<?php echo $this->__('Qty') ?>" class="input-text qty" />');
+															}
+														});
+													</script>
+												<?php else: ?>
+													<input type="text" name="ship[<?php echo $_index ?>][<?php echo $_item->getQuoteItemId() ?>][qty]" value="<?php echo $this->escapeHtml($_item->getQty()) ?>" size="2" class="input-text qty" />
+												<?php endif; ?>
+											</td>
+											<td><?php if ($_item->getProduct()->getIsVirtual()): echo $this->__('Shipping selection is not applicable.'); else: echo $this->getAddressesHtmlSelect($_item, $_index); endif; ?></td>
+											<td class="col-action" data-title="Action">
+												<a href="<?php echo $this->getItemDeleteUrl($_item) ?>" title="<?php echo $this->__('Remove Item') ?>" class="btn-floating waves-effect waves-light red"><i class="icons-cancel-2"></i></a>
+											</td>
+										</tr>
+										<?php endif; ?>
+									<?php endforeach; ?>
+									</tbody>
+									<tfoot>
+										<tr>
+											<td colspan="5" style="text-align: right;">
+											<button type="submit" title="<?php echo $this->__('Update Qty &amp; Addresses') ?>" class="btn green" onclick="$('can_continue_flag').value=0"><span><span><?php echo $this->__('Update Qty &amp; Addresses') ?></span></span></button>
+											<button data-action="add-new-customer-address" type="button" title="<?php echo $this->__('Enter a New Address') ?>" class="btn secondary" onclick="$('add_new_address_flag').value=1; $('checkout_multishipping_form').submit();"><span><span><?php echo $this->__('Enter a New Address') ?></span></span></button>
+											</td>
+										</tr>
+									</tfoot>
+								</table>
+							<script type="text/javascript">decorateTable('multiship-addresses-table')</script>
+						</div>
+					<div class="buttons-set">
+						<p class="back-link"><a class="arrow-left" href="<?php echo $this->getBackUrl() ?>"><?php echo $this->__('Back to Shopping Cart') ?></a></p>
+                        <button type="submit" data-action="checkout-continue-shipping" title="<?php echo $this->__('Continue to Shipping Information') ?>" class="btn <?php if ($this->isContinueDisabled()):?> disabled<?php endif; ?>" onclick="$('can_continue_flag').value=1"<?php if ($this->isContinueDisabled()):?> disabled="disabled"<?php endif; ?>><span><span><?php echo $this->__('Continue to Shipping Information') ?></span></span></button>
+                    </div>
+				
+				 <?php echo $this->getBlockHtml('formkey') ?>
+            </form>
+			</div>
+        </div>
+    </div>
+
+

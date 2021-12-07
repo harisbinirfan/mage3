@@ -1,0 +1,326 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     default_default
+ * @copyright   Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<div class="entry-edit">
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend"><?php echo Mage::helper('catalog')->__('Product Categories') ?></h4>
+    </div>
+    <fieldset id="grop_fields">
+        <input type="hidden" name="category_ids" id="product_categories" value="<?php echo $this->getIdsString() ?>" class="validate-parent-cateogry validate-category validate-brand validate-brand-match-attribute validate-category-match-attributeset validate-category-duplication validate-brand-duplication">
+        <?php $product = Mage::registry('current_product'); ?>
+    		<?php if($product): ?>
+    		<?php if($attributeSetId = $product->getAttributeSetId()): ?>
+    			<?php
+    				$attributeSetModel = Mage::getModel("eav/entity_attribute_set");
+    				$attributeSetModel->load($attributeSetId);
+    				$attributeSetName  = $attributeSetModel->getAttributeSetName();
+    			?>
+    			<input type="hidden" id="attributeSetName" name="attributeSetName" value="<?php echo $attributeSetName; ?>"/>
+    			<?php endif; ?>
+    		<?php endif; ?>
+        <div id="product-categories" class="tree"></div>
+    </fieldset>
+</div>
+<?php if($this->getRootNode() && $this->getRootNode()->hasChildren()): ?>
+<script type="text/javascript">
+// 3SD CODE DECLEAR ALL VARS
+var categoryValid = [];
+var parentCategoryValidate = true;
+var lastCategoryValidate = false;
+var brandValidate = false;
+var brandMatchAttributeValidate = false;
+var categoryMatchAttributeSetValidate = false;
+var categoryDuplicationValidate = true;
+var brandDuplicationValidate = true;
+
+// 3SD CODE GET MANUFACTURER TEXT
+var manufacturer = document.getElementById("manufacturer");
+var manufacturerIndex = manufacturer.selectedIndex;
+var manufacturerText = manufacturer.getElementsByTagName("option")[manufacturerIndex].text;
+var attributeSetName = document.getElementById("attributeSetName").value;
+
+Ext.EventManager.onDocumentReady(function() {
+    var categoryLoader = new Ext.tree.TreeLoader({
+       dataUrl: '<?php echo $this->getLoadTreeUrl()?>'
+    });
+
+    categoryLoader.createNode = function(config) {
+        config.uiProvider = Ext.tree.CheckboxNodeUI;
+        var node;
+        if (config.children && !config.children.length) {
+            delete(config.children);
+            node = new Ext.tree.AsyncTreeNode(config);
+
+        } else {
+            node = new Ext.tree.TreeNode(config);
+        }
+        return node;
+    };
+
+    categoryLoader.on("beforeload", function(treeLoader, node) {
+        treeLoader.baseParams.category = node.attributes.id;
+    });
+
+    categoryLoader.on("load", function(treeLoader, node, config) {
+        varienWindowOnload();
+    });
+
+    var tree = new Ext.tree.TreePanel('product-categories', {
+        animate:true,
+        loader: categoryLoader,
+        enableDD:false,
+        containerScroll: true,
+        rootUIProvider: Ext.tree.CheckboxNodeUI,
+        selModel: new Ext.tree.CheckNodeMultiSelectionModel(),
+        rootVisible: '<?php echo $this->getRootNode()->getIsVisible() ?>'
+    });
+
+    tree.on('check', function(node) {
+
+        if(node.attributes.checked) {
+            categoryAdd(node.id);
+        } else {
+            categoryRemove(node.id);
+        }
+
+        varienElementMethods.setHasChanges(node.getUI().checkbox);
+
+		// 3SD CODE Category Array
+		if(node.getUI().checked() === false){
+			delete(categoryValid[node.attributes.id]);
+		} else {
+			categoryValid[node.attributes.id] = node.attributes;
+		}
+
+		categoryValidation(node);
+
+
+
+    }, tree);
+
+
+
+
+	tree.on('click', function(node) {
+
+		// 3SD CODE Category Array
+		if(node.getUI().checked() === true){
+			delete(categoryValid[node.attributes.id]);
+		} else {
+			categoryValid[node.attributes.id] = node.attributes;
+		}
+
+		categoryValidation(node);
+
+	});
+
+    // set the root node
+    var root = new Ext.tree.TreeNode({
+        text: '<?php echo $this->jsQuoteEscape($this->getRootNode()->getName()) ?>',
+        draggable:false,
+        checked:'<?php echo $this->getRootNode()->getChecked() ?>',
+        id:'<?php echo $this->getRootNode()->getId() ?>',
+        disabled: <?php echo ($this->getRootNode()->getDisabled() ? 'true' : 'false') ?>,
+        uiProvider: Ext.tree.CheckboxNodeUI
+    });
+
+    tree.setRootNode(root);
+    bildCategoryTree(root, <?php echo $this->getTreeJson() ?>);
+    tree.addListener('click', categoryClick.createDelegate(this));
+
+    // render the tree
+    tree.render();
+    root.expand();
+    //tree.expandAll();
+});
+
+
+function bildCategoryTree(parent, config){
+    if (!config) return null;
+
+    if (parent && config && config.length){
+        for (var i = 0; i < config.length; i++){
+            config[i].uiProvider = Ext.tree.CheckboxNodeUI;
+            var node;
+            var _node = Object.clone(config[i]);
+            if (_node.children && !_node.children.length) {
+                delete(_node.children);
+                node = new Ext.tree.AsyncTreeNode(_node);
+
+            } else {
+                node = new Ext.tree.TreeNode(config[i]);
+            }
+            parent.appendChild(node);
+            node.loader = node.getOwnerTree().loader;
+            if(config[i].children){
+                bildCategoryTree(node, config[i].children);
+            }
+
+			// 3SD CODE ONLOAD SET ARRAY CHECKBOX CHECKED
+			if(node.attributes.checked){
+				categoryValid[node.attributes.id] = node.attributes;
+			}
+        }
+
+		// 3SD CODE CALL CATEGORY VALIDATE FUNCTION
+		categoryValidation(node);
+    }
+}
+
+function categoryClick(node, e){
+    if (node.disabled) {
+        return;
+    }
+    node.getUI().check(!node.getUI().checked());
+    varienElementMethods.setHasChanges(Event.element(e), e);
+};
+
+function categoryAdd(id) {
+    var ids = $('product_categories').value.split(',');
+    ids.push(id);
+    $('product_categories').value = ids.join(',');
+}
+
+function categoryRemove(id) {
+    var ids = $('product_categories').value.split(',');
+    // bug #7654 fixed
+    while (-1 != ids.indexOf(id)) {
+        ids.splice(ids.indexOf(id), 1);
+    }
+    $('product_categories').value = ids.join(',');
+}
+
+// 3SD CODE FUNCTION TO VALIDATE CATEGORY CASES
+function categoryValidation(node){
+
+	var brand = 0;
+	var category = 0;
+	parentCategoryValidate = true;
+	lastCategoryValidate = false;
+	brandValidate = false;
+	brandMatchAttributeValidate = false;
+	categoryDuplicationValidate = true;
+	brandDuplicationValidate = true;
+  categoryMatchAttributeSetValidate = false;
+  manufacturerIndex = manufacturer.selectedIndex;
+  manufacturerText = manufacturer.getElementsByTagName("option")[manufacturerIndex].text;
+  attributeSetName  = document.getElementById("attributeSetName").value;
+
+	if(typeof console.clear == 'function'){
+		console.clear();
+	}
+
+	// console.log("------------------------------------------------ group -----------------------------------");
+
+	categoryValid.each(function(n) {
+
+		if(n.childrenCount !== '0' && n.collectionType === null){
+			parentCategoryValidate = false;
+		}
+
+		if(n.level === '2' && n.collectionType === '1'){
+			brand++;
+			brandValidate = true;
+			if(manufacturerText.trim() === n.name.trim()) {
+				brandMatchAttributeValidate = true;
+			}
+
+			if( brand > 1) {
+				brandDuplicationValidate = false;
+			}
+		}
+
+		if(n.childrenCount === '0' && n.collectionType === null){
+			category++;
+			lastCategoryValidate = true;
+      if(attributeSetName.trim() === n.name.trim()) {
+				categoryMatchAttributeSetValidate = true;
+			}
+			if(category > 1){
+				categoryDuplicationValidate = false;
+			}
+		}
+
+		console.log(n);
+	});
+
+
+
+
+}
+
+Validation.addAllThese([
+	['validate-category', 'Please select one of the last category.', function(v) {
+		if(lastCategoryValidate){
+			return true;
+		}
+		return false;
+	}],
+
+	['validate-brand', 'Please select one brand.', function(v) {
+		if(brandValidate){
+			return true;
+		}
+		return false;
+	}],
+
+	['validate-parent-cateogry', 'Parent Categories are not allowed', function(v) {
+		if(parentCategoryValidate){
+			return true;
+		}
+		return false;
+	}],
+
+	['validate-brand-match-attribute', 'Please make sure your brand match with manufacturer attribute.', function(v) {
+		if(brandMatchAttributeValidate){
+			return true;
+		}
+		return false;
+	}],
+
+  ['validate-category-match-attributeset', 'Please make sure your last category match with attribute set.', function(v) {
+		if(categoryMatchAttributeSetValidate){
+			return true;
+		}
+		return false;
+	}],
+
+	['validate-category-duplication', 'Multiple Categories are not allowed', function(v) {
+		if(categoryDuplicationValidate){
+			return true;
+		}
+		return false;
+	}],
+
+	['validate-brand-duplication', 'Multiple Brands are not allowed', function(v) {
+		if(brandDuplicationValidate){
+			return true;
+		}
+		return false;
+	}]
+]);
+</script>
+<?php endif; ?>

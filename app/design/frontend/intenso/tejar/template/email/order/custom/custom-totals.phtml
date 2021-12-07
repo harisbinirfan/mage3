@@ -1,0 +1,122 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/**
+ * @var $this Mage_Sales_Block_Order_Totals
+ * @see Mage_Sales_Block_Order_Totals
+ */
+?>
+<!--------------------------------- ZEE CODE--------------------------------------------------->
+		<!--- Include STORE CREDIT into Totals (If Applicable)  -->
+		<?php  $creditAmount = (float)$this->getOrder()->getStoreCreditAmount();?>
+	
+		<?php  if($creditAmount && $creditAmount>0  && $this->getRequest()->getControllerName()!='sales_order_creditmemo'):?>
+			
+		 <tr class="<?php echo $_code?>_store_credit">
+			 <td valign="top" class="mcnTextContent" style="padding-top:0; padding-bottom:18px;">
+				<table align="left" cellspacing="0" cellpadding="0" border="0">
+					<tbody>
+						<tr>
+						<td <?php // echo $this->getLabelProperties()?>>Paid By Store Credit</td>
+						<?php echo $_code?>
+						</tr>
+					</tbody>
+				</table>
+				<table align="right" cellspacing="0" cellpadding="0" border="0">
+					<tbody>
+						<tr>
+							<td align="right" valign="top" <?php // echo $this->getValueProperties()?>>-<?php echo Mage::helper('core')->currency($creditAmount, true, false);?></td>
+						</tr>
+					</tbody>
+				</table>
+			 </td>
+		 </tr>
+		 
+		<?php endif;?>
+		
+		<!--- Include REFUNDED into Totals (If Applicable & Credit Memo is available)  -->
+		<?php if($this->getCreditMemo()): ?>
+			<?php  $refundedAmount = $this->getCreditMemo()->getStoreCreditRefund();?>
+			<?php  if($refundedAmount && $refundedAmount>0):?>
+			<tr class="<?php echo $_code?>_store_credit">
+				<td valign="top" class="mcnTextContent" style="padding-top:0; padding-bottom:18px;">
+					<table align="left" cellspacing="0" cellpadding="0" border="0">
+						<tbody>
+							<tr>
+								<td align="left" valign="top" <?php echo $this->getLabelProperties()?> class="label"> Refunded To Store Credit</td>
+							</tr>
+						</tbody>
+					</table>
+					<table align="right" cellspacing="0" cellpadding="0" border="0">
+						<tbody>
+							<tr>
+								<td align="right" valign="top"<?php echo $this->getValueProperties()?> class="emph"><?php echo Mage::helper('core')->currency($refundedAmount, true, false);?></td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+				
+			<?php endif;?>
+		<?php endif;?>
+	<!--------------------------------- ZEE CODE--------------------------------------------------->
+<?php  foreach ($this->getTotals() as $_code => $_total): ?>
+    <?php if ($_total->getBlockName()): ?>
+        <?php echo $this->getChildHtml($_total->getBlockName(), false); ?>
+    <?php else:?>
+
+    <tr class="<?php echo $_code?>">
+		<td valign="top" class="mcnTextContent" style="padding-top:0; padding-bottom:18px;">
+			<table align="left" cellspacing="0" cellpadding="0" border="0">
+				<tbody>
+					<tr>
+						<td align="left" valign="top" <?php // echo $this->getLabelProperties()?> class="order<?php echo $_code?>" >
+							<?php if ($_total->getStrong()):?>
+							<strong><?php echo $this->escapeHtml($_total->getLabel());?></strong>
+							<?php else:?>
+							<?php echo $this->escapeHtml($_total->getLabel());?>
+							<?php endif?>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<table align="right" cellspacing="0" cellpadding="0" border="0">
+				<tbody>
+					<tr>
+						<td align="right" valign="top" <?php // echo $this->getValueProperties()?> class="order<?php echo $_code?>Value">
+							<?php if ($_total->getStrong()):?>
+						
+							<strong><?php echo $this->formatValue($_total) ?></strong>
+							<?php else:?>
+							<?php echo $this->formatValue($_total) ?>
+							<?php endif?>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</tr>
+    <?php endif?>
+<?php endforeach?>
+

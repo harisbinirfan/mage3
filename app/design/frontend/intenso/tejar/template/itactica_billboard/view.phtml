@@ -1,0 +1,168 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    Itactica
+ * @package     Itactica_Billboard
+ * @copyright   Copyright (c) 2014-2015 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+
+?>
+<?php
+$billboard = $this->getCurrentBillboard();
+$position = array('First','Second','Third','Fourth','Fifth');
+$uniqId = uniqid();
+$helper = Mage::helper('itactica_billboard');
+?>
+<?php
+//--- Get Current Theme name to add relevant theme specific meta tag
+	$currentTheme = Mage::getSingleton('core/design_package')->getTheme('template');
+	if ($currentTheme == "tejar"): ?>
+<?php if ($billboard): ?>
+<div class="section-content" style="background: <?php echo $helper->hex($billboard->getBackgroundColor()); ?>;">
+	<div class="container">
+<?php if ($billboard->getColumns() == 5 ): ?>
+	<div id="billboard-<?php echo $uniqId; ?>" class="billboard row<?php if ($billboard->getBillboardType() == 1): ?> flushrow<?php endif; ?><?php if ($billboard->getCustomClassname()) echo ' ' . $billboard->getCustomClassname() ?>" style="background: <?php echo $helper->hex($billboard->getBackgroundColor()); ?>;<?php echo $this->getInlineStyle(); ?>">
+		<?php for ($i=0; $i < $billboard->getColumns(); $i++): ?>
+		<?php
+			$clear = 'frontend/intenso/default/images/clear.png';
+			$getImageLarge = 'getImageLarge'.$position[$i];
+			$getImageMedium = 'getImageMedium'.$position[$i];
+			$height = array( '196' , '196' , '464' ,  '196' , '196');
+			$width = array( '381', '381' , '381' , '381' , '381');
+			$getAlt = 'getAlt'.$position[$i];
+			$getLink = 'getLink'.$position[$i];
+			$getDescription = 'getDescription'.$position[$i];
+			$imageWidth = $width[$i];
+			$imageHeight = $height[$i];
+		?>
+			<?php if ($position[$i] == "First" || $position[$i] == "Third" || $position[$i] == "Fourth"): ?>
+			<div class="col-xs-4">
+			<?php endif; ?>
+			<div class="banner-gird <?php if ($position[$i] == "Third"): ?>large <?php elseif ($position[$i] == "First" || $position[$i] == "Fourth" ): ?> small-top <?php else: ?> small <?php endif; ?>">
+				<a class="billboard-link"	<?php if ($billboard->$getLink()): ?>href="<?php echo $billboard->$getLink(); ?>" <?php endif; ?> <?php if ($billboard->$getAlt()): ?> title="<?php echo $billboard->$getAlt(); ?>" <?php endif; ?>>
+					<img alt="<?php echo $billboard->$getAlt(); ?>" class="billboard-image lazyload"  src="<?php echo $this->getSkinUrl('images/clear.png'); ?>" data-src="<?php echo Mage::helper('itactica_billboard/image')->getImageBaseUrl() . $billboard->$getImageLarge(); ?>" width="<?php echo $imageWidth; ?>" height="<?php echo $imageHeight; ?>">
+				</a>
+				<?php if ($billboard->$getDescription() && $billboard->$getAlt() ): ?>
+					<div class="gird-action">
+						<?php if ($billboard->$getAlt()): ?>
+						<h4 class="bg-title">
+							<a <?php if ($billboard->$getLink()): ?>href="<?php echo $billboard->$getLink(); ?>" <?php endif; ?> <?php if ($billboard->$getAlt()): ?> title="<?php echo $billboard->$getAlt(); ?>" <?php endif; ?> class="truncate">
+								<span><?php echo $billboard->$getAlt(); ?></span>
+							</a>
+						</h4>
+						<?php endif; ?>
+						<?php if ($billboard->$getDescription()): ?>
+						<p class="bg-para"><?php echo $billboard->$getDescription(); ?></p>
+						<?php endif; ?>
+						<?php if ($billboard->$getLink()): ?>
+						<a href="<?php echo $billboard->$getLink(); ?>" class="gird-action-btn">Shop Now</a>
+						<?php endif; ?>
+					</div>
+				<?php endif; ?>
+			</div>
+			<?php if ($position[$i] == "Second" || $position[$i] == "Third" || $position[$i] == "Fifth"): ?>
+			</div>
+			<?php endif; ?>
+        <?php endfor; ?>
+    </div>
+<?php elseif ($billboard->getColumns() == 4 ): ?>
+	<div id="billboard-<?php echo $uniqId; ?>" class="billboard row<?php if ($billboard->getBillboardType() == 1): ?> flushrow<?php endif; ?><?php if ($billboard->getCustomClassname()) echo ' ' . $billboard->getCustomClassname() ?>" style="background: <?php echo $helper->hex($billboard->getBackgroundColor()); ?>;<?php echo $this->getInlineStyle(); ?>">
+		<?php for ($i=0; $i < $billboard->getColumns(); $i++): ?>
+		<?php
+			$clear = 'frontend/intenso/default/images/clear.png';
+			$getImageLarge = 'getImageLarge'.$position[$i];
+			$getImageMedium = 'getImageMedium'.$position[$i];
+			$height = array( '464', '196' ,'196' , '464');
+			$width = array( '381', '381' , '381' , '381');
+			$getAlt = 'getAlt'.$position[$i];
+			$getLink = 'getLink'.$position[$i];
+			$getDescription = 'getDescription'.$position[$i];
+			$imageWidth = $width[$i];
+			$imageHeight = $height[$i];
+		?>
+			<?php if ($position[$i] == "First" || $position[$i] == "Second" || $position[$i] == "Fourth"): ?>
+			<div class="col-xs-4">
+			<?php endif; ?>
+			<div class="banner-gird <?php if ($position[$i] == "First" || $position[$i] == "Fourth" ): ?>large <?php elseif ($position[$i] == "Second" ): ?> small-top <?php else: ?> small <?php endif; ?>">
+				<a 	class="billboard-link" <?php if ($billboard->$getLink()): ?>href="<?php echo $billboard->$getLink(); ?>" <?php endif; ?> <?php if ($billboard->$getAlt()): ?> title="<?php echo $billboard->$getAlt(); ?>" <?php endif; ?>>
+					<img alt="<?php echo $billboard->$getAlt(); ?>" class="billboard-image lazyload" src="<?php echo $this->getSkinUrl('images/clear.png'); ?>" data-src="<?php echo Mage::helper('tejar_billboard/image')->init($billboard,"image_large_first",$billboard->$getImageLarge()); ?>" width="<?php echo $imageWidth; ?>" height="<?php echo $imageHeight; ?>">
+				</a>
+				<?php if ($billboard->$getDescription() && $billboard->$getAlt() ): ?>
+				<div class="gird-action">
+					<?php if ($billboard->$getAlt()): ?>
+					<h4 class="bg-title">
+						<a 	<?php if ($billboard->$getLink()): ?> href="<?php echo $billboard->$getLink(); ?>" <?php endif; ?> <?php if ($billboard->$getAlt()): ?> title="<?php echo $billboard->$getAlt(); ?>" <?php endif; ?> class="truncate">
+							<span><?php echo $billboard->$getAlt(); ?></span>
+						</a>
+					</h4>
+					<?php endif; ?>
+					<?php if ($billboard->$getDescription()): ?>
+					<p class="bg-para"><?php echo $billboard->$getDescription(); ?></p>
+					<?php endif; ?>
+					<?php if ($billboard->$getLink()): ?>
+					<a href="<?php echo $billboard->$getLink(); ?>" class="gird-action-btn">Shop Now</a>
+					<?php endif; ?>
+				</div>
+				<?php endif; ?>
+			</div>
+			<?php if ($position[$i] == "First" || $position[$i] == "Third" || $position[$i] == "Fourth"): ?>
+			</div>
+			<?php endif; ?>
+        <?php endfor; ?>
+    </div>
+	<?php else : ?>
+		<div id="billboard-<?php echo $uniqId; ?>" class="billboard row<?php if ($billboard->getBillboardType() == 1): ?> flushrow<?php endif; ?><?php if ($billboard->getCustomClassname()) echo ' ' . $billboard->getCustomClassname() ?>" style="background: <?php echo $helper->hex($billboard->getBackgroundColor()); ?>;<?php echo $this->getInlineStyle(); ?>">
+			<?php for ($i=0; $i < $billboard->getColumns(); $i++): ?>
+			<?php
+				$clear = 'frontend/intenso/default/images/clear.png';
+				$getImageLarge = 'getImageLarge'.$position[$i];
+				$getImageMedium = 'getImageMedium'.$position[$i];
+				$height = array( '464' , '464' , '464');
+				$width = array( '381', '381' , '381');
+				$getAlt = 'getAlt'.$position[$i];
+				$getLink = 'getLink'.$position[$i];
+				$getDescription = 'getDescription'.$position[$i];
+				$imageWidth = $width[$i];
+				$imageHeight = $height[$i];
+			?>
+
+			<div class="<?php if ($billboard->getColumns() == 1): ?> col-xs-12 <?php elseif ($billboard->getColumns() == 2): ?>col-xs-6 <?php else: ?> col-xs-4 <?php endif; ?>">
+				<div class="banner-gird medium">
+					<a 	class="billboard-link" <?php if ($billboard->$getLink()): ?> href="<?php echo $billboard->$getLink(); ?>" <?php endif; ?> <?php if ($billboard->$getAlt()): ?> title="<?php echo $billboard->$getAlt(); ?>" <?php endif; ?>>
+					<?php if ($billboard->getColumns() == 1): ?>
+						<img alt="<?php echo $billboard->$getAlt(); ?>" class="billboard-image lazyload" src="<?php echo $this->getSkinUrl('images/clear.png'); ?>" data-src="<?php echo Mage::helper('tejar_billboard/image')->init($billboard,"image_large_first",$billboard->$getImageLarge()); ?>" width="<?php echo "1203"; ?>" height="<?php echo "464"; ?>">
+					<?php elseif ($billboard->getColumns() == 2): ?>
+						<img alt="<?php echo $billboard->$getAlt(); ?>" class="billboard-image lazyload" src="<?php echo $this->getSkinUrl('images/clear.png'); ?>" data-src="<?php echo Mage::helper('tejar_billboard/image')->init($billboard,"image_large_first",$billboard->$getImageLarge()); ?>" width="<?php echo "587"; ?>" height="<?php echo "464"; ?>">
+					<?php else: ?>
+						<img alt="<?php echo $billboard->$getAlt(); ?>" class="billboard-image lazyload" src="<?php echo $this->getSkinUrl('images/clear.png'); ?>" data-src="<?php echo Mage::helper('tejar_billboard/image')->init($billboard,"image_large_first",$billboard->$getImageLarge()); ?>" width="<?php echo $imageWidth; ?>" height="<?php echo $imageHeight; ?>">
+					<?php endif; ?>
+					</a>
+					<?php if ($billboard->$getDescription() && $billboard->$getAlt() ): ?>
+						<div class="gird-action">
+							<?php if ($billboard->$getAlt()): ?>
+							<h4 class="bg-title">
+								<a 	<?php if ($billboard->$getLink()): ?>href="<?php echo $billboard->$getLink(); ?>" <?php endif; ?> <?php if ($billboard->$getAlt()): ?> title="<?php echo $billboard->$getAlt(); ?>" <?php endif; ?> class="truncate">
+									<span><?php echo $billboard->$getAlt(); ?></span>
+								</a>
+							</h4>
+							<?php endif; ?>
+							<?php if ($billboard->$getDescription()): ?>
+							<p class="bg-para"><?php echo $billboard->$getDescription(); ?></p>
+							<?php endif; ?>
+							<?php if ($billboard->$getLink()): ?>
+							<a href="<?php echo $billboard->$getLink(); ?>" title="<?php echo $billboard->$getAlt(); ?>" class="gird-action-btn">Shop Now</a>
+							<?php endif; ?>
+						</div>
+					<?php endif; ?>
+				</div>
+			</div>
+
+			<?php endfor; ?>
+		</div>
+	<?php endif; ?>
+		</div>
+	</div>
+	<?php endif; ?>
+<?php endif; ?>

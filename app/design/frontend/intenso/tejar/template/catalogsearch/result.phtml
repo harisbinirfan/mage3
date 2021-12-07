@@ -1,0 +1,331 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+
+<?php  if($this->getResultCount()): ?>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+
+<div class="page-title">
+    <?php if ($this->helper('rss/catalog')->getTagFeedUrl()): ?>
+        <a href="<?php echo $this->helper('rss/catalog')->getTagFeedUrl() ?>" class="nobr link-rss"><?php echo $this->__('Subscribe to Feed') ?></a>
+    <?php endif; ?>
+    <h2><?php echo ($this->getHeaderText() || $this->getHeaderText() === false) ? $this->getHeaderText() : $this->__("Search results for '%s'", $this->helper('catalogsearch')->getEscapedQueryText()) ?></h2>
+</div>
+    <?php if ($messages = $this->getNoteMessages()):?>
+    <p class="note-msg">
+        <?php foreach ($messages as $message):?>
+            <?php echo $message?>
+        <?php endforeach;?>
+    </p>
+    <?php endif; ?>
+    <?php $categoryCollection = $this->getLoadedCategoryCollection(); ?>
+	<?php if($categoryCollection->getSize() && count($categoryCollection) > 0): ?>
+		<section class="category-wrapper">
+			<h3><?php echo $this->__('Shop By Category'); ?></h3>
+			<div class="gird-container" id="category_thumbnails">
+				<?php $i=0; foreach($categoryCollection as $subcategory):?>
+						<?php $i++; ?>
+						<div class="gird-item <?php  echo $i>=6 ? "gird-item--hidden":"";  ?>" style="">
+							<div class="gird-item--image">
+								<a href="<?php echo  $subcategory->getUrl(); ?>">
+                  <?php $title = $subcategory->getQueryText(); ?>
+				  <img 
+									<?php $title = $subcategory->getQueryText(); ?>
+									<?php $_category = $subcategory->load($subcategory->getId()); ?>
+									<?php $thumbnail = $_category->getCollectionType() == 1 ?  $_category->getCustomThumbnail() : $_category->getThumbnail(); ?>
+									<?php $attr = $_category->getCollectionType() == 1 ?  "custom_thumbnail" : "thumbnail"; ?>
+									<?php if($thumbnail):?>
+									src="<?php echo $this->getSkinUrl('images/clear.png'); ?>"
+									data-src="<?php echo $this->helper('tejar_catalog/category_image')->init($_category, $attr, $thumbnail); ?>"
+									class="lazyload"
+									<?php else: ?>
+									src="<?php echo $this->getSkinUrl('images/clear.png'); ?>"
+									<?php endif;?>
+									alt="<?php echo $title; ?>"							
+									width="500" height="500"  />
+								</a>
+							</div>
+							<div class="gird-item--acion">
+								<a href="<?php echo  $subcategory->getUrl(); ?>">
+									<h2 class="category-heading"><?php echo $title; ?><span><?php // echo $subcategory->getChildrenCount(); ?></span></h2>
+								</a>
+							</div>
+						</div>
+				<?php endforeach; ?>
+					<div class="gird-item more-item gird-item--hidden" id="more_less_button">
+						<div class="gird-item--image">
+							<a href="javascript:void(0);">
+								<svg version="1.1" viewBox="0 0 341.333 341.333" style="enable-background:new 0 0 341.333 341.333;"><g><g><g><rect x="128" y="128" width="85.333" height="85.333"/><rect x="0" y="0" width="85.333" height="85.333"/><rect x="128" y="256" width="85.333" height="85.333"/><rect x="0" y="128" width="85.333" height="85.333"/><rect x="0" y="256" width="85.333" height="85.333"/><rect x="256" y="0" width="85.333" height="85.333"/><rect x="128" y="0" width="85.333" height="85.333"/><rect x="256" y="128" width="85.333" height="85.333"/><rect x="256" y="256" width="85.333" height="85.333"/></g></g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></svg>
+							</a>
+						</div>
+						<div class="gird-item--acion">
+							<a href="javascript:void(0);">
+								<h3 class="category-heading">Show More</h3>
+							</a>
+						</div>
+					</div>
+				</div>
+				<style>
+					.category-wrapper + .tejar-catalog {
+						border-top: 1px solid #ccc;
+					}
+					.gird-item.gird-item--hidden {
+						display: none;
+					}
+					.gird-item--image svg {
+						position: absolute;
+						left: 0;
+						top: 0;
+						width: 100%;
+						height: auto;
+						margin-left: auto;
+						margin-right: auto;
+						padding: 10px;
+						fill: #afafaf;
+					}
+					@media only screen and (min-width: 1440px){
+						.gird-item--image svg {
+							padding: 30px;
+						}
+					}
+				</style>
+				<script type="text/javascript">
+					document.addEventListener("DOMContentLoaded", function() {
+						(function($){
+							$.fn.extend({
+							hideMaxListItems: function(options)
+							{
+								// OPTIONS
+								var defaults = {
+									max: 5,
+									speed: 400,
+									innerAction: false,
+									moreText:'Show More',
+									lessText:'Show less'
+								};
+								var options =  $.extend(defaults, options);
+								// FOR EACH MATCHED ELEMENT
+								return this.each(function() {
+									var $thisList = $(this);
+									var op = options;
+									var totalListItems = $thisList.children("div").length;
+									var speedPerLI;
+									// Get animation speed per LI; Divide the total speed by num of LIs.
+									// Avoid dividing by 0 and make it at least 1 for small numbers.
+									if ( totalListItems > 0 && op.speed > 0  ){
+										speedPerLI = Math.round( op.speed / totalListItems );
+										if ( speedPerLI < 1 ) { speedPerLI = 1; }
+									} else {
+										speedPerLI = 0;
+									}
+									op.max = Math.round(($thisList.width() - 4) / $thisList.children("div").width()) - 2;
+									// If list has more than the "max" option
+									if ( (totalListItems > 0) && (totalListItems > op.max) )
+									{
+										// Initial Page Load: Hide each LI element over the max
+										$thisList.children("div:not('.more-item')").each(function(index){
+											if ( (index+1) > op.max ) {
+												$(this).hide(0);
+											} else {
+												$(this).show(0);
+											}
+										});
+										// Replace [COUNT] in "moreText" or "lessText" with number of items beyond max
+										var howManyMore = totalListItems - op.max;
+										var newMoreText = op.moreText;
+										var newLessText = op.lessText;
+										if ( howManyMore > 0 ){
+											newMoreText = newMoreText.replace("[COUNT]", howManyMore);
+											newLessText = newLessText.replace("[COUNT]", howManyMore);
+										}
+										var action = $thisList.find(".more-item");
+										action.show();
+										// READ MORE - add text within button, register click event that slides the items up and down
+										action.children('.gird-item--image').children("a")
+												.off('click')
+												.on("click", function(e){
+													var $theLink = $(this);
+													var listElements = $theLink.parent().parent().parent().children("div:not('.more-item')");
+													var actionText = $theLink.parent().parent().find(".category-heading");
+													listElements = listElements.slice(op.max);
+													if ( actionText.html() == newMoreText ){
+														$(".arrows").addClass("open");
+														actionText.html(newLessText);
+														var i = 0;
+														(function() { $(listElements[i++] || []).slideToggle(speedPerLI,arguments.callee); })();
+                            lazyLoad();
+													}
+													else {
+														$(".arrows").removeClass("open");
+														actionText.html(newMoreText);
+														var i = listElements.length - 1;
+														(function() { $(listElements[i--] || []).slideToggle(speedPerLI,arguments.callee); })();
+													}
+													e.preventDefault();
+												});
+									}
+									else {
+										if ( $thisList.find(".more-item").length > 0 ){
+											$thisList.find(".more-item").hide();
+										}
+										$thisList.children("div:not(.more-item)").each(function(index){
+											$(this).show(0);
+										});
+									}
+								});
+							}
+							});
+							})(jQuery); // End jQuery Plugin
+						jQuery("#category_thumbnails").hideMaxListItems();
+					});
+				</script>
+		</section>
+	<?php endif; ?>
+    <?php echo $this->getProductListHtml() ?>
+	<?php echo $this->getChildHtml('catalog_list_script'); ?>
+<?php else: ?>
+    <?php $helper = Mage::helper('catalog/category') ?>
+    <?php $categories = $helper->getStoreCategories() ?>
+	<div class="container">
+		<div class="page-title">
+			<h1><?php echo ($this->getHeaderText() || $this->getHeaderText() === false) ? $this->getHeaderText() : $this->__("Search results for '%s'", $this->helper('catalogsearch')->getEscapedQueryText()) ?></h1>
+		</div>
+	</div>
+
+	<?php if ($messages = $this->getNoteMessages()):?>
+        <div class="note-msg">
+            <?php foreach ($messages as $message):?>
+            <?php echo $message?>
+            <?php endforeach;?>
+        </div>
+		<?php endif; ?>
+		<div class="container">
+        <div class="col-sm-12 no-results">
+
+            <h1 style="font-size: 2.6rem; color: #333; font-weight: 400;"><?php echo ($this->getNoResultText()) ? $this->getNoResultText() : $this->__('Your search returns no results.') ?></h1>
+            <p style="font-weight: 100; font-size: 1.2rem;"><?php echo $this->__('Please check your spelling, try more general words or use synonyms.') ?></p>
+			<?php
+					$brands = array();
+					$collection = Mage::getModel('catalogsearch/query')->getCategoryCollection();
+					$collection->getSelect()->Where("((`collection_type` = 1) AND (`level` = 2))");
+
+			?>
+			<?php foreach($collection as $item): ?>
+				<?php $brands[] = "<a href='".$helper->getCategoryUrl($item)."'>".$item->getQueryText()."</a>"; ?>
+			<?php endforeach; ?>
+
+
+			<?php if(!empty($brands)): ?>
+			<p style="font-size: 1.2rem;">Browse all <?php echo implode(', ', $brands); ?> products.</p>
+			<?php endif; ?>
+
+            <?php echo $this->getChildHtml('no_route_search'); ?>
+            <?php if (count($categories) > 0): ?>
+            <h3><?php echo $this->__('Top Destinations'); ?></h3>
+            <ul class="top-destinations">
+                <?php foreach($categories as $category): ?>
+                    <li class="cat_item">
+						<div class="cat_itemInner">
+							<a href="<?php echo $helper->getCategoryUrl($category) ?>">
+								<?php echo $category->getName() ?>
+							</a>
+						</div>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+            <!-- <a class="button home" href="<?php echo Mage::getBaseUrl(); ?>"><?php echo $this->__('Home'); ?></a> -->
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php /*if (Mage::helper('core')->isModuleOutputEnabled('Itactica_FeaturedProducts')): ?>
+        <?php if (Mage::getStoreConfig('intenso/catalog/no_results_featured')): ?>
+            <?php echo $this->getLayout()->createBlock('itactica_featuredproducts/view')->setIdentifier(Mage::getStoreConfig('intenso/catalog/no_results_featured'))->setTemplate('itactica_featuredproducts/view.phtml')->toHtml() ?>
+        <?php endif; ?>
+    <?php endif; */ ?>
+<style>
+.catalogsearch-result-index .no-results, .catalogsearch-advanced-result .no-results {
+    text-align: unset;
+}
+.form-search {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.top-destinations {
+    padding: 0;
+    list-style-type: none;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin: 0;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.top-destinations li {
+    -ms-flex-preferred-size: 16.66667%;
+    flex-basis: 16.66667%;
+    position: relative;
+}
+
+.top-destinations li:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+}
+
+.top-destinations li .cat_itemInner {
+    border: 0.0625rem solid #ccc;
+	box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
+    border-radius: 10px;
+	background: #fff;
+    position: absolute;
+    top: 0.625rem;
+    bottom: 0.625rem;
+    left: 0.625rem;
+    right: 0.625rem;
+    z-index: 1;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+.cms-no-route .form-box h3, .no-results h3{
+	font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1;
+}
+.cms-no-route p, .no-results p {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+@media only screen and (max-width: 49em){
+	.top-destinations li {
+		-ms-flex-preferred-size: 50%;
+		flex-basis: 50%;
+		position: relative;
+	}
+	.top-destinations li .cat_itemInner{
+		    top: 0.325rem;
+			bottom: 0.325rem;
+			left: 0.325rem;
+			right: 0.325rem;
+	}
+	.cms-no-route .form-box h3, .no-results h3 {
+		font-size: 1.3rem;
+	}
+}
+</style>
+<?php endif;  ?>

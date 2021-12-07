@@ -1,0 +1,70 @@
+<?xml version="1.0" ?>
+  <config>
+    <modules>
+      <Tejar_Customer>
+        <version>0.0.1</version>
+      </Tejar_Customer>
+    </modules>
+	<frontend>
+		<routers>
+			<customer>
+				<args>
+					<modules>
+						<Tejar_Customer before="Mage_Customer">Tejar_Customer</Tejar_Customer>
+					</modules>
+				</args>
+			</customer>
+		</routers>
+    </frontend>
+	<global>
+		<helpers>
+			<customer>
+				<rewrite>
+					<data>Tejar_Customer_Helper_Data</data>
+				</rewrite>
+			</customer>
+		</helpers>
+		<models>
+			<tejar_customer>
+				<class>Tejar_Customer_Model</class>
+			</tejar_customer>
+			<customer>
+				<rewrite>
+					<customer>Tejar_Customer_Model_Customer</customer>
+				</rewrite>
+			</customer>
+		</models>
+		<blocks>
+			<customer>
+				<rewrite>
+					<form_register>Tejar_Customer_Block_Form_Register</form_register>
+				</rewrite>
+			</customer>
+            <tejar_customer>
+                <class>Tejar_Customer_Block</class>
+            </tejar_customer>
+        </blocks>
+    </global>
+
+	<default>
+		<tejar_customer>
+			<backend>
+				<areas>
+					<newsletter>
+						<label>Newsletter Email</label>
+					</newsletter>
+					<register>
+						<label>Register Email</label>
+					</register>
+					<guest_checkout>
+						<label>Guest Checkout Email</label>
+					</guest_checkout>
+          <contact_page>
+          	<label>Contact Page Email</label>
+          </contact_page>
+				</areas>
+			</backend>
+		</tejar_customer>
+    </default>
+
+  </config>

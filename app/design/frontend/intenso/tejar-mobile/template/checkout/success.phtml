@@ -1,0 +1,252 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php 
+$orderId  = Mage::getSingleton('checkout/session')->getLastOrderId();
+$quoteId = Mage::getModel('sales/order')->load($orderId)->getQuoteId();
+$order = Mage::getModel('sales/order')->loadByIncrementId($this->getOrderId());
+?>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+
+<div class="">
+    <div class="checkout-onestep">
+		<div class="container">
+			<div class="page-title center">
+				<div class="trigger"></div>
+					<svg class="center" version="1.1" id="tick" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+						 viewBox="0 0 37 37" style="enable-background:new 0 0 37 37;" xml:space="preserve" width="75" height="75">
+					<path class="circ path" style="fill:none;stroke:#71c341;stroke-width:3;stroke-linejoin:round;stroke-miterlimit:10;" d="
+						M30.5,6.5L30.5,6.5c6.6,6.6,6.6,17.4,0,24l0,0c-6.6,6.6-17.4,6.6-24,0l0,0c-6.6-6.6-6.6-17.4,0-24l0,0C13.1-0.2,23.9-0.2,30.5,6.5z"
+						/>
+					<polyline class="tick path" style="fill:none;stroke:#71c341;stroke-width:3;stroke-linejoin:round;stroke-miterlimit:10;" points="
+						11.6,20 15.9,24.2 26.4,13.8 "/>
+					</svg>
+					<h1 class="center"><!--<span class="icons-ok"></span>--><?php echo $this->__('Thank you, your order has been placed.') ?></h1>
+					<!--<p class="center">Thank you for shopping at Tejar<?php /* if($store->getCode()== "default"):?>.<?php else: ?>.<?php echo $name = $store->getCode();?>.<?php endif;?> An email confirmation is on its way to: <strong><?php echo  $order->getCustomerEmail(); */ ?></strong>.</p>-->
+					<p class="center">We’ve sent you an e-mail confirmation.</p>
+					<!--==================================== ZEE CODE ================================-->
+					<!-- To display a Message If User Has Registered & Created his Account...... -->
+					<p class="center">
+						<?php if(Mage::getSingleton('core/session')->getGuestCheckoutRegistrationStatus()=="1"){ echo $this->__('You will also receive your account confirmation email with login details.') ; } ?>
+					</p>
+					<!--==================================== ZEE CODE ================================-->
+			</div>
+			
+			<div class="order-success-page-title">
+				<?php if ($this->getOrderId()):?>
+				<?php if ($this->getCanViewOrder()) :?>
+				<h4 style="font-weight: 600;"><?php echo $this->__('Order #%s', sprintf('<a href="%s"><strong>%s</strong></a>', $this->escapeHtml($this->getViewOrderUrl()), $this->escapeHtml($this->getOrderId()))) ?></h4>
+				<?php  else :?>
+				<h4 style="font-weight: 600;"><?php echo $this->__('Order <strong>#%s</strong>', $this->escapeHtml($this->getOrderId())) ?></h4>
+				<?php endif;?>
+				<?php endif;?>	
+				<h4 class="separator">&nbsp;</h4>
+				<h4 style="font-weight: 600;"><?php echo $this->__('Ordered on') ?> <?php echo $this->formatDate($order->getCreatedAtStoreDate()) ?></h4>
+			</div>
+		</div>
+		
+		<!--==================================== ZEE CODE ================================-->	
+		<table class="success-detail-table">
+			<tbody>
+				<tr>
+					<td colspan="2">
+						<h2><?php echo $this->__('Shipping') ?></h2>
+						<h5><?php echo $this->__('Shipping Address') ?></h5>
+						<address><?php echo $order->getShippingAddress()->format('html') ?></address>
+						<h5><?php echo $this->__('Shipping Method') ?></h5>
+						<p><?php echo $order->getShippingDescription(); ?></p>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<h2><?php echo $this->__('Item to be shipped') ?></h2>
+							<table class="">
+							<tbody>
+							<?php
+							//========================================= ZEE CODE ================================================//
+							foreach($order->getAllVisibleItems() as $item): 
+							$configItem = Mage::getModel('catalog/product')->loadByAttribute('sku', $item->getSku());
+							/*--------------------------------------------------------*/
+							/* 3SD CODE ASSOCIATE PRODUCT NAME */
+							if($item->getSku() == ''){
+								$configItemId = Mage::getModel('catalog/product')->load($item->getId()) ;
+							}
+							else
+							{
+								$configItemId = Mage::getModel('catalog/product')->loadByAttribute('sku', $item->getSku());
+							}
+							/*--------------------------------------------------------*/													
+							$product = Mage::getModel('catalog/product')->setStoreId(Mage::app()->getStore()->getId())->load($item->getProductId());
+							//--- Get Product Brand...
+							$productBrand  = $product->getAttributeText('manufacturer');
+							//$productModel = Mage::getModel('catalog/product')->load($item->getProduct()->getId())->getModel();
+							//--- Taking Model by using loadByAttribute as currently unable to get it from $product object..
+							$productModel  = $configItem->getModel();
+							//echo var_dump($configItem->getData('model'));
+						    //--- Create Brand URL...
+						    $brandUrl=Mage::getUrl(); 
+						    $brandName = strtolower($product->getAttributeText('manufacturer'));
+						    $brandName = str_replace(' ', '-', $brandName);
+						  
+						    //--- Fix for replacing space and '&' from brand name.
+						    $brandName = str_replace(' ', '-', $brandName);
+						    $brandName = str_replace('-&-', '-', $brandName);
+							?> 
+							   <tr>
+								   <td class="item-image-col">
+										<a href="<?php echo $product->getProductUrl() ?>" title="<?php echo $this->escapeHtml($configItemId->getName()); ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($configItem, 'small_image')->resize(150); ?>" width="150" height="150" class="media-object img-responsive" alt="<?php echo $this->getImageLabel($configItem, 'small_image'); ?>"/></a></td>
+								   </td>
+									<td class="item-detail-col">
+										<h5 class="product-name"><a href="<?php echo $product->getProductUrl() ?>"><?php echo $this->escapeHtml($configItemId->getName()); ?></a></h5>
+											<div class="brand_model">
+											<p>By: <a href="<?php echo $brandUrl;?><?php echo strtolower($brandName);?>"><?php echo $productBrand;?></a></p>
+											<p>Model: <span><?php echo $productModel;?></span></p>
+										</div>
+										<span class="hide" id="itemSku"><?php echo $item->getSku(); ?></span>
+										<?php echo Mage::helper("core")->currency($item->getPrice()) ?>
+										<!--==================================== ZEE CODE ================================-->
+										<!--=================== GET CUSTOM STOCK STATUS ===================-->		
+										<?php 
+										$customStockProduct = Mage::getModel('catalog/product')->load($configItem->getId());
+										$customStock = $customStockProduct->getAttributeText('custom_stock_availability');?>
+										<p class="cart-in-stock"><?php echo $customStock?$customStock:"In Stock";?></p>
+										<!--==================================== ZEE CODE ================================-->
+										<p class="qty-col bloder">Qty: <span><?php echo round($item->getQtyOrdered(), 0) ?></span></p>
+										<p class="subtotal-col bloder">Subtotal: <?php echo Mage::helper("core")->currency($item->getBaseRowTotal()) ?></p>
+										<?php 	$_giftMessage = $this->helper('giftmessage/message')->getGiftMessageForEntity($item); ?>
+										<?php 	if($this->helper('giftmessage/message')->getIsMessagesAvailable('order_item', $item) && $item->getGiftMessageId()): ?>
+										<?php 	$_giftMessageFrom = trim($this->escapeHtml($_giftMessage->getSender()));
+												$_giftMessageTo = trim($this->escapeHtml($_giftMessage->getRecipient()));
+												$_giftMessageMessage = trim($this->helper('giftmessage/message')->getEscapedGiftMessage($item)); ?>
+											<?php if($_giftMessageMessage !="" || $_giftMessageTo !="" || $_giftMessageFrom !="" ): ?>
+												<dl class="gift-message">
+													<dt><i class="icons-gift"></i><strong><?php echo $this->__('Gift Message') ?></strong></dt>
+													<?php if($_giftMessageFrom !=""): ?>
+														<dt><strong><?php echo $this->__('From:') ?></strong> <?php echo $_giftMessageFrom ?></dt>
+													<?php endif; ?>
+													<?php if($_giftMessageTo !=""): ?>
+														<dt><strong><?php echo $this->__('To:') ?></strong> <?php echo $_giftMessageTo ?></dt>
+													<?php endif; ?>
+													<?php if($_giftMessageMessage !="" ): ?>
+														<dd><i>"<?php echo $_giftMessageMessage ?>"</i></dd>
+													<?php endif; ?>
+												</dl>
+											<?php endif ?>
+										<?php  endif ?>
+									</td>
+								</tr>
+								<?php endforeach ?> 
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<h2><?php echo $this->__('Payment') ?></h2>
+						<h5><?php echo $this->__('Payment Method') ?></h5>
+						<p><?php  echo $order->getPayment()->getMethodInstance()->getTitle(); ?></p>
+					</td>
+				</tr>
+				<?php if($this->helper('giftmessage/message')->getIsMessagesAvailable('order', $order) && $order->getGiftMessageId()): ?>
+				<?php	$_giftMessage = $this->helper('giftmessage/message')->getGiftMessageForEntity($order); 
+						$_giftMessageFrom = trim($this->escapeHtml($_giftMessage->getSender()));
+						$_giftMessageTo = trim($this->escapeHtml($_giftMessage->getRecipient()));
+						$_giftMessageMessage = trim($this->helper('giftmessage/message')->getEscapedGiftMessage($order)); ?>
+					<tr>
+						<td colspan="2">
+							<h2><?php echo $this->__('Gift Message') ?></h2>
+							<div class="order-additional order-gift-message">
+								<h5 class="sub-title"><?php echo $this->__('Gift Message for This Order') ?></h5>
+								
+								<dl class="gift-message">
+								<?php if($_giftMessageFrom !=""): ?>
+									<dt><strong><?php echo $this->__('From:') ?></strong> <?php echo $this->escapeHtml($_giftMessage->getSender()) ?></dt>
+								<?php endif; ?>
+								<?php if($_giftMessageTo !=""): ?>
+									<dt><strong><?php echo $this->__('To:') ?></strong> <?php echo $this->escapeHtml($_giftMessage->getRecipient()) ?></dt>
+								<?php endif; ?>
+								<?php if($_giftMessageMessage !="" ): ?>
+									<dd><i>"<?php echo $this->helper('giftmessage/message')->getEscapedGiftMessage($order) ?>"</i></dd>
+								<?php endif; ?>
+								</dl>
+							</div>
+						</td>
+					</tr>
+				<?php endif; ?>
+				<tr>
+					<td colspan="2">
+						<h2><?php echo $this->__('Order Total') ?></h2>
+						<table class="zebra table_type_3">
+							<tbody>
+								<tr>
+									<td><?php echo $this->__('Sub Total') ?></td>
+									<td class="align_right"><span class="price"><?php  echo  Mage::helper("core")->currency($order->getSubtotal()); ?></span></td>
+								</tr>
+								<!--==================================== ZEE CODE ================================-->
+								<!-- To display User Store Credit Info (If Used)...... -->
+								<?php if($order->getStoreCreditAmount()):?>	
+								<tr>
+									<td><?php echo $this->__('Store Credit') ?></td>
+									<td class="align_right"><span class="price">-<?php echo  Mage::helper('core')->currency($order->getStoreCreditAmount(), true, false);?></span>
+									</td>
+								</tr>
+								<?php endif; ?> 
+								<!-- To display Order Discount Amount (If Discount Coupon Used)...... -->
+								<?php if($order->getDiscountAmount()):?>	
+								<tr>
+									<td><?php echo $this->__('Discount Amount') ?></td>
+									<td class="align_right"><span class="price"><?php echo  Mage::helper('core')->currency($order->getDiscountAmount(), true, false);?></span>
+									</td>
+								</tr>
+								<?php endif; ?> 					
+								<!--==================================== ZEE CODE ================================-->
+								<?php if($order->getShippingAmount() && $order->getShippingAmount() > 0) :?>
+								<tr>
+									<td><?php echo $this->__('Shipping Amount') ?></td>
+									<td class="align_right"><span class="price"><?php  echo  Mage::helper("core")->currency($order->getShippingAmount()); ?></span></td>
+								</tr>
+								<?php endif ;?>
+								<?php if($order->getDiscountAmount() && $order->getDiscountAmount() > 0) :?>
+								<tr>
+									<td><?php echo $this->__('Discount Amount') ?></td>
+									<td class="align_right"><span class="price"><?php echo Mage::helper("core")->currency($order->getDiscountAmount()); ?></span></td>
+								</tr>
+								<?php endif ;?>
+								<?php if($order->getTaxAmount() && $order->getTaxAmount() > 0) :?>
+								<tr>
+									<td><?php echo $this->__('Tax Amount') ?></td>
+									<td class="align_right"><span class="price"><?php echo Mage::helper("core")->currency($order->getTaxAmount()); ?></span></td>
+								</tr>
+								<?php endif ;?>
+								<tr>
+									<td><?php echo $this->__('Grand Total') ?></td>
+									<td class="align_right"><span class="price"><?php echo Mage::helper("core")->currency($order->getGrandTotal()); ?></span></td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+<?php
+$total = $order->getGrandTotal();
+?>
+<script>
+dataLayer.push({'event':'orderConfirmation','orderTotalVal':<?php echo $total; ?>})
+</script>
+
+<script>
+jQuery(document).ready(function(){
+    jQuery(".trigger").toggleClass("drawn")
+});
+</script>
+<?php Mage::getSingleton('core/session')->unsGuestCheckoutRegistrationStatus(); ?>

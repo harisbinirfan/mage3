@@ -1,0 +1,36 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014-2017 Intenso (https://www.getintenso.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php if($crumbs && is_array($crumbs)): ?>
+    <div class="breadcrumbs">
+        <ul itemscope itemtype="https://schema.org/BreadcrumbList">
+			<?php $i=1; ?>
+            <?php foreach($crumbs as $_crumbName => $_crumbInfo): ?>
+                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="<?php echo $_crumbName ?>">
+                <?php if($_crumbInfo['link']): ?>
+                    <a itemprop="item" href="<?php echo $_crumbInfo['link'] ?>" title="<?php echo $this->escapeHtml($_crumbInfo['title']) ?>">
+						<span itemprop="name"><?php echo $this->escapeHtml($_crumbInfo['label']) ?></span>
+					</a>
+					<meta itemprop="position" content="<?php echo $i; ?>" />	
+                <?php elseif($_crumbInfo['last']): ?>
+                    <strong itemprop="name"><?php echo $this->escapeHtml($_crumbInfo['label']) ?></strong>
+					<meta itemprop="position" content="<?php echo $i; ?>" />
+                <?php else: ?>
+                    <?php echo $this->escapeHtml($_crumbInfo['label']) ?>
+                <?php endif; ?>
+                <?php if(!$_crumbInfo['last']): ?>
+                    <span>> </span>
+                <?php endif; ?>
+                </li>
+			<?php $i++; ?>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>

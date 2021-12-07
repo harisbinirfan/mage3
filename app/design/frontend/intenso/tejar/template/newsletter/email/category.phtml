@@ -1,0 +1,31 @@
+<?php
+/**
+ * Intenso Premium Theme
+ * 
+ * @category    Itactica
+ * @package     Itactica_FeaturedCategories
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+
+?>
+<?php $_sliders = $this->getSlider(); ?>
+
+<?php if ($_sliders): ?>
+<?php foreach ($_sliders as $_slider): ?>
+<table border="0" cellpadding="0" cellspacing="0" width="100%" class="templateContainer">
+<?php $_columnCount = 3; ?>   
+	<?php $i=0; foreach ($this->getCategoryCollection($_slider->getId()) as $category): ?>
+		<?php if ($i++%$_columnCount==0): ?>
+				<tr><td valign="top"><!--[if (gte mso 9)|(IE)]> <table align="center" border="0" cellspacing="0" cellpadding="0" width="600" style="width:600px;"><tr><![endif]-->	
+		<?php endif; ?>					
+				<!--[if (gte mso 9)|(IE)]> <td align="center" valign="top" width="200" style="width:200px;"><![endif]--><table align="left" border="0" cellpadding="0" cellspacing="0" width="200" class="columnWrapper"><tr><td valign="top" class="columnContainer first" bgcolor="#132a42" style="padding-top: 9px;padding-bottom: 9px; border-top: 1px solid #eef0f3; border-right: 1px solid #eef0f3;"><table align="left" width="90%" border="0" cellspacing="0" cellpadding="0" style=""><tbody><tr><td width="20">&nbsp;</td><td align="center" valign="middle" height="35" width="35" style="width:35px; height:35px;"><a href="<?php echo $category->getUrl(); ?>" target="_blank"><?php $brandName = strtolower($category->getName()); $brandName = str_replace(' ', '-', $brandName); $brandName = str_replace(' ', '-', $brandName); $brandName = str_replace('-&-', '-', $brandName); ?><img style="display:block" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA); ?>wysiwyg/email/<?php echo $brandName; ?>.png" alt="<?php echo $category->getName(); ?>" width="42" height="42" border="0"></a></td><td width="10">&nbsp;</td><td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height:16px; color:#444444;"><a href="<?php echo $category->getUrl(); ?>" target="_blank" style="color:#FFFFFF; text-decoration:none;"><?php echo $category->getName(); ?></a></td></tr></tbody></table></td></tr></table><!--[if (gte mso 9)|(IE)]> </td><![endif]--> 
+		<?php if ($i%$_columnCount==0 || $i==count($this->getCategoryCollection($_slider->getId()))): ?>
+			   <!--[if (gte mso 9)|(IE)]> </tr></table><![endif]--> </td></tr>
+		<?php endif; ?>
+	<?php endforeach; ?>
+</table>
+<?php endforeach; ?>
+<?php endif;?>
+
+	

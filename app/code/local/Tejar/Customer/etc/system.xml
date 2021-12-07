@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+/**
+ * Tejar is not affiliated with or in any way responsible for this code.
+ *
+ * Commercial support is available directly from the [extension author](http://www.techytalk.info/contact/).
+ *
+ * @category Marko-M
+ * @package SocialConnect
+ * @author Marko Martinović <marko@techytalk.info>
+ * @copyright Copyright (c) Marko Martinović (http://www.techytalk.info)
+ * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ */
+-->
+<config>
+    <sections>
+        <customer>
+            <groups>
+				<create_account translate="label" module="customer">
+					<fields>
+						<max_first_last_name translate="label">
+                            <label>Set First Name and Last Name Character Length</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>140</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </max_first_last_name>
+						<max_characters translate="label">
+                            <label>Max Character Length</label>
+							<comment>Set First Name and Last Name Character Length</comment>
+                            <frontend_type>text</frontend_type>
+							<depends><max_first_last_name>1</max_first_last_name></depends>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </max_characters>
+                    </fields>
+                </create_account>
+				<zerobounce translate="label">
+                    <label>Email Validation</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>200</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+						 <enabled translate="label">
+                            <label>Enable</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enabled>
+						<forms translate="label">
+                            <label>Forms</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>tejar_customer/config_form_backend</source_model>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><enabled>1</enabled></depends>
+                        </forms>
+						<api_key translate="label">
+                            <label>API Key</label>
+							              <comment>Set API Key</comment>
+                            <frontend_type>text</frontend_type>
+							              <depends><enabled>1</enabled></depends>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </api_key>
+					</fields>
+				</zerobounce>
+            </groups>
+        </customer>
+    </sections>
+</config>

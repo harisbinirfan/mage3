@@ -1,0 +1,55 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    Itactica
+ * @package     Itactica_FeaturedCategories
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+
+?>
+<?php $_sliders = $this->getSlider(); ?>
+<?php if ($_sliders): ?>
+<?php foreach ($_sliders as $_slider): ?>
+<div class="<?php if ($_slider->getCustomClassname()): ?><?php echo $_slider->getCustomClassname() ?><?php endif;?>">
+<div class="title-block">
+	<h4 class="title-block-left"><span class="content"><?php echo $_slider->getTitle(); ?></span>
+	</h4>
+	<?php if ($_slider->getCustomClassname() == "brands"): ?>
+		<a href="<?php echo Mage::getBaseUrl(); ?>brands" class="title-block-right">View All</a>
+	<?php endif;?>
+	</div>
+	<div id="featured_categories" class="owl-top-narrow">
+		<div class="filter-products">
+			<div class="brand-slider owl-carousel" >
+			<?php foreach ($this->getCategoryCollection($_slider->getId()) as $category): ?>
+				<div class="owl-item item">
+					<div class="category-images">
+						<a href="<?php echo $category->getUrl(); ?>">
+							<div class="img-placeholder"></div>
+							<img class="item-image" src="<?php echo $this->getSkinUrl('images/clear.png'); ?>"
+							data-lazy="<?php echo $this->helper('tejar_catalog/category_image')->init($category, 'thumbnail',$category->getThumbnail()); ?>"
+							alt="<?php echo $category->getName(); ?>" width="396" height="204">
+						</a>
+					</div>
+					<div class="category-item-info">
+						<h6 class="category-title">
+							<a href="<?php echo $category->getUrl(); ?>" class="truncate"><?php echo $category->getName(); ?></a>
+						</h6>
+						<a href="<?php echo $category->getUrl(); ?>" class="action-btn">Shop Now</a>
+					</div>
+				</div>
+			<?php endforeach; ?>
+			</div>
+		</div>
+	</div>
+</div>
+<?php endforeach; ?>
+<?php endif;?>
+<script>
+	var brandSlick = $j("#featured_categories .filter-products .brand-slider");
+	brandSlick.slick({lazyLoad:"ondemand",prevArrow:'<button class="slick-prev" aria-label="Previous" type="button"><span aria-label="Previous">\u2039</span></button>',nextArrow:'<button class="slick-next" aria-label="Next" type="button"><span aria-label="Next">\u203a</span></button>',speed:1E3,slidesToShow:6,slidesToScroll:3,speed: 300,
+		responsive:[{breakpoint:10240.9,settings:{slidesToShow:6,slidesToScroll:6}},{breakpoint:1920.9,settings:{slidesToShow:4,slidesToScroll:4}},{breakpoint:1680.9,settings:{slidesToShow:4,slidesToScroll:2}},{breakpoint:1440.9,settings:{slidesToShow:3,slidesToScroll:3}},{breakpoint:1280.9,settings:{slidesToShow:3,slidesToScroll:3}},{breakpoint:1024.9,settings:{slidesToShow:3,slidesToScroll:3}},{breakpoint:992.9,settings:{slidesToShow:2,slidesToScroll:2}},{breakpoint:768.9,settings:{slidesToShow:2,slidesToScroll:2}},{breakpoint:480.9,settings:{slidesToShow:1,slidesToScroll:1,appendArrows:!1}}]
+	});
+</script>

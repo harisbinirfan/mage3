@@ -1,0 +1,68 @@
+<?php
+/**
+ * Tejar is not affiliated with or in any way responsible for this code.
+ *
+ * Commercial support is available directly from the [extension author](http://www.techytalk.info/contact/).
+ *
+ * @category Marko-M
+ * @package SocialConnect
+ * @author Marko Martinović <marko@techytalk.info>
+ * @copyright Copyright (c) Marko Martinović (http://www.techytalk.info)
+ * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ */
+?>
+<div class="page-title">
+	<h1><?php echo $this->__('Facebook Connect') ?></h1>
+</div>
+<div class="theme_box">	
+	<div class="tejar-socialconnect-account">
+    <?php if($this->_hasData()): ?>
+
+    <?php
+        $facebookId = $this->_getFacebookId();
+        $status = $this->_getStatus();
+        $email = $this->_getEmail();
+        $name = $this->_getName();
+        $picture = $this->_getPicture();
+        $gender = $this->_getGender();
+        $birthday = $this->_getBirthday();
+    ?>
+
+    
+                    <?php if(!empty($picture)): ?>
+                    <p><img src="<?php echo $picture; ?>" alt="<?php echo $this->escapeHtml($name); ?>" /></p>
+                    <?php endif; ?>
+                
+                
+                    <?php if(!empty($status)): ?>
+                    <p><?php printf($this->__('Connected as %s', '<strong>'.$status.'</strong>')) ?></p>
+                    <?php endif; ?>
+                    <?php if(!empty($email)): ?>
+                    <p><?php printf($this->__('Email: %s', '<strong>'.$email.'</strong>')) ?></p>
+                    <?php endif; ?>
+                    <?php if(!empty($facebookId)): ?>
+                    <p><?php printf($this->__('Facebook #: %s', '<strong>'.$facebookId.'</strong>')) ?></p>
+                    <?php endif; ?>
+                    <?php if(!empty($gender)): ?>
+                    <p><?php printf($this->__('Gender: %s', '<strong>'.$gender.'</strong>')) ?></p>
+                    <?php endif; ?>
+                    <?php if(!empty($birthday)): ?>
+                    <p><?php printf($this->__('Birthday: %s', '<strong>'.$birthday.'</strong>')) ?></p>
+                    <?php endif; ?>
+					<?php echo $this->getChildHtml('tejar_socialconnect_account_facebook_button'); ?>
+    <?php else: ?>
+    
+        
+            
+                <p><?php echo $this->__('You can connect store account with your Facebook account so you could login easier in the future.') ?></p>
+            
+            <div class="buttons-set">
+			<p class="back-link"><a href="<?php echo $this->escapeUrl($this->getBackUrl()) ?>"><small>&laquo; </small><?php echo $this->__('Back') ?></a></p>
+                <?php echo $this->getChildHtml('tejar_socialconnect_account_facebook_button'); ?>
+				</div>
+            
+        
+    
+    <?php endif; ?>
+	</div>
+</div>

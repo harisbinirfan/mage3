@@ -1,0 +1,92 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+
+/**
+ * Product media data template
+ *
+ * @see Mage_Catalog_Block_Product_View_Media
+ */
+	$_product = $this->getProduct();
+?>
+<?php if($_product): ?>
+<?php $_options = $_product->getTypeInstance(true)->getConfigurableAttributesAsArray($_product); ?>
+<?php if($_options): ?>
+<?php $_optioncount = count($_options); ?>
+<?php if(Mage::getStoreConfig('intenso/product_page/swatch_display', Mage::app()->getStore())):?>
+	<?php $maxlimit = Mage::getStoreConfig('intenso/product_page/swatch_display', Mage::app()->getStore()) - 1; ?>
+<?php endif;?>
+<div class="product-options swatch-placeholder" id="product-options-wrapper">
+	<input type="hidden" id="myConfigProductAttributeCount" value="<?php echo $_optioncount; ?>">    
+	<dl>
+	<?php foreach ($_options as $_option): ?>
+		<dt class="swatch-attr">
+			<?php 
+			$_attrCode = strtolower($_option['label']);
+			$_attrCode = str_replace(' ', '-', $_attrCode);
+			$_attrCode = str_replace(' ', '-', $_attrCode);
+			$_attrCode = str_replace('-&-', '-', $_attrCode);
+			?>
+			<label id="<?php echo $_attrCode; ?>_label" class="required">
+				<em>*</em>
+				<?php echo $_option['label']; ?>:
+				<span id="select_label_<?php echo $_attrCode; ?>" class="select-label"></span>
+			</label>
+		</dt>
+		<dd class="clearfix swatch-attr last">
+			<div class="input-box">
+				<ul class="configurable-swatch-list clearfix" id="configurable_swatch_<?php echo $_attrCode; ?>">
+					<?php $i = 0; ?>
+					<?php foreach ($_option['values'] as $_opt): ?>
+						<?php if($i == $maxlimit){break;} ?>
+						<li class="option">
+							<a href="javascript:void(0)" class="swatch-link">
+								<span class="swatch-label" style="line-height: 100px;">
+									<div class="ph-item">
+										<div class="ph-swatch"></div>
+									</div>
+								</span>
+							</a>
+						</li>
+						
+					<?php $i++; endforeach; ?>
+				</ul>
+			</div>
+		</dd>
+		<?php endforeach; ?>
+	</dl>
+</div>
+<?php endif; ?>
+<?php endif; ?>
+<style>
+.product-options .ph-item {
+	padding: 0;
+	overflow: hidden;
+	margin-bottom: 0;
+	margin-top: 0;
+	border: none;
+	border-radius: 0;
+}
+
+.ph-swatch-label {
+	
+	height: 10px;
+}
+.ph-swatch{
+	background: #ddd;
+	height: 55px;
+}
+.swatch-placeholder.product-options .configurable-swatch-list li {
+	border: none !important;
+	margin: 0;
+}
+.swatch-placeholder.product-options span.swatch-label {
+	padding: 0;
+}
+</style>

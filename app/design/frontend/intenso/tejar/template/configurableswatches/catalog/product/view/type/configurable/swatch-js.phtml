@@ -1,0 +1,20 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+  $moduleName = Mage::app()->getRequest()->getModuleName();
+?>
+
+<script>
+var swatchesConfig;
+document.addEventListener("DOMContentLoaded", function(){
+	$j(function(){
+    	var swatchesConfig = new Product.ConfigurableSwatches(spConfig);
+    });
+});	
+</script>

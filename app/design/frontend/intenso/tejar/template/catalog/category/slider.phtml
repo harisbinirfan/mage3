@@ -1,0 +1,112 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php
+/**
+ * Category view template
+ *
+ * @see Mage_Catalog_Block_Category_View
+ */
+?>
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    Itactica
+ * @package     Itactica_FeaturedCategories
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+
+	$_helper    = $this->helper('catalog/output');
+    $_category  = $this->getCurrentCategory();
+	$category = Mage::getModel('catalog/category')->load($_category->getId());
+	$parentCategory = Mage::getModel('catalog/category')->load($_category->getParentId());
+	$subcategories = $category->getChildrenCategories();
+	$displayMode = $_category->getData('display_mode');
+	$level = $category->getData('level');
+
+?>
+<?php if(!$category['collection_type']):?>
+<?php if($level != 2): ?>
+	<?php if (count($subcategories) > 0):?>
+		<section class="category-wrapper">
+			<h3><?php echo $this->__('Shop By Category'); ?></h3>
+			<div class="gird-container">
+		<?php foreach($subcategories as $subcategory):?>
+				<div class="gird-item" style="">
+					<div class="gird-item--image">
+						<a href="<?php echo  $subcategory->getUrl(); ?>">
+						<img 
+							<?php $category = $subcategory->load($subcategory->getId()); ?>
+							<?php if($category->getThumbnail()):?>
+							src="<?php echo $this->getSkinUrl('images/clear.png'); ?>"
+							data-src="<?php echo $this->helper('tejar_catalog/category_image')->init($category, 'thumbnail',$category->getThumbnail()); ?>"  
+							class="lazyload"
+							<?php else: ?>
+							src="<?php echo $this->getSkinUrl('images/clear.png'); ?>"
+							<?php endif;?>
+							alt="<?php echo $subcategory->getName(); ?>"							
+							width="500" height="500"  />
+						</a>
+					</div>
+					<div class="gird-item--acion">
+						<a href="<?php echo  $subcategory->getUrl(); ?>">
+							<h2 class="category-heading"><?php echo  $subcategory->getName(); ?><span><?php // echo $subcategory->getChildrenCount(); ?></span></h2>
+						</a>
+					</div>
+				</div>
+		<?php endforeach; ?>
+	</div>
+</section>
+	<?php endif; ?>
+<?php else: ?>
+<div class="category-container">
+<?php if (count($subcategories) > 0):?>
+<?php foreach($subcategories as $subcategory):?>
+<?php $innersubcategories = Mage::getModel('catalog/category')->load($subcategory->getId()); ?>
+<?php if (count($innersubcategories->getChildrenCategories()) > 0):?>
+<section class="category-wrapper " id="catId-<?php echo $subcategory->getId(); ?>">
+	<a href="<?php echo  $subcategory->getUrl(); ?>">
+		<h3 class="category-heading"><?php echo  $subcategory->getName(); ?></h3>
+	</a>
+	<div class="gird-container">
+		<?php foreach($innersubcategories->getChildrenCategories() as $innersubcategory):?>
+			<div class="gird-item">
+				<div class="gird-item--image">
+					<a href="<?php echo  $innersubcategory->getUrl(); ?>">
+					<img 
+							<?php $category = $innersubcategory->load($innersubcategory->getId()); ?>
+							<?php if($category->getThumbnail()):?>
+							src="<?php echo $this->getSkinUrl('images/clear.png'); ?>"
+							data-src="<?php echo $this->helper('tejar_catalog/category_image')->init($category, 'thumbnail',$category->getThumbnail()); ?>"  
+							class="lazyload"
+							<?php else: ?>
+							src="<?php echo $this->getSkinUrl('images/clear.png'); ?>"
+							<?php endif;?>
+							alt="<?php echo $innersubcategory->getName(); ?>"							
+							width="500" height="500"  />
+					</a>
+				</div>
+				<div class="gird-item--acion">
+					<a href="<?php echo  $innersubcategory->getUrl(); ?>">
+						<h2 class="category-heading"><?php echo  $innersubcategory->getName(); ?></h2>
+					</a>
+				</div>
+			</div>
+		<?php endforeach;?>
+	</div>
+</section>
+<?php endif; ?>
+<?php endforeach;?>
+<?php endif; ?>
+</div>
+<?php endif; ?>
+<?php endif; ?>

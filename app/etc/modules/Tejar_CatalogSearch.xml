@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>  
+    <modules>  
+        <Tejar_CatalogSearch>  
+            <active>true</active>  
+            <codePool>local</codePool>
+        </Tejar_CatalogSearch>  
+    </modules>  
+</config> 

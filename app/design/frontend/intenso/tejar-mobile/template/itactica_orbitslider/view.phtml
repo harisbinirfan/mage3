@@ -1,0 +1,63 @@
+<?php
+/**
+ * Intenso Premium Theme
+ * 
+ * @category    Itactica
+ * @package     Itactica_OrbitSlider
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+
+?>
+<?php $_slider = $this->getCurrentSlider();?>
+<?php $helper = Mage::helper('itactica_orbitslider');
+?>
+<?php if ($_slider) :?>
+	<?php 
+		$animationOptions = Mage::getModel('itactica_orbitslider/slider_attribute_source_animationtype')
+			->getAllOptions();
+		$animationType = strtolower($animationOptions[$_slider->getAnimationType()]['label']);
+	?>
+	<main class="image-slider slider <?php if ($_slider->getCustomClassname()) echo ' ' . $_slider->getCustomClassname() ?>" data-sizes="50vw" sizes="50vw">
+		<?php if ($_slider->getUseAdvanced()): ?>
+		<?php echo $_slider->getContent();?>
+		<?php else: ?>
+			<?php $slides = $this->getSlides($_slider->getId()); ?>
+			<?php $i=1; foreach ($slides as $slide): ?>
+			<div class="image-slide <?php if ($slide->getNavigationSkin() == 2): ?> dark<?php endif; ?>" <?php if($i == 1): ?> aria-hidden="false" <?php else: ?> aria-hidden="true" <?php endif; ?> >	
+				<a href="<?php echo $slide->getImageLink(); ?>">
+					<picture>
+						<?php if($i == 1): ?> 
+							<source media="(max-width: 599px)" srcset="<?php echo Mage::helper('tejar_orbitslider/image')->init($slide,"filename_for_small",$slide->getFilenameForSmall()); ?>">
+							<source media="(min-width: 600px)" srcset="<?php echo Mage::helper('tejar_orbitslider/image')->init($slide,"filename_for_medium",$slide->getFilenameForMedium()); ?>">
+							<img width="375" height="217" alt="<?php echo $slide->getTitleForLarge() ?>" 
+							src="<?php echo Mage::helper('tejar_orbitslider/image')->init($slide,"filename_for_small",$slide->getFilenameForSmall()); ?>">
+						<?php else: ?> 
+							<source media="(max-width: 599px)" data-srcset="<?php echo Mage::helper('tejar_orbitslider/image')->init($slide,"filename_for_small",$slide->getFilenameForSmall()); ?>">
+							<source media="(min-width: 600px)" data-srcset="<?php echo Mage::helper('tejar_orbitslider/image')->init($slide,"filename_for_medium",$slide->getFilenameForMedium()); ?>">
+							<img width="375" height="217" alt="<?php echo $slide->getTitleForLarge() ?>" 
+							src="<?php echo $this->getSkinUrl('images/clear.png'); ?>" data-lazy="<?php echo Mage::helper('tejar_orbitslider/image')->init($slide,"filename_for_small",$slide->getFilenameForSmall()); ?>" style="opacity: 0;">
+						<?php endif; ?>
+					</picture>
+				</a>
+			</div>		
+			<?php $i++; endforeach; ?>
+		<?php endif; ?>
+	</main>
+	<script>
+	document.addEventListener("DOMContentLoaded", function(){
+	  $j(".image-slider").slick({
+		lazyLoad: 'ondemand', // ondemand progressive anticipated
+		dots: true,
+		appendArrows: null,
+		speed: <?php echo $_slider->getAnimationSpeed(); ?>,
+		slidesToShow: 1,
+		autoplay: true,
+		autoplaySpeed: <?php echo $_slider->getTimerSpeed(); ?>,
+		infinite: true,
+		<?php echo $animationType == "fade" ? "fade: true,": ""; ?>
+		swipe: <?php echo $_slider->getSwipe()==1 ? "true" : "false"; ?>
+	  });
+	});
+	</script>
+<?php endif;?>

@@ -1,0 +1,28 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php 
+$action = Mage::app()->getFrontController()->getAction();
+$path = $action->getFullActionName('');
+$siteKey =  Mage::helper('tejar_captcha')->getConfigNode('public_key');
+$captchaModel = Mage::helper('captcha')->getCaptcha("newsletter_captcha");
+?>
+<?php if(Mage::helper('tejar_captcha')->getConfigNode('recaptcha_enable') && $captchaModel->isRequired()): ?>
+<input type="hidden" id="g-recaptcha-token-id" name="g-recaptcha-token" value="" />
+<script type="text/javascript">
+	grecaptcha.ready(function() {
+		grecaptcha.execute('<?php echo $siteKey; ?>', {action: '<?php echo $path . "page"; ?>'})
+		.then(function(token) {
+			document.getElementById('g-recaptcha-token-id').value = token;
+		});
+	});
+</script>
+<?php endif; ?>
+

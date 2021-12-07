@@ -1,0 +1,76 @@
+<script type="text/javascript">  
+var xhttp = XMLHttp.getTransport(),
+url = document.location.href,
+listing = document.querySelectorAll(".category-products:not(body)")[0],
+layer = document.querySelectorAll("#layered-navigation")[0],
+layerContainer = document.querySelectorAll(".layered-nav-container")[0],
+layerContainer = layerContainer&&(layerContainer.classList.contains('ajax_filter')),
+json, responseList , responseLayer , action , xhrActtion;
+
+function catalogAssets(){
+	listing.classList.remove('category-loaded'); 
+	Intenso.libs.catalogAjax.ajaxListener(); 
+	Intenso.libs.catalogAjax.shorten_list($j('.products-grid').data('list-qty'));
+	Intenso.libs.catalogAjax.settings.catalogListing.trigger('item:setWidth');
+	Intenso.libs.catalogAjax.settings.catalogListing.trigger('isotope:update');
+	Intenso.libs.catalogAjax.settings.catalogListing.trigger('catalog:update');
+	listing.classList.add('category-loaded');
+	Intenso.libs.ui.init();
+}
+
+xhttp.onreadystatechange = function() {
+	if (this.readyState == 4 && this.status == 200) {
+		json = JSON.parse(xhttp.responseText),
+		responseList = json.listing,
+		responseLayer = json.layer;
+		if (typeof Prototype !== "undefined" && typeof jQuery !== "undefined") {
+			listing&&(listing.update(responseList));
+			layer&&layerContainer&&(layer.update(responseLayer));
+		} else {
+			listing&&(listing.innerHTML = xStripScript(responseList));
+			layer&&layerContainer&&(layer.innerHTML = xStripScript(responseLayer));
+			if (typeof xhrActtion !== "undefined") {
+				listing&&(xEvalScripts(responseList));
+				layer&&layerContainer&&(xEvalScripts(responseLayer));
+			}
+			xhrActtion = true;
+		}
+		
+		if (typeof Intenso !== "undefined") {
+			catalogAssets();
+		}
+		action = true;
+	}
+};
+xhttp.open("GET", url  + (url.match(new RegExp('\\?')) ? '&isLayerAjax=true' : '?isLayerAjax=true' ), true);
+setRequestHeaders(xhttp);
+xhttp.send();
+
+function CatalogListingAjax(element , setting , array){
+	listing&&(listing.update(responseList));
+	layer&&(layer.update(responseLayer));
+	catalogAssets();
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+	if (typeof action !== "undefined") {
+		catalogAssets();
+	}
+	
+	if (typeof xhrActtion !== "undefined") {
+		listing&&(xEvalScripts(responseList));
+		layer&&layerContainer&&(xEvalScripts(responseLayer));
+	}
+	xhrActtion = true;
+});
+
+function infiniteScrollActive(){
+	var button = document.getElementById('scroll-action'),
+	catalogList = document.getElementById('catalog-listing');
+	if(button && catalogList){
+		catalogList.classList.add('infinite-scroll');
+		Intenso.libs.catalogAjax.init();
+		button.style.display = "none";
+	}
+}
+</script>

@@ -1,0 +1,83 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+
+<?php $_orders = $this->getOrders(); ?>
+
+	<div class="box-account box-recent">
+		<div class="box-head">
+			<h3><?php echo $this->__('Recent Orders') ?></h3>
+			<?php if( sizeof($_orders->getItems()) > 0 ): ?><a href="<?php echo $this->getUrl('sales/order/history') ?>"><?php echo $this->__('View All Orders') ?></a><?php endif; ?>
+		</div>
+	</div>
+	
+<?php if( sizeof($_orders->getItems()) > 0 ): ?>
+
+    
+	<?php foreach ($_orders as $_order): ?>
+			<div class="orders-list-wrapper section-offset-fluied">
+			<div class="section-offset">
+	<div class="orders-list-wrapper">
+		<table class="table_type_1 orders_table orders-list" id="my-orders-table">
+<!--========================================== ZEE CODE =================================-->				
+			<thead>
+				<tr>
+					<th colspan="2" class="order-placed bg-color-light"><?php echo $this->__('Order # ') ?><?php echo $_order->getRealOrderId() ?><br><?php echo $this->formatDate($_order->getCreatedAtStoreDate()) ?></th>
+					<th colspan="2" class="order-total align_right bg-color-light"><?php echo $this->__('Total') ?>&nbsp;&nbsp;<?php echo $_order->formatPrice($_order->getGrandTotal()) ?> </br><a href="<?php echo $this->getViewUrl($_order) ?>" title="<?php echo $this->__('View Order') ?>"><?php echo $this->__('Order Detail ') ?></a><?php if ($this->helper('sales/reorder')->canReorder($_order)) : ?>&nbsp;|&nbsp;<a href="<?php echo $this->getReorderUrl($_order) ?>" class="" title="<?php echo $this->__('Reorder') ?>"><?php echo $this->__('Reorder') ?></a><?php endif ?></th>            
+				</tr>
+		 	<?php 
+				$entireOrderGiftItemAvailable = "";
+				$message = Mage::getModel('giftmessage/message');
+				$gift_message_id = $_order->getGiftMessageId();
+				$items = $_order->getAllVisibleItems();
+				$entireOrderGift = "";
+				foreach($items as $item){
+				 if($this->helper('giftmessage/message')->getIsMessagesAvailable('order_item', $item) && $item->getGiftMessageId()){
+					$entireOrderGift = $item->getGiftMessageId();
+					$entireOrderGiftItemAvailable = $this->helper('giftmessage/message')->getIsMessagesAvailable('order_item', $item) && $item->getGiftMessageId();
+				 }
+				}
+				//echo "<pre>"; print_r($gift_message_id);die;
+				if(!is_null($gift_message_id) or !is_null($entireOrderGift) ) {
+				$message->load((int)$gift_message_id);
+				$gift_sender = $message->getData('sender');
+				$gift_recipient = $message->getData('recipient');
+				//echo $gift_message = $message->getData('message');
+			?>
+			<?php if($this->helper('giftmessage/message')->getIsMessagesAvailable('order', $_order) && $_order->getGiftMessageId() || $entireOrderGiftItemAvailable): ?>
+			
+				<tr>
+					<th colspan="4"><h6 class="gift-heading"><i class="icons-gift"></i> <?php echo $this->__('This is a gift order'); ?></h6></th>
+				</tr>
+				<?php endif ;?>
+			<?php } ?>
+			
+			
+      </thead>
+		<tbody>
+			<tr><td colspan="4" ><div class="my-order-status">
+			<h5><?php echo $_order->getStatusLabel(); ?></h5>
+			<strong>Product (<?php echo (int) $_order->getTotalQtyOrdered(); ?><?php // echo $_order->getData('total_qty_ordered'); ?>)</strong>
+			</div></td></tr>
+			<?php $collection_mode = 'history';
+			foreach($_order->getAllVisibleItems() as $item){ ?>
+					<?php include('item_loop.phtml'); ?>	
+			<?php }?>
+		</tbody>
+    <!--============================================== END Order COLLECTION ============================================-->	
+	</table>
+</div>
+</div>
+		</div>
+	<?php endforeach; ?>
+    <script type="text/javascript">decorateTable('my-orders-table')</script>
+<?php else: ?>
+    <p><?php echo $this->__('You have placed no orders.'); ?></p>
+<?php endif; ?>

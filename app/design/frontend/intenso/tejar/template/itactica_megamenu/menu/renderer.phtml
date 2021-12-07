@@ -1,0 +1,148 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+
+/** @var Mage_Page_Block_Html_Topmenu_Renderer $this */
+/** @var Varien_Data_Tree_Node $menuTree */
+/** @var string $childrenWrapClass */
+
+$html = '';
+$children = $menuTree->getChildren();
+$parentLevel = $menuTree->getLevel();
+$childLevel = is_null($parentLevel) ? 0 : $parentLevel + 1;
+$arrowBoxClass = ($childLevel == 0) ? ' arrow-box' : '';
+$counter = 1;
+$childrenCount = $children->count();
+
+$parentPositionClass = $menuTree->getPositionClass();
+$itemPositionClassPrefix = $parentPositionClass ? $parentPositionClass . '-' : 'nav-';
+ if ($childLevel == 0) {
+ $html .= '<ul class="nav-primary">';
+ }
+foreach ($children as $child) {
+    $child->setLevel($childLevel);
+    $child->setIsFirst($counter == 1);
+    $child->setIsLast($counter == $childrenCount);
+    $child->setPositionClass($itemPositionClassPrefix . $counter);
+
+    $outermostClassCode = 'level'. $childLevel;
+    $_hasChildren = ($child->hasChildren() && $childLevel < 1) ? 'has-children' : '';
+	$_hasMegaMenu = ($child->hasChildren() && $childLevel < 1) ? 'has-megamenu' : '';
+
+    $class = $this->_getRenderedMenuItemAttributes($child);
+    $class = str_replace('last', '', $class);
+
+    if ($childLevel == 0) {
+        if (Mage::registry('parent_id')) {
+            Mage::unregister('parent_id');
+        }
+        Mage::register('parent_id',$child->getId());
+    }
+    
+    if ($this->getMenuStyle($child->getId()) == 'no-dropdown' 
+        || ($childLevel > 1 && $this->getMenuStyle(Mage::registry('parent_id')) == 'mega-menu')) {
+        $class = str_replace('parent', '', $class);
+    } else {
+        $class = str_replace('parent', $_hasMegaMenu . ' ' . $this->getMenuStyle($child->getId()), $class);
+    }
+	
+	$active = "";
+	if(strpos($class , "active")){
+		$active = "active";
+	}
+	
+	$noChildren = "";
+	if ($childLevel == 1) {
+		$noChildren = "no-children";
+	}
+ 
+    $html .= '<li '. $class .'>';
+
+	if($this->getBottomBlock($child->getId())){
+	$html .= '<a href="'. $child->getUrl() .'" class="'. $outermostClassCode .' '. $noChildren .' '. $_hasChildren . ' ' . $active .'" data-dropfall-id="'. $child->getId() .'">'. $this->getBottomBlock($child->getId()) . $this->escapeHtml($this->__($child->getName())) . '</a>';	
+	
+	}
+	else{
+	$html .= '<a href="'. $child->getUrl() .'" class="'. $outermostClassCode .' '. $noChildren .' '. $_hasChildren . ' ' . $active . '" data-dropfall-id="'. $child->getId() .'"><i class="sprite sprite-blank"></i>' . $this->escapeHtml($this->__($child->getName())) . '</a>';	
+	}
+	
+	// $html .= '<h2 class=" hide">' . $this->escapeHtml($this->__($child->getName())) . '</h2>';	
+
+   
+
+ 
+
+    $html .= '</li>';
+	
+
+   
+    $counter++;
+}
+ if ($childLevel == 0) {
+$html .= '</ul>';
+$html .= '<div class="sub-dropdown-root">';
+$html .= '<div class="sub-dropdown-background">';
+$html .= '<div class="sub-alternate-background"></div>';
+$html .= '</div>';
+$html .= '<div class="sub-dropdown-arrow"></div>';
+$html .= '<div class="sub-dropdown-container">';
+ } 
+foreach ($children as $child) {
+    $child->setLevel($childLevel);
+    $child->setIsFirst($counter == 1);
+    $child->setIsLast($counter == $childrenCount);
+    $child->setPositionClass($itemPositionClassPrefix . $counter);
+
+    $outermostClassCode = 'level'. $childLevel;
+    $_hasChildren = ($child->hasChildren() && $childLevel < 1) ? 'has-children' : '';
+	$_hasMegaMenu = ($child->hasChildren() && $childLevel < 1) ? 'has-megamenu' : '';
+
+    $class = $this->_getRenderedMenuItemAttributes($child);
+    $class = str_replace('last', '', $class);
+
+    if ($childLevel == 0) {
+        if (Mage::registry('parent_id')) {
+            Mage::unregister('parent_id');
+        }
+        Mage::register('parent_id',$child->getId());
+    }
+    
+    if ($this->getMenuStyle($child->getId()) == 'no-dropdown' 
+        || ($childLevel > 1 && $this->getMenuStyle(Mage::registry('parent_id')) == 'mega-menu')) {
+        $class = str_replace('parent', '', $class);
+    } else {
+        $class = str_replace('parent', $_hasMegaMenu . ' ' . $this->getMenuStyle($child->getId()), $class);
+    }
+
+
+    $nextChildLevel = $childLevel + 1;
+
+   if (!empty($_hasChildren) && $childLevel < 1) {
+		$html .= '<div class="sub-dropdown-section" data-dropfall="' . $child->getId() .'">';
+		$html .= '<div class="sub-dropdown-content">';
+		$html .= '<div class="nav-secondary-container">';
+        $html .= '<ul class="level'. $childLevel .' dropdown nav-secondary"' . '>';
+        $html .=     $this->render($child, $childrenWrapClass);
+        $html .= '</ul>';
+		$html .= '<div class="nav-banner" ' . $this->getRightBlockWidth(Mage::registry('parent_id'), 'width') . '>'. $this->getRightBlock(Mage::registry('parent_id')).'</div>';
+		$html .= '</div>';
+		$html .= '</div>';
+		$html .= '</div>';
+    }
+
+  
+
+    $counter++;
+}
+if ($childLevel == 0) {
+$html .= '</div>';
+$html .= '</div>';
+}
+return $html;
+

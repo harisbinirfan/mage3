@@ -1,0 +1,104 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    Itactica
+ * @package     Itactica_FeaturedProducts
+ * @copyright   Copyright (c) 2014-2017 Intenso (https://www.getintenso.com)
+ * @license     http://getintenso.com/license
+ */
+
+?>
+<?php $_productCollection=$this->getProductCollection(0,false,true); ?>
+<?php $_slider = $this->getCurrentSlider(); ?>
+<?php $categories = $this->getCategories(); ?>
+<?php $_intensoHelper = $this->helper('itactica_intenso'); ?>
+<?php if ($_slider) :?>
+    <section class="row featured-slider featured-slider-section<?php if ($_slider->getCustomClassname()) echo ' ' . $_slider->getCustomClassname() ?><?php if ($_slider->getDisplayType() == 0): ?> grid-type<?php endif; ?><?php if ($_slider->getNumberItemsMobile() == 2): ?> mobile-two-items<?php endif; ?>" data-options="animation_speed:<?php echo $_slider->getAnimationSpeed(); ?>; min_item_width:<?php echo $_slider->getMinimumWidth(); ?>; number_items_on_mobile:<?php echo $_slider->getNumberItemsMobile(); ?>; swipe:<?php echo $_slider->getSwipe(); ?>">
+        <h3><?php echo $_slider->getTitle(); ?></h3>
+        <?php foreach ($categories as $id => $category): ?>
+            <ol class="clearfix" <?php if($id > 0) echo ' data-featured-cat-name="'.$category.'"'?>>
+                <?php $productCollectionByCategory = $this->getProductCollection($id); ?>
+                <?php foreach ($productCollectionByCategory as $product): ?>
+                    <li class="item">
+                        <div class="item-content">
+                            <div class="item-images<?php if (!$_slider->getHasPadding()): ?> flush<?php endif; ?>">
+                                <?php if (Mage::getStoreConfig('intenso/catalog/lazy_loading')): ?>
+                                    <a class="product-image" href="<?php echo $product->getProductUrl(); ?>" <?php echo $this->getPictureStyle();?>>
+                                        <img id ="product-collection-image-<?php echo $product->getId(); ?>" class="item-image" alt="<?php echo $this->stripTags($product->getName(), null, true); ?>" src="<?php echo $this->getSkinUrl('images/clear.png'); ?>" data-echo="<?php echo $this->getProductImage($product); ?>" width="430" height="<?php echo $_slider->getImageHeight(); ?>">
+                                        <?php echo $_intensoHelper->getAlternativeImgUrl($product, 430, $_slider->getImageHeight(), true); ?>
+                                    </a>
+                                <?php else: ?>
+                                    <a class="product-image" href="<?php echo $product->getProductUrl(); ?>">
+                                        <img id ="product-collection-image-<?php echo $product->getId(); ?>" class="item-image" src="<?php echo $this->getProductImage($product); ?>" alt="<?php echo $this->stripTags($product->getName(), null, true); ?>" width="430" height="<?php echo $_slider->getImageHeight(); ?>">
+                                        <?php echo $_intensoHelper->getAlternativeImgUrl($product, 430, $_slider->getImageHeight()); ?>
+                                    </a>
+                                <?php endif; ?>
+
+                                <div class="product-label-placeholder" data-productid="<?php echo $product->getId(); ?>" data-labelurl="<?php echo Mage::getBaseUrl(); ?>itactica-productlabel" data-source="category"></div>
+
+                                <?php if (Mage::helper('itactica_quickview')->isEnabled()): ?>
+                                    <a href="<?php echo $this->getUrl('itactica_quickview/product/view/id/' . $product->getId()) ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>" class="quickview-button button"><?php echo $this->__('Quick View') ?></a>
+                                <?php endif; ?>
+                            </div>
+                            <div class="item-info">
+                                <h6 class="item-title">
+                                    <a href="<?php echo $product->getProductUrl(); ?>" class="truncate"><span><?php echo $this->stripTags($product->getName(), null, true); ?></span></a>
+                                </h6>
+                                <?php if($_slider->getShowRating()): ?>
+                                    <?php $reviewHelper = $this->getLayout()->createBlock('review/helper'); ?>
+                                    <?php echo $reviewHelper->getSummaryHtml($product, 'short', false); ?>
+                                <?php endif; ?>
+                                <?php if($_slider->getShowPriceTag()): ?>
+                                    <?php echo $this->getPriceHtml($product, true); ?>
+                                <?php endif; ?>
+                                <?php
+                                if (Mage::helper('itactica_intenso')->isConfigSwatchesEnabled() && $_slider->getShowColorOptions()) {
+                                    echo $this->getLayout()->createBlock('core/template')->setTemplate('configurableswatches/catalog/product/list/swatches.phtml')->setProduct($product)->toHtml();
+                                }
+                                ?>
+                                <?php if (Mage::helper('itactica_quickview')->isEnabled()): ?>
+                                    <a href="<?php echo $this->getUrl('itactica_quickview/product/view/id/' . $product->getId()) ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>" class="quickview-button button"><?php echo $this->__('Quick View') ?></a>
+                                <?php endif; ?>
+                            </div>
+                            <?php if($_slider->getShowAddToCartButton() || $_slider->getShowCompareButton() || $_slider->getShowWishlistButton()): ?>
+                                <div class="actions clearfix">
+                                    <?php if(!$product->canConfigure() && $product->isSaleable() && $_slider->getShowAddToCartButton()): ?>
+                                        <button class="btn-cart" title="<?php echo $this->__('Add to Cart') ?>" type="button" onclick="setLocation('<?php echo $this->getAddToCartUrl($product) ?>')"><span><?php echo $this->__('Add to Cart') ?></span></button>
+                                    <?php elseif($product->getStockItem() && $product->getStockItem()->getIsInStock()): ?>
+                                        <button type="button" title="<?php echo $this->__('View Details') ?>" class="button btn-cart preview" onclick="setLocation('<?php echo $product->getProductUrl() ?>')"><span><span><?php echo $this->__('View Details') ?></span></span></button>
+                                    <?php elseif($_slider->getShowAddToCartButton()): ?>
+                                        <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                                    <?php endif; ?>
+                                    <ul class="add-to-links">
+                                        <?php if($this->helper('wishlist')->isAllow() && $_slider->getShowWishlistButton()): ?>
+                                            <li><a class="link-wishlist" href="<?php echo $this->helper('wishlist')->getAddUrl($product) ?>" title="<?php echo $this->__('Add to Wishlist') ?>"><?php echo $this->__('Add to Wishlist') ?></a></li>
+                                        <?php endif; ?>
+                                        <?php $_compareUrl=$this->helper('catalog/product_compare')->getAddUrl($product); ?>
+                                        <?php if($_compareUrl && $_slider->getShowCompareButton()): ?>
+                                            <li><a id="compare-id-<?php echo $product->getId(); ?>" class="link-compare" href="<?php echo $_compareUrl ?>" title="<?php echo $this->__('Add to Compare') ?>"><?php echo $this->__('Add to Compare') ?></a></li>
+                                        <?php endif; ?>
+                                    </ul>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </li>
+                <?php endforeach; ?>
+            </ol>
+        <?php endforeach; ?>
+    </section>
+    <?php echo $this->getChildHtml('compare-js'); ?>
+
+    <?php
+    if (Mage::helper('itactica_intenso')->isConfigSwatchesEnabled()) {
+        echo $this->getLayout()->createBlock('configurableswatches/catalog_media_js_list')->setTemplate('configurableswatches/catalog/media/js.phtml')->setProductCollection($_productCollection)->toHtml();
+        if (version_compare(Mage::getVersion(), '1.9.3', '>=')) {
+            $priceHelper = Mage::helper('configurableswatches/list_price');
+            if ($priceHelper->isEnabled()) {
+                $priceHelper->attachConfigurableProductChildrenPricesMapping($_productCollection->getItems(), $_productCollection->getStoreId());
+                echo $this->getLayout()->createBlock('configurableswatches/catalog_product_list_price')->setProductCollection($_productCollection)->toHtml();
+            }
+        }
+    }
+    ?>
+<?php endif;?>

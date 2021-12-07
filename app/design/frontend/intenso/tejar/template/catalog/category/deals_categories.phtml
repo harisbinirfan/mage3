@@ -1,0 +1,74 @@
+<?php 
+
+	$storeId = Mage::app()->getStore()->getStoreId();
+	$filter = Mage::getSingleton('catalog/layer');
+	$category  = Mage::registry('current_category');
+	
+	 $_categories = Mage::getModel('catalog/category')->getCollection()
+		->addAttributeToSelect('*')
+		->addIsActiveFilter(1)
+		->addAttributeToFilter('collection_type',array('null' => true))
+		->addAttributeToFilter('children_count',array('eq' => 0))
+		->addAttributeToFilter('dup_cat.product_id', array('in' => $filter->productIds()))
+		->addAttributeToFilter('level', array('gt' => 2))
+		->addOrderField('name');
+	
+	
+	$_categories->getSelect()->joinInner(array('dup_cat' => $_categories->getTable('catalog/category_product_index')),'main_table.entity_id = dup_cat.category_id AND dup_cat.store_id="'.$storeId.'" AND dup_cat.visibility IN('.join(',',Mage::getSingleton('catalog/product_visibility')->getVisibleInCatalogIds()).')')->group('main_table.entity_id');
+	
+	
+	$matchDealCategoryUrl = preg_match('/deals\/filter\/category/i',Mage::app()->getRequest()->getRequestString());
+
+	$matchEventNational = preg_match('/event\/national/i',Mage::app()->getRequest()->getRequestString());
+	$matchEventNational2 = preg_match('/national/i',Mage::app()->getRequest()->getParam('event'));
+	$categoryFilterUrl = Mage::getBaseUrl() . "deals/filter/category/%s";
+	if($matchEventNational){
+		$categoryFilterUrl = Mage::getBaseUrl() . "deals/filter/category/%s/event/national/";
+	}
+	elseif($matchEventNational2){
+		$categoryFilterUrl = Mage::getBaseUrl() . "deals/filter/category/%s?event=national";
+	}
+?>
+<?php if( $_categories->getSize()): ?>
+<section class="category-wrapper owl-top-narrow" id="deals-category">
+	<div class="deal-category">
+		<div class="title-block">
+			<h3 class="title-block-left">Explore deals you're into</h3>
+			<?php if($matchDealCategoryUrl): ?>
+				<span class="title-block-right"><a href="<?php echo $category->getUrl(); ?>">Reset Filters</a></span>
+			<?php endif; ?>
+		</div>
+		
+		<div class="filter-products">
+			<div class="gird-container deals-category-slider owl-carousel">
+				<?php foreach($_categories as $_category): ?>			
+					<div class="owl-item item gird-item ">
+						<div class="gird-item--image">
+							<a href="<?php echo sprintf($categoryFilterUrl, $_category->getId()); ?>">
+									<img src="<?php echo $this->getSkinUrl('images/clear.png'); ?>" data-lazy="<?php echo $this->helper('tejar_catalog/category_image')->init($_category, 'thumbnail',$_category->getThumbnail())->resize(150); ?>" class="item-image" />
+							</a>
+						</div>
+						<div class="gird-item--acion">
+							<a href="<?php echo sprintf($categoryFilterUrl, $_category->getId()); ?>">
+								<h2 class="category-heading"><?php echo $_category->getName(); ?></h2>
+							</a>
+						</div>
+					</div>
+				<?php endforeach; ?>
+			</div>
+		</div>
+	</div>
+</section>
+
+<script>
+	document.addEventListener("DOMContentLoaded", function(){
+		var brandSliderSlick = $j("#deals-category .gird-container");
+		brandSliderSlick.slick({lazyLoad:"ondemand",infinite:false,prevArrow:'<button class="slick-prev" aria-label="Previous" type="button"><span aria-label="Previous">\u2039</span></button>',nextArrow:'<button class="slick-next" aria-label="Next" type="button"><span aria-label="Next">\u203a</span></button>',speed:1E3,slidesToShow:6,slidesToScroll:3,speed: 300,
+			responsive:[{breakpoint:10240.9,settings:{slidesToShow:10,slidesToScroll:10}},{breakpoint:1920.9,settings:{slidesToShow:9,slidesToScroll:9}},{breakpoint:1680.9,settings:{slidesToShow:8,slidesToScroll:8}},{breakpoint:1440.9,settings:{slidesToShow:7,slidesToScroll:7}},{breakpoint:1280.9,settings:{slidesToShow:6,slidesToScroll:6}},{breakpoint:1024.9,settings:{slidesToShow:5,slidesToScroll:5}},{breakpoint:992.9,settings:{slidesToShow:4,slidesToScroll:4}},{breakpoint:768.9,settings:{slidesToShow:3,slidesToScroll:3}},{breakpoint:480.9,settings:{
+				slidesToShow:2,slidesToScroll:2
+			}}]
+		});
+	});
+</script>
+
+<?php endif; ?>

@@ -1,0 +1,11 @@
+<?php $countryArray=$this->getCurrencies();ksort($countryArray);?>
+<?php if($this->getCurrencyCount()>1):?>
+<select onchange="window.location.href=this.value" name="currency" id="currency" title="Select Your Currency">
+<?php foreach($countryArray as $_code=>$_name):?>
+<?php $rest=substr($_code,0,-1);?>
+<option value="<?php echo $this->getSwitchCurrencyUrl($_code)?>" data-image="flag flag-<?php echo strtolower($rest);?>" <?php if($_code==$this->getCurrentCurrencyCode()):?> selected="selected" <?php endif;?>>
+<?php echo $_code?>
+</option>
+<?php endforeach;?>
+</select>
+<?php endif;?>

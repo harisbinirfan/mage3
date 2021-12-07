@@ -1,0 +1,56 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+
+<?php 
+$countryArray  = $this->getCurrencies();
+ksort($countryArray);
+
+//echo "<pre>"; var_dump($this->getCurrencyCount());die;
+?>
+
+
+<?php if($this->getCurrencyCount() > 1): ?>
+<?php $currentCurrencyCode = $this->getCurrentCurrencyCode();
+
+//die;
+?>
+<?php //if(isset($currentCurrencyCode) && isset($currentCurrencyName)){
+	
+	//die;
+	?>
+<?php $reset = $currentCurrencyCode; ?>
+<?php $reset = substr($currentCurrencyCode, 0, -1); ?>
+<li class="group-title">Currency</li>
+				<li class="level0 nav-1 first has-dropdown mega-menu not-click">
+					<a class="level0 has-children">
+					
+					<div class="flag flag-<?php echo strtolower($reset);?>"></div>
+					<?php echo $currentCurrencyCode; ?>
+					</a>
+					<ul class="level0 dropdown arrow-box columns-6-for-large columns-2-for-medium">
+					<li class="title back js-generated">
+					<h5><a href="javascript:void(0)">Back</a></h5>
+					</li>
+					 <?php foreach ($countryArray as $_code => $_name): ?>
+					 <?php $rest = substr($_code, 0, -1); ?>
+					 
+					<li class="level1 nav-1-9 <?php if($_code == $currentCurrencyCode): ?>active<?php endif; ?>">
+					<a href="<?php echo $this->getSwitchCurrencyUrl($_code)?>">
+					<div class="flag flag-<?php echo strtolower($rest);?>" title="<?php echo $_name; ?>" id="<?php echo $_code; ?>"></div>
+					
+					 <?php echo $_code ?>
+					</a>
+					</li>
+					<?php endforeach; ?>
+					</ul>
+		</li>
+		<?php  //} ?>
+<?php endif; ?>

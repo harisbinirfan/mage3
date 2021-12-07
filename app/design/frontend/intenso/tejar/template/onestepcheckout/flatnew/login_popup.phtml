@@ -1,0 +1,282 @@
+<div id="onestepcheckout-login-popup" style="display:none;">
+    <div class="onestepcheckout-popup-wrapper">
+        <div class="onestepcheckout-popup-contents">
+            <div id="onestepcheckout-login-popup-contents-forgot" style="display: none;">
+                <form id="onestepcheckout-forgot-form">
+
+                    <div id="onestepcheckout-forgot-loading" style="display: none;" class="loading-ajax-login">&nbsp;
+                    </div>
+                    <div id="onestepcheckout-forgot-error" class="onestepcheckout-error" style="display: none;">&nbsp;
+                    </div>
+                    <div id="onestepcheckout-forgot-success" style="display: none;">
+
+                        <!--2014.18.11 update start-->
+                        <?php echo $this->__('We have now sent you a new password to your email address.'); ?>
+                        <!--2014.18.11 update end-->
+                    </div>
+					<h2 class="center account-title"><?php echo $this->__('Retrieve password') ?></h2>
+
+                    <ul id="onestepcheckout-forgot-table">
+
+                        <li>
+							<div class="input-wrapper input-field">
+                            <label class="required label-floating"
+                                   for="id_onestepcheckout_email"><?php echo $this->__('Email address'); ?>
+                                <em>*</em></label>
+                            <input type="text" class="input-text input-floating required-entry validate-email"
+									placeholder="<?php echo $this->__('Email address'); ?>"
+                                   name="onestepcheckout_email" id="id_onestepcheckout_email"/>
+						   </div>
+                        </li>
+
+                    </ul>
+					<footer class="bottom_box on_the_sides">
+									<button class="btn btn-big" id="onestepcheckout-forgot-button"
+                                    type="button"><?php echo $this->__('Send password'); ?></button>
+									<p class="back-link"><a id="onestepcheckout-return-login-link" class="arrow-left" href="javascript:void(0);"><?php echo $this->__('Back to Login') ?></a></p>
+							</footer>
+                </form>
+
+            </div>
+
+            <div id="onestepcheckout-login-popup-contents-login">
+					<div id="onestepcheckout-login-error" class="onestepcheckout-error" style="display: none;">&nbsp;
+                    </div>
+                  <h2 class="account-title center"><?php echo $this->__('Sign in to your account') ?></h2>
+                <form id="onestepcheckout-login-form">
+
+                    <div id="onestepcheckout-login-loading" style="display: none;" class="loading-ajax-login">&nbsp;
+                    </div>
+
+
+                    <ul id="onestepcheckout-login-table">
+                        <li>
+							<div class="input-field input-wrapper">
+								<div class="input-box">
+									<label class="required label-floating"
+										   for="id_onestepcheckout_username"><?php echo $this->__('Email address'); ?>
+										<em>*</em></label>
+									<input tabindex="100" type="text" class="input-text input-floating input-floating required-entry validate-email"
+										   placeholder="<?php echo $this->__('Email address'); ?>"
+										   name="onestepcheckout_username" id="id_onestepcheckout_username"/>
+								</div>
+							</div>
+                        </li>
+                        <li>
+							<div class="input-field input-wrapper">
+								<div class="input-box">
+									<label class="required label-floating"
+										   for="id_onestepcheckout_password"><?php echo $this->__('Password'); ?> <em>*</em></label>
+									<input type="password" tabindex="101" name="onestepcheckout_password"
+										   placeholder="<?php echo $this->__('Password'); ?>"
+										   class="input-text input-floating input-floating required-entry validate-password"
+										   id="id_onestepcheckout_password"/>
+									<a id="onestepcheckout-forgot-password-link"  href="javascript:void(0);" class="forget_link"><?php echo $this->__('forgot?') ?></a>
+								</div>
+							</div>
+                        </li>
+                        <li class="last">
+                            <button class="btn btn-big" tabindex="102" id="onestepcheckout-login-button"
+                                    type="button"><?php echo $this->__('Login'); ?></button>
+
+							<div class="row">
+								<div class="col-xs-12">
+									<?php echo $this->getChildHtml('tejar_socialconnect_login');?>
+								</div>
+							</div>
+
+
+                            <?php if (!Mage::helper('onestepcheckout')->isCustomerLoggedIn() && Mage::helper('onestepcheckout')->enableRegistration()): ?>
+							 <div class="login_bottom">
+								<div class="heading-divider">
+								   <h5><?php echo $this->__("Don't have an account?") ?></h5>
+								</div>
+								<button id="onestepcheckout-register-link" type="button" title="<?php echo $this->__('Create a new Account') ?>" class="btn btn-big secondary"><span><span><?php echo $this->__('Create an Account') ?></span></span></button>
+							 </div>
+                            <?php endif; ?>
+
+                        </li>
+                    </ul>
+                    <!--Leonard SUPEE9767-->
+                    <?php echo $this->getBlockHtml('formkey') ?>
+                    <!-- Leonard SUPEE 9767-->
+
+                </form>
+
+            </div>
+            <!-- Create new account - Add by Leo 03/04/2015 -->
+            <div id="onestepcheckout-login-popup-contents-register" style="display: none;">
+
+
+
+
+                <form id="onestepcheckout-register-form">
+
+                    <div id="onestepcheckout-register-loading" style="display: none;" class="loading-ajax-login">
+                        &nbsp;
+                    </div>
+                    <div id="onestepcheckout-register-error" class="onestepcheckout-error" style="display: none;">
+                        &nbsp;
+                    </div>
+
+					 <h2 class="account-title center"><?php echo $this->__('Create a new account ') ?></h2>
+
+                    <ul id="onestepcheckout-register-table">
+
+                        <li class="row">
+							<div class="col-sm-6 co-xs-12">
+								<div class="input-field input-wrapper">
+									<div class="input-box">
+										<label class="required label-floating"
+											   for="id_onestepcheckout_firstname"><?php echo $this->__('First Name'); ?>
+											<em>*</em></label>
+										<input tabindex="100" type="text" class="input-text input-floating required-entry"
+											   placeholder="<?php echo $this->__('First Name'); ?>"
+											   name="onestepcheckout_firstname" id="id_onestepcheckout_firstname"/>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6 co-xs-12">
+								<div class="input-field input-wrapper">
+									<div class="input-box">
+										<label class="required label-floating"
+											   for="id_onestepcheckout_lastname"><?php echo $this->__('Last Name'); ?><em>*</em></label>
+										<input tabindex="100" type="text" class="input-text input-floating required-entry"
+											   placeholder="<?php echo $this->__('Last Name'); ?>"
+											   name="onestepcheckout_lastname" id="id_onestepcheckout_lastname"/>
+									</div>
+								</div>
+							</div>
+                        </li>
+                        <li class="row">
+							<div class="col-sm-12 co-xs-12">
+								<div class="input-field input-wrapper">
+									<div class="input-box">
+										<label class="required label-floating"
+											   for="id_onestepcheckout_register_username"><?php echo $this->__('Email address'); ?>
+											<em>*</em></label>
+										<input tabindex="100" type="text" class="input-text input-floating required-entry validate-email"
+											   placeholder="<?php echo $this->__('Email address'); ?>"
+											   name="onestepcheckout_register_username"
+											   id="id_onestepcheckout_register_username"/>
+									</div>
+								</div>
+							</div>
+                        </li>
+						<li class="row">
+							<div class="col-sm-6 co-xs-12">
+								<div class="input-field input-wrapper">
+									<div class="input-box">
+										<label class="required label-floating"
+											   for="id_onestepcheckout_register_password"><?php echo $this->__('Password'); ?>
+											<em>*</em></label>
+										<input type="password" tabindex="101" name="onestepcheckout_register_password"
+											   placeholder="<?php echo $this->__('Password'); ?>"
+											   class="input-text input-floating required-entry validate-password"
+											   id="id_onestepcheckout_register_password"/>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6 co-xs-12 last">
+								<div class="input-field input-wrapper">
+									<div class="input-box">
+										<label class="required label-floating"
+											   for="id_onestepcheckout_register_confirm_password"><?php echo $this->__('Confirm Password'); ?>
+											<em>*</em></label>
+										<input type="password" tabindex="101" name="onestepcheckout_register_confirm_password"
+											   placeholder="<?php echo $this->__('Confirm Password'); ?>"
+											   class="input-text input-floating required-entry validate-cpassword"
+											   id="id_onestepcheckout_register_confirm_password"/>
+									</div>
+								</div>
+							</div>
+                        </li>
+                    </ul>
+					<footer class="bottom_box on_the_sides">
+							<button class="btn btn-big" tabindex="102" id="onestepcheckout-register-button" type="button"><?php echo $this->__('Register'); ?></button>
+					</footer>
+					<div class="login_bottom">
+						<div class="heading-divider">
+						   <h5><?php echo $this->__("Already have an account?") ?></h5>
+						</div>
+						<button type="button" title="<?php echo $this->__('Sign In') ?>" class="btn btn-big secondary" id="onestepcheckout-return-login-link-2"><span><span><?php echo $this->__('Sign In') ?></span></span></button>
+					 </div>
+
+
+                </form>
+            </div>
+            <!-- Create new account - Add by Leo 03/04/2015 -->
+
+        </div>
+
+    </div>
+
+	<p class="close"><a class="close-onestepcheckout-modal" href="javascript:void(0);">CLOSE</a></p>
+</div>
+<script>
+    var onestepcheckout_login_popup;
+    var login_popup;
+    Event.observe(window, 'load', function () {
+        var options = {
+            forgot_password_url: '<?php echo $this->getUrl('onestepcheckout/ajax/forgotPassword', array('_secure' => true)); ?>',
+            login_url: '<?php echo $this->getUrl('onestepcheckout/ajax/login', array('_secure' => true)); ?>',
+            register_url: '<?php echo $this->getUrl('onestepcheckout/ajax/createAcc', array('_secure' => true)); ?>',
+            translations: {
+                invalid_email: '<?php echo $this->__('Please enter a valid email address'); ?>',
+                email_not_found: '<?php echo $this->__('Please enter a registered email address.'); ?>'
+            }
+        };
+        onestepcheckout_login_popup = new OneStepCheckoutLoginPopup(options);
+        login_popup = onestepcheckout_login_popup;
+    });
+</script>
+
+<!-- Terms and conditions -->
+<?php $_helper = Mage::helper('onestepcheckout'); ?>
+<?php $width = $_helper->getTermPopupWidth() ? $_helper->getTermPopupWidth() : 482; ?>
+<?php $height = $_helper->getTermPopupHeight() ? $_helper->getTermPopupHeight() : 530; ?>
+
+
+<?php if (!$_helper->enableCustomSize()): ?>
+    <div id="onestepcheckout-toc-popup" style="display:none;">
+        <div class="onestepcheckout-popup-wrapper">
+            <div class="onestepcheckout-popup-wrapper-inner">
+                <h1><span><?php echo $_helper->getTermTitle(); ?></span></h1>
+
+                <div class="onestepcheckout-toc-terms" style="height: 446px;">
+                    <div class="onestepcheckout-toc-terms-content">
+                        <?php echo $_helper->getTermsConditionsHtml(); ?>
+                    </div>
+                </div>
+
+                <p class="close"><a href="javascript:void(0);"><?php echo $this->__('X'); ?></a></p>
+            </div>
+        </div>
+    </div>
+<?php else: ?>
+    <div id="onestepcheckout-toc-popup"
+         style="display:none; width:<?php echo $width ?>px; height:<?php echo $height ?>px;">
+        <div class="onestepcheckout-popup-wrapper2"
+             style="width:<?php echo $width ?>px; height:<?php echo $height ?>px;">
+            <div class="onestepcheckout-popup-wrapper-inner2">
+                <h1><span><?php echo $_helper->getTermTitle(); ?></span></h1>
+
+                <div class="onestepcheckout-toc-terms" style="<?php
+                if ($height) {
+                    $height = (int)$height - 87;
+                    echo 'height: ' . ((int)$height) . 'px;';
+                } else {
+                    echo 'height: 446px;';
+                }
+                ?>">
+                    <div class="onestepcheckout-toc-terms-content">
+                        <?php echo $_helper->getTermsConditionsHtml(); ?>
+                    </div>
+                </div>
+
+                <p class="close"><a href="javascript:void(0);"><?php echo $this->__('X'); ?></a></p>
+            </div>
+        </div>
+
+    </div>
+<?php endif; ?>

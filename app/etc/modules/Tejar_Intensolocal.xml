@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Tejar_Intensolocal>
+            <active>true</active>
+            <codePool>local</codePool>
+          <depends>
+                <Itactica_LayeredNavigation/>
+            </depends>
+        </Tejar_Intensolocal>
+        <Tejar_OrbitSlider>  
+            <active>true</active>  
+            <codePool>local</codePool>
+			<depends>
+                <Itactica_OrbitSlider/>
+            </depends>
+        </Tejar_OrbitSlider>
+    </modules>
+</config>

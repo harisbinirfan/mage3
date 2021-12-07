@@ -1,0 +1,33 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+/* @var $this Mage_Core_Block_Template */
+/* @var $catalogSearchHelper Mage_Catalogsearch_Helper_Data */
+
+/*
+*@name curPageURL
+*@parameters None
+*@return Current complete URL String..
+*/
+//GEt Current Store URL...
+?>
+<?php $catalogSearchHelper =  $this->helper('catalogsearch');?>
+<div class="search-box clearfix search">
+<input type="hidden" name="order" value="relevance">
+<input type="hidden" name="dir" value="desc">
+  <label for="search" id="searchBox" class="no-display">Search</label>
+    <input id="search" autocomplete="off" aria-labelledby="searchBox" maxlength="<?php echo $catalogSearchHelper->getMaxQueryLength();?>" onfocus="this.value = this.value;" type="text" tabindex="0" placeholder="<?php echo $this->__('Keyword, Model or SKU'); ?>"  class="alignleft search_box_btn placeholder" value="<?php echo $catalogSearchHelper->getEscapedQueryText() ?>" name="<?php echo $catalogSearchHelper->getQueryParamName() ?>" id="search"  />
+    <button class="button_blue def_icon_btn icons-search" type="submit" aria-label="Search" aria-hidden="true"></button>
+    <button type="button" id="def_icon_btn_clear" class="button_blue def_icon_btn_clear icons-cancel-1" aria-label="Search Clear" onclick="jQuery('#search').val('');jQuery('#search_autocomplete').html('');jQuery('#search_autocomplete').hide();jQuery(this).hide(); jQuery('#search').focus();" <?php if($catalogSearchHelper->getEscapedQueryText()) echo "style='display: block;'"; ?> aria-hidden="true"></button>
+	<span id="search-spinner">
+		<span class="spinner"></span>
+		<span></span>
+    </span>
+    <div  class="search-autocomplete" id="search_autocomplete"></div>
+</div>

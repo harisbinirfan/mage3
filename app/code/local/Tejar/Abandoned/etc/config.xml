@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Tejar_Abandoned>
+            <version>3.8.3</version>
+        </Tejar_Abandoned>
+    </modules>
+    <global>
+		<models>
+			<adjcartalert>
+				<rewrite>
+					<cartalert>Tejar_Abandoned_Model_Cartalert</cartalert>
+				</rewrite>
+			</adjcartalert>
+        </models>
+    </global>
+	<frontend>
+		<routers>
+			<adjcartalert>
+				<args>
+					<modules>
+						<tejar_abandoned before="AdjustWare_Cartalert">Tejar_Abandoned</tejar_abandoned>
+					</modules>
+				</args>
+			</adjcartalert>
+		</routers>
+	</frontend>
+</config>

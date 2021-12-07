@@ -1,0 +1,75 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014-2017 Intenso (https://www.getintenso.com)
+ * @license     http://getintenso.com/license
+ */
+
+/**
+ * Product media data template
+ *
+ * @see Mage_Catalog_Block_Product_View_Media
+ */
+?>
+<?php
+    $_product = $this->getProduct();
+    $_helper = $this->helper('catalog/output');
+    $width = 500;
+    if (Mage::registry('media_mobile_image_size')) {
+        list($maxHeight, $resizeAsSquare, $baseImageSize) = Mage::registry('media_mobile_image_size');
+    } else {
+        $maxHeight = 500;
+        $baseImageSize = 1200;
+    }
+	 $_isNewLabel = Mage::getStoreConfig('intenso/product_label/new_label', Mage::app()->getStore());
+?>
+<div class="product-mobile__gallery" >
+    <div class="product-label-placeholder" data-productid="<?php echo $_product->getId(); ?>" data-labelurl="<?php echo Mage::getBaseUrl(); ?>itactica-productlabel" data-source="product"></div>
+	<?php
+		if($_isNewLabel){
+			$now = date("Y-m-d");
+			$newsFrom= substr($_product->getData('news_from_date'),0,10);
+			$newsTo=  substr($_product->getData('news_to_date'),0,10);
+			if ($newsTo != '' || $newsFrom != ''){
+				if (($newsTo != '' && $newsFrom != '' && $now>=$newsFrom && $now<=$newsTo) || ($newsTo == '' && $now >=$newsFrom) || ($newsFrom == '' && $now<=$newsTo))
+				{
+		?>
+				<div class="intenso-product-label-wrapper position-top-left " style="margin: 6px;"><span class="intenso-product-label" style=" background-image: url(<?php echo $this->getSkinUrl('images/discount.svg'); ?>);color: #fff;padding: 15px 5px;font-size: 12px;width: 40px;height: 40px;font-weight: 600;">New</span></div>
+		<?php
+
+				}
+			}
+		}
+	?>
+    <div class="product-image__slider" id="gallery-image-mobile">
+    <?php $mainImageSrc = $this->helper('catalog/image')->init($_product, 'image')->resize($width); ?>
+    <div class="item">
+        <a class="lightbox-mobile product-image" href="<?php echo $this->helper('catalog/image')->init($_product, 'image'); ?>">
+            <img src="<?php echo $this->helper('catalog/image')->init($_product, 'image')->resize($width); ?>" alt="<?php echo $this->escapeHtml($this->getImageLabel()); ?>" width="<?php echo $width; ?>" height="<?php echo $width; ?>">
+        </a>
+    </div>
+    <?php if (count($this->getGalleryImages()) > 0): ?>
+    <?php foreach ($this->getGalleryImages() as $_image): ?>
+        <?php if ($this->isGalleryImageVisible($_image) && strpos($mainImageSrc, $_image->getFile()) === false): ?>
+        <div class="item">
+            <a class="lightbox-mobile product-image" href="<?php echo $this->helper('catalog/image')->init($_product, 'image', $_image->getFile()); ?>">
+                <img src="<?php echo $this->getSkinUrl('images/clear.png'); ?>" data-lazy="<?php echo $this->helper('catalog/image')->init($_product, 'image', $_image->getFile())->resize($width); ?>" alt="<?php echo $this->escapeHtml($_image->getLabel()) ?>" width="<?php echo $width; ?>" height="<?php echo $width; ?>">
+            </a>
+        </div>
+        <?php endif; ?>
+    <?php endforeach; ?>
+    <?php endif; ?>
+    </div>
+</div>
+<input type="hidden" id="clearImage" class="clear-image" value="<?php echo $this->getSkinUrl('images/clear.png'); ?>"/>
+<input type="hidden" id="placeholderName" value="<?php echo Mage::getModel('catalog/product')->getImageUrl(); ?>" />
+<script type="text/javascript">
+	document.addEventListener("DOMContentLoaded", function(){
+		var slick = $j(".product-image__slider");
+		slick.slick({lazyLoad:"ondemand",dots: true,slidesToShow:1,slidesToScroll:1,speed: 300,appendArrows:!1,adaptiveHeight: true});
+	});
+</script>
+<?php echo $this->getChildHtml('after'); ?>

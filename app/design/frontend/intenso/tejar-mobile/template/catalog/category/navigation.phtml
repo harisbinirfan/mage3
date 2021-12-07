@@ -1,0 +1,328 @@
+<?php
+/**
+ * Intenso Premium Theme
+ *
+ * @category    design
+ * @package     intenso_default
+ * @copyright   Copyright (c) 2014 Itactica (http://www.itactica.com)
+ * @license     http://getintenso.com/license
+ */
+?>
+<?php
+/**
+ * Category view template
+ *
+ * @see Mage_Catalog_Block_Category_View
+ */
+?>
+<?php
+	$_category  = $this->getCurrentCategory();
+?>
+<?php if($_category->getCollectionType() === "1"): ?>
+<?php
+	$_categoriesIds = explode('/',$_category->getPath());
+	$_categories = Mage::getModel('catalog/category')->getCollection()
+	->addAttributeToSelect('*')
+	->addIsActiveFilter(1)
+	->addAttributeToFilter('collection_type',['eq'=>1])
+	->addAttributeToFilter('entity_id', array('in' => $_categoriesIds))
+	->addAttributeToFilter('level', array('eq' => 2))
+	->addOrderField('name');
+
+?>
+<?php if($_categories->getSize() > 0): ?>
+<?php foreach($_categories as $__category): ?>
+<?php if($__category->getChildrenCategories()): ?>
+<div class="category__header category__left brand__<?php echo $__category->getUrlPath(); ?>">
+	<div class="category__hero">
+		<?php if($_imgUrl = $__category->getImageUrl()): ?>
+			<img src="<?php echo $_imgUrl; ?>" alt="<?php echo $this->escapeHtml($_category->getName()); ?>" title="<?php echo $this->escapeHtml($_category->getName()); ?>" />
+		<?php endif; ?>
+		<?php
+			 if ($_orbitSliderId = $_category->getData('category_orbitslider')) {
+				$orbitSliderBlock = Mage::app()->getLayout()
+					->createBlock('itactica_orbitslider/slider_widget_view')
+					->setData('slider_id',$_orbitSliderId)
+					->setTemplate('itactica_orbitslider/slider/widget/view.phtml')
+					->toHtml();
+			} else {
+				$orbitSliderBlock = '';
+			}
+
+			echo $orbitSliderBlock;
+		?>
+	</div>
+	<div class="category__navArea">
+		<div class="category__rightColumn">
+			<div class="category__navigation">
+				<div class="category__overlay" id="category__overlay"></div>
+				<nav class="category__navBar">
+					<ul class="category__navList" id="category__navList">
+						<li class="category__navItem category__isLogo category__isCurrent">
+							<a href="<?php echo $__category->getUrl(); ?>">
+								<span class="category__linkLogo">
+									<?php
+
+											$mediaUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . "wysiwyg/brand_logo/";
+											$mediaPath = Mage::getBaseDir('media') . DS . "wysiwyg/brand_logo/";
+											$mediaPathPng = $mediaPath . $__category->getUrlPath() . ".png";
+											$mediaPathJpg = $mediaPath . $__category->getUrlPath() . ".jpg";
+											$imgUrl = "";
+											if(file_exists($mediaPathPng)){
+												$imgUrl = $mediaUrl . $__category->getUrlPath() . ".png";
+											} elseif(file_exists($mediaPathJpg)){
+												$imgUrl = $mediaUrl .  $__category->getUrlPath() . ".jpg";
+											} else {
+												$imgUrl = $this->helper('itactica_featuredcategories/category')->resize('catalog/category/'.$__category->getCustomThumbnail());
+											}
+
+										?>
+									<img src="<?php echo $imgUrl; ?>" />
+								</span>
+							</a>
+						</li>
+						<li class="category__navItem category__more">
+							<button type="button" tabindex="-1" id="categoryMenu">
+								<span class="category__linkText">
+									Menu
+								</span>
+							</button>
+						</li>
+					</ul>
+				</nav>
+				<nav class="category__navMenu" id="navMenu">
+					<div class="category__navList <?php echo 'level'.$__category->getLevel(); ?>">
+						<ul>
+							<li class="category__navItem category__back">
+								<button type="button" tabindex="0"><span>Back to Store</span></button>
+							</li>
+							<li class="category__navItem <?php if($__category->getId() === $_category->getId()) echo "category__isCurrent"; ?> category__isHeading">
+								<a href="<?php echo $__category->getUrl(); ?>">
+									<span class="category__linkText"><?php echo $__category->getName(); ?></span>
+								</a>
+							</li>
+							<?php if($_subCategories = $__category->getChildrenCategories()): ?>
+								<?php foreach($_subCategories as $_subCategory): ?>
+									<li class="category__navItem <?php if($_subCategory->getChildrenCategories()) echo "category__hasChildren"; ?> <?php if($_subCategory->getId() === $_category->getId() || $_subCategory->getId() === $_category->getParentCategory()->getId()) echo "category__isCurrent"; ?>" id="<?php echo 'category__' . $_subCategory->getId(); ?>">
+										<a href="<?php echo $_subCategory->getUrl(); ?>">
+											<span class="category__linkText">
+												<?php echo $_subCategory->getName(); ?>
+											</span>
+										</a>
+										<?php if($__subCategories = $_subCategory->getChildrenCategories()): ?>
+											<div class="category__navList <?php echo 'level'.$_subCategory->getLevel(); ?> category__subnav">
+												<ul>
+													<span tabindex="0"></span>
+													<li class="category__navItem category__back">
+														<button type="button" tabindex="0"><span><?php echo $_subCategory->getName(); ?></span></button>
+													</li>
+													<li class="category__navItem category__isHeading">
+														<a href="<?php echo $_subCategory->getUrl(); ?>">
+															<span class="category__linkText">
+																<?php echo $_subCategory->getName(); ?>
+															</span>
+														</a>
+													</li>
+													<?php foreach($__subCategories as $__subCategory): ?>
+														<li class="category__navItem <?php echo 'level' . $__subCategory->getLevel(); ?> <?php if($__subCategory->getId() === $_category->getId()) echo "category__isCurrent"; ?>" id="<?php echo 'category__' . $__subCategory->getId(); ?>">
+															<a href="<?php echo $__subCategory->getUrl(); ?>">
+																<span class="category__linkText">
+																	<?php echo $__subCategory->getName(); ?>
+																</span>
+															</a>
+														</li>
+													<?php endforeach; ?>
+												</ul>
+											</div>
+										<?php endif; ?>
+									</li>
+								<?php endforeach; ?>
+							<?php endif; ?>
+							<?php if($_category->getCollectionType() === "1" && $_category->getLevel() === "2" && $_category->getDisplayMode() === "PRODUCTS_AND_PAGE"): ?>
+							<li class="category__navItem category__action">
+								<a href="javascript:void(0);" id="categoryAction">
+									<span class="category__linkText">
+										<?php echo $this->__('View All Products'); ?>
+									</span>
+								</a>
+							</li>
+							<?php endif; ?>
+						</ul>
+					</div>
+				</nav>
+			</div>
+		</div>
+	</div>
+</div>
+
+<?php if($_category->getCollectionType() === "1" && $_category->getLevel() === "2" && $_category->getDisplayMode() === "PRODUCTS_AND_PAGE"): ?>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+	var categoryAction = document.getElementById('categoryAction');
+	// Bind event
+    if(categoryAction.attachEvent){
+        categoryAction.attachEvent('onclick', actionTrigger);
+    }
+    else {
+        categoryAction.addEventListener('click', actionTrigger, false);
+    }
+	function actionTrigger() {
+			jQuery(".tejar-catalog").show();
+			Intenso.libs.catalogAjax.settings.catalogListing.trigger('item:setWidth');
+			Intenso.libs.catalogAjax.settings.catalogListing.trigger('isotope:update');
+			Intenso.libs.catalogAjax.settings.catalogListing.trigger('catalog:update');
+			jQuery(".category__banner").hide();
+			this.hide();
+	}
+});
+</script>
+<?php endif; ?>
+
+<script>
+var categoryDropDown = function () {
+
+	var ClassName = {
+		INVISIBLE: 'category__isInvisible',
+		ACTIVE: 'category__isOpen',
+		HAS_CHILDREN: 'category__hasChildren',
+		VISIBLE: 'category__visible',
+		BACK_BUTTON: 'category__back'
+	};
+
+	var ESCAPE_KEYCODE = 27; // KeyboardEvent.which value for Escape (Esc) key
+	var SPACE_KEYCODE = 32; // KeyboardEvent.which value for space key
+	var TAB_KEYCODE = 9; // KeyboardEvent.which value for tab key
+	var ARROW_UP_KEYCODE = 38; // KeyboardEvent.which value for up arrow key
+	var ARROW_DOWN_KEYCODE = 40; // KeyboardEvent.which value for down arrow key
+	var RIGHT_MOUSE_BUTTON_WHICH = 3; // MouseEvent.which value for the right button (assuming a right-handed mouse)
+
+	function categoryDropDown(reference, targetElem, tagName) {
+
+		var _this = this;
+		var navMenu = document.getElementById(reference);
+
+		function removeClass(element , className){
+			element.className = element.className.replace(new RegExp("(^|\\s+)" + className + "(\\s+|$)"), ' ').strip();
+			return element;
+		}
+
+		function addClass(element , className){
+			if (!hasClass(element, className))
+			element.className += (element.className ? ' ' : '') + className;
+			return element;
+		}
+
+		function hasClass(element , className){
+			var elementClassName = element.className;
+			return (elementClassName.length > 0 && (elementClassName == className ||
+			new RegExp("(^|\\s)" + className + "(\\s|$)").test(elementClassName)));
+		}
+
+
+		/* Contains
+		---------------------------------------------------------------------- */
+		var rnative = /^[^{]+\{\s*\[native \w/;
+		var hasCompare;
+		var docElem = document.documentElement;
+		var hasCompare = rnative.test( docElem.compareDocumentPosition );
+		compare = hasCompare || rnative.test( docElem.contains ) ? function( a, b ) {
+			var adown = a.nodeType === 9 ? a.documentElement : a,
+				bup = b && b.parentNode;
+			return a === bup || !!( bup && bup.nodeType === 1 && (
+				adown.contains ?
+					adown.contains( bup ) :
+					a.compareDocumentPosition && a.compareDocumentPosition( bup ) & 16
+			));
+		} :
+		function( a, b ) {
+			if ( b ) {
+				while ( (b = b.parentNode) ) {
+					if ( b === a ) {
+						return true;
+					}
+				}
+			}
+			return false;
+		};
+
+
+		contains = function( context, elem ) {
+			// Set document vars if needed
+			if ( ( context.ownerDocument || context ) !== document ) {
+				setDocument( context );
+			}
+
+			return compare( context, elem );
+		};
+
+		document.getElementById(targetElem).addEventListener('click', function(){
+			addClass(navMenu, ClassName.ACTIVE);
+			addClass(document.getElementById('category__overlay'), ClassName.VISIBLE);
+		});
+
+
+		document.getElementById('category__overlay').addEventListener('click', function(){
+			if(hasClass(this, ClassName.VISIBLE)) removeClass(this, ClassName.VISIBLE);
+			for(var i = 0; i < items.length; i++){
+				var parentWrapper = parentElement(items[i], ClassName.ACTIVE);
+				if(parentWrapper && hasClass(parentWrapper, ClassName.ACTIVE)){
+					removeClass(parentWrapper, ClassName.ACTIVE);
+				}
+			}
+		});
+
+		var items = navMenu.getElementsByTagName(tagName);
+
+		function parentElement(element, className){
+			var a = element;
+			var els = [];
+			while (a) {
+				els.unshift(a);
+				a = a.parentNode;
+			}
+
+			var result;
+			for(var i = 0; i < els.length; i++){
+				if(els[i].className){
+					if(hasClass(els[i], className)){
+						result = els[i];
+					}
+				}
+			}
+
+			return result;
+
+		}
+
+		for(var i = 0; i < items.length; i++){
+			if(hasClass(items[i], ClassName.BACK_BUTTON)){
+				items[i].getElementsByTagName('button')[0].addEventListener('click', function(){
+					var parentWrapper = parentElement(this, ClassName.ACTIVE);
+					if(hasClass(parentWrapper, 'category__navMenu')) removeClass(document.getElementById('category__overlay'), ClassName.VISIBLE);
+					removeClass(parentWrapper, ClassName.ACTIVE);
+				});
+			}
+		}
+
+
+		for(var i = 0; i < items.length; i++){
+			if(hasClass(items[i], ClassName.HAS_CHILDREN)){
+				items[i].getElementsByTagName('a')[0].addEventListener('click', function(elem){
+					elem.preventDefault();
+					addClass(this.parentNode.getElementsByTagName('div')[0],ClassName.ACTIVE);
+				});
+			}
+		}
+
+	}
+
+
+	return categoryDropDown;
+}();
+
+categoryDropDown('navMenu', 'categoryMenu', 'li');
+</script>
+<?php endif; ?>
+<?php endforeach; ?>
+<?php endif; ?>
+<?php endif; ?>
