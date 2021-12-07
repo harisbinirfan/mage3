@@ -12,6 +12,7 @@
 !app/code/etc/modules/
 !app/code/locale/
 !dev/
+!dev/*
 !downloader/
 !errors/
 !includes/
