@@ -9,13 +9,13 @@
 !temp
 !.DS_Store
 #For app directory
-!app/
-app/*
-!app/code/
-app/code/*
-!app/code/local
-app/code/local/*
-!app/code/local/Tejar
+# !app/
+# app/*
+# !app/code/
+# app/code/*
+# !app/code/local
+# app/code/local/*
+# !app/code/local/Tejar
 !app/design/
 app/design/*
 !app/design/frontend
