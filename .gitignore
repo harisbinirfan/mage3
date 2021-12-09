@@ -33,6 +33,10 @@ app/design/adminhtml/default/*
 !app/etc/
 app/etc/*
 !app/etc/modules
+
+#Exclude all sql directories in app folder
+/app/**/sql/
+
 #For skins directory        
 !skin/
 skin/*
